@@ -1,0 +1,129 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+	<meta charset="UTF-8" />
+	<title>Spongboy goes Quallenfisching!</title>
+	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+
+function preload() {
+
+    game.load.tilemap("level_01", "assets/level_01.json",null,Phaser.Tilemap.TILED_JSON);
+    game.load.image("tiles","assets/Tiles/tiles-2.png");
+    game.load.image("bikiniBottomBG","assets/BG/sky.png");
+
+    game.load.spritesheet("player", "assets/Sprites/dude.png",32,48);
+}
+
+var player;
+var map;
+var bgLayer,wLayer,pLayer;
+var layer;
+
+function create() {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+    game.physics.arcade.gravity.y = 500;
+
+    createWorld();
+    createPlayer();
+    createControl();
+
+}
+
+function update() {
+
+    game.physics.arcade.collide(player,layer);
+   updatePlayerControl();
+}
+
+function createWorld()
+{
+    game.stage.backgroundColor ="#15DAFF";
+   background = game.add.sprite(0,0, "bikiniBottomBG");
+   background.fixedToCamera = true;
+
+    map = game.add.tilemap("level_01");
+    map.addTilesetImage("tiles-2","tiles");
+
+    bgLayer = map.createLayer("Background Layer");
+    wLayer = map.createLayer("Water Layer");
+    layer = map.createLayer("Platform Layer");
+    // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
+    map.setCollisionBetween(1, 20, true, 'Platform Layer');
+
+    // Anzeigen der Kollisionbox
+    //layer.debug = true;
+    layer.resizeWorld();
+}
+
+//Funtkion zum Erstellen des Spielers
+function createPlayer(){
+  // Player wird erstellt
+  player = game.add.sprite(40,game.height +850, "player");
+
+  // Player Physic wird geladen
+  game.physics.enable(player, Phaser.Physics.ARCADE);
+
+  // Pysic für den Player wird gesetzt
+  player.body.bounce.y = 0.1;
+  player.body.collideWorldBounds = true;
+
+  // Animation erstellen
+  player.animations.add("left",[0,1,2,3],10, true);
+  player.animations.add("right",[5,6,7,8],10,true);
+
+    // Die Kamera folgt dem Spieler
+  game.camera.follow(player);   
+}
+
+// Funktion zum Einstellen der Steuerung
+function createControl(){
+
+  cursors = game.input.keyboard.createCursorKeys();   
+  sprungButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+}
+
+function updatePlayerControl(){
+  // Resetet die Player Velocity
+  player.body.velocity.x = 0;
+
+  if(cursors.left.isDown)
+  {
+    // Bewegt sich nach links
+    player.body.velocity.x = -150;
+    player.animations.play("left");
+  }
+
+  else if (cursors.right.isDown)
+  {
+    // Bewegt sich nach rechts
+    player.body.velocity.x = 150;
+    player.animations.play("right");
+  }
+  else
+  {
+    //Still stehenbleiben
+    player.animations.stop();
+    player.frame = 4;
+  }
+
+  // Erlaubt das Springen, wenn der boden berührt wird.
+  if (sprungButton.isDown && player.body.onFloor())
+  {
+    player.body.velocity.y = -350;
+  }
+}
+</script>
+
+</body>
+</html>
