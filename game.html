@@ -21,7 +21,8 @@ function preload() {
     game.load.tilemap("level_01", "assets/level_01.json",null,Phaser.Tilemap.TILED_JSON);
     game.load.image("tiles","assets/Tiles/tiles-2.png");
     game.load.image("bikiniBottomBG","assets/BG/sky.png");
-
+	// backgroundmusik einbindung
+	game.load.audio('fun', 'audio/fun.mp3');
     game.load.spritesheet("player", "assets/Sprites/dude.png",32,48);
 }
 
@@ -29,6 +30,8 @@ var player;
 var map;
 var bgLayer,wLayer,pLayer;
 var layer;
+// backgroundMusic
+var bMusic;
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -37,6 +40,12 @@ function create() {
     createWorld();
     createPlayer();
     createControl();
+	
+	// Variablen zuweisung, loop=true, lautstärke setzten von 0 bis 1, musik abspielen
+	bMusic = game.add.audio('fun');
+	bMusic.loop = true;
+	bMusic.volume = 0.1;
+	bMusic.play();
 
 }
 
