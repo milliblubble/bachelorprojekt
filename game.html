@@ -16,21 +16,29 @@
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
-//test
 
 function preload() {
 
     game.load.tilemap("level_01", "assets/level_01.json",null,Phaser.Tilemap.TILED_JSON);
     game.load.image("tiles","assets/Tiles/tiles-2.png");
     game.load.image("bikiniBottomBG","assets/BG/sky.png");
-
+    game.load.image("jfish","assets/Sprites/Jellyfish.png");
     game.load.spritesheet("player", "assets/Sprites/dude.png",32,48);
+    game.load.image("catcher", "assets/Sprites/net.png"); 
 }
 
 var player;
 var map;
 var bgLayer,wLayer,pLayer;
 var layer;
+var jellyfish; 
+var score = 0; 
+var scoreText; 
+var catcher; 
+var life = 100; 
+var lifeText; 
+
+
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -39,13 +47,34 @@ function create() {
     createWorld();
     createPlayer();
     createControl();
+    createJellyfish();
+    createCatcher(); 
+    //lifeScore(); 
+    
+    scoreText = game.add.text(60 ,16, 'Score: 0', { fontSize: '32px', fill: '#000'}); 
+    scoreText.anchor.set(0.5); 
+    scoreText.fixedToCamera= true;
+
+    lifeText = game.add.text(92, 40, 'Health: 100 %', {fontSize: '32px', fill: '#000'} ); 
+    lifeText.anchor.set(0.5); 
+    lifeText.fixedToCamera =true; 
 
 }
 
 function update() {
 
-    game.physics.arcade.collide(player,layer);
+   game.physics.arcade.collide(player,layer);
    updatePlayerControl();
+
+   game.physics.arcade.collide(jellyfish,wLayer);
+
+   game.physics.arcade.collide(jellyfish, layer);  
+   game.physics.arcade.overlap(catcher,jellyfish, collectJellyfish, null, this); //problem
+   game.physics.arcade.overlap(player,jellyfish, killPlayer, null, this);
+
+   catcher.x = Math.floor(player.x +2 ); //Positioniert den Catcher vor dem Dude --> DER ÜBELTÄTER!!! >.< 
+   catcher.y = Math.floor(player.y + 2 ); 
+   
 }
 
 function createWorld()
@@ -60,7 +89,7 @@ function createWorld()
     bgLayer = map.createLayer("Background Layer");
     wLayer = map.createLayer("Water Layer");
     layer = map.createLayer("Platform Layer");
-    // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
+    // AKtiviert die Kollision für die Plattform Layer in den Bereichen 1-20
     map.setCollisionBetween(1, 20, true, 'Platform Layer');
 
     // Anzeigen der Kollisionbox
@@ -71,7 +100,11 @@ function createWorld()
 //Funtkion zum Erstellen des Spielers
 function createPlayer(){
   // Player wird erstellt
-  player = game.add.sprite(40,game.height +850, "player");
+  player = game.add.sprite(40,game.height +850, "player"); // 0,0 lässt Zwiebelkopf in die Welt hineinfallen 
+  player.inputEnabled =true; 
+  player.input.enableDrag(); 
+
+
 
   // Player Physic wird geladen
   game.physics.enable(player, Phaser.Physics.ARCADE);
@@ -87,6 +120,57 @@ function createPlayer(){
     // Die Kamera folgt dem Spieler
   game.camera.follow(player);   
 }
+
+
+function createJellyfish() {
+
+  jellyfish = game.add.group();
+  jellyfish.enableBody =true;
+
+
+  for (var i = 0; i < 50; i++)
+    {
+        
+        var jf = jellyfish.create(game.rnd.integerInRange(100,400) *i , game.rnd.integerInRange(100,800),'jfish'); // willkürliche Anordnung der Quallenfische 
+        
+        //game.add.tween(jf).to( { y: +50}, 2000, 'Linear', true, 0, 100, true);  Ansatz für den 'float' der Quallenfische
+
+        //  Let gravity do its thing
+       jf.body.gravity.y =0;
+
+        //Schnelligkeit -- funktioniert noch nicht richtig 
+       jf.body.velocity.y = -100 * Math.random() * 0.2;    
+
+        // unterschiedliche Bounce-Werte für die Quallenfische        
+       jf.body.bounce.y = 0.7 + Math.random() * 0.2;
+
+
+        jf.body.collideWorldBounds =true; 
+    }
+  }
+
+
+
+function createCatcher(){
+
+  catcher = game.add.sprite(0,0,"catcher"); 
+  catcher.scale.setTo(0.1,0.1); 
+  catcher.anchor.set(0.5); 
+  game.physics.enable(catcher, Phaser.Physics.ARCADE); //Problem 
+  catcher.body.collideWorldBounds = true; 
+  
+
+  
+}
+
+//function lifeScore(){
+  //life = game.add.text(120, 40, 'Health: 100 %', {fontSize: '32px', fill: '#000'} ); 
+  //life.anchor.set(0.5); 
+  //life.fixedToCamera =true; 
+
+//}
+
+
 
 // Funktion zum Einstellen der Steuerung
 function createControl(){
@@ -125,6 +209,29 @@ function updatePlayerControl(){
     player.body.velocity.y = -350;
   }
 }
+
+function collectJellyfish(catcher,jellyfish) {
+  
+  score += 1;
+  scoreText.text = 'Score: ' + score;   
+  jellyfish.kill();
+
+}
+
+ function killPlayer(player,jellyfish){  
+  if(life > 0) {
+    life -= 10;  
+    lifeText.text = 'Health: '+ life +' %';
+    jellyfish.kill();
+  }
+  else{
+    player.kill(); 
+    catcher.kill(); 
+  } 
+
+   }
+
+
 </script>
 
 </body>
