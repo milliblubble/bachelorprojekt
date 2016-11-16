@@ -20,9 +20,12 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create
 
 function preload() {
 
-    game.load.tilemap("level_01", "assets/level_01.json",null,Phaser.Tilemap.TILED_JSON);
-    game.load.image("tiles","assets/Tiles/tiles-2.png");
+    game.load.tilemap("level_01", "assets/Level/level_01.json",null,Phaser.Tilemap.TILED_JSON);
+    game.load.image("tiles","assets/Tiles/tile-sheet.png");
     game.load.image("bikiniBottomBG","assets/BG/sky.png");
+    game.load.image("spongeboy_house", "assets/Object/Spongeboy_House.png");
+    game.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");
+    game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");
 	// backgroundmusik einbindung
 	game.load.audio('fun', 'audio/fun.mp3');
     game.load.spritesheet("player", "assets/Sprites/dude.png",32,48);
@@ -31,7 +34,6 @@ function preload() {
 var player;
 var map;
 var bgLayer,wLayer,pLayer;
-var layer;
 // backgroundMusic
 var bMusic;
 
@@ -53,7 +55,7 @@ function create() {
 
 function update() {
 
-    game.physics.arcade.collide(player,layer);
+    game.physics.arcade.collide(player,pLayer);
    updatePlayerControl();
 }
 
@@ -64,23 +66,26 @@ function createWorld()
    background.fixedToCamera = true;
 
     map = game.add.tilemap("level_01");
-    map.addTilesetImage("tiles-2","tiles");
+    map.addTilesetImage("tile-sheet","tiles");
+    map.addTilesetImage("Spongeboy_House","spongeboy_house");
+    map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
+    map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
 
-    bgLayer = map.createLayer("Background Layer");
-    wLayer = map.createLayer("Water Layer");
-    layer = map.createLayer("Platform Layer");
+    bgLayer2 = map.createLayer("Background Layer 2");
+    bgLayer1 = map.createLayer("Background Layer 1");
+    pLayer = map.createLayer("Platform Layer");
     // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
-    map.setCollisionBetween(1, 20, true, 'Platform Layer');
+    map.setCollisionBetween(1, 500, true, 'Platform Layer');
 
     // Anzeigen der Kollisionbox
     //layer.debug = true;
-    layer.resizeWorld();
+    pLayer.resizeWorld();
 }
 
 //Funtkion zum Erstellen des Spielers
 function createPlayer(){
   // Player wird erstellt
-  player = game.add.sprite(40,game.height +850, "player");
+  player = game.add.sprite(40,game.height +400, "player");
 
   // Player Physic wird geladen
   game.physics.enable(player, Phaser.Physics.ARCADE);
