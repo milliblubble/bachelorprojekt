@@ -16,47 +16,67 @@
 
 var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
 
-//test
-
 function preload() {
 
-    game.load.tilemap("level_01", "assets/Level/level_01.json",null,Phaser.Tilemap.TILED_JSON);
-    game.load.image("tiles","assets/Tiles/tile-sheet.png");
-    game.load.image("bikiniBottomBG","assets/BG/sky.png");
-    game.load.image("spongeboy_house", "assets/Object/Spongeboy_House.png");
-    game.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");
-    game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");
-	// backgroundmusik einbindung
-	game.load.audio('fun', 'audio/fun.mp3');
-    game.load.spritesheet("player", "assets/Sprites/dude.png",32,48);
+// LADEN DER TILEMAP
+game.load.tilemap("level_01", "assets/Level/level_01.json",null,Phaser.Tilemap.TILED_JSON);
+
+// LADEN DER TILEMAP
+game.load.image("tiles","assets/Tiles/tile-sheet.png");
+
+// LADEN DER HINTERGRUENDE
+game.load.image("bikiniBottomBG","assets/BG/sky.png");
+
+// LADEN DER OBJEKTE
+game.load.image("spongeboy_house", "assets/Object/Spongeboy_House.png");  // Spongeboys Haus
+game.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");  // Rusty Cancer Gebauede
+game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
+
+// LADEN DER SPRITESHEETS
+//game.load.spritesheet("player", "assets/Sprites/dude.png",32,48); // Spieler-Sprite
+game.load.spritesheet("player", "assets/Sprites/Spongeboy.png",49,55); // Spieler-Sprite
+game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
+
+// LADEN DER MUSIK
+game.load.audio('fun', 'audio/fun.mp3');  // Backgroundmusik FUN-Song
+
 }
 
-var player;
+// KARTENVARIABLE
 var map;
 var bgLayer,wLayer,pLayer;
+
 // backgroundMusic
 var bMusic;
 
-function create() {
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.physics.arcade.gravity.y = 500;
+// VARIABLEN FÜR DEN SPIELER
+var player;
 
-    createWorld();
-    createPlayer();
-    createControl();
-	
-	// Variablen zuweisung, loop=true, lautstärke setzten von 0 bis 1, musik abspielen
-	bMusic = game.add.audio('fun');
-	bMusic.loop = true;
-	bMusic.volume = 0.1;
-	bMusic.play();
+// GRUPPENVARIABLE
+var quallen;
+
+function create() {
+  game.physics.startSystem(Phaser.Physics.ARCADE);
+  game.physics.arcade.gravity.y = 500;
+
+  createWorld();  // ERSTELLT DIE WELT
+  createMusic();  // EINSTELLUNGEN DER MUSIK
+  createPlayer(); // ERSTELLT DEN SPIELER
+  createControl();  // ERSTELLUNG DER STEUERUNG
+  createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
+
 
 }
 
 function update() {
 
-    game.physics.arcade.collide(player,pLayer);
-   updatePlayerControl();
+  game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT
+  game.physics.arcade.collide(player,quallen); // KOLLISION SPIELER MIT QUALLEN WIRD AKTIVIERT
+  game.physics.arcade.collide(quallen,pLayer);  // KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
+  updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
+  
+  // ZEIGT HITBOXEN
+  //debug();
 }
 
 function createWorld()
@@ -78,7 +98,7 @@ function createWorld()
     map.setCollisionBetween(1, 500, true, 'Platform Layer');
 
     // Anzeigen der Kollisionbox
-    //layer.debug = true;
+
     pLayer.resizeWorld();
 }
 
@@ -95,18 +115,42 @@ function createPlayer(){
   player.body.collideWorldBounds = true;
 
   // Animation erstellen
-  player.animations.add("left",[0,1,2,3],10, true);
-  player.animations.add("right",[5,6,7,8],10,true);
+  player.animations.add("right",[2,3],5,true);
+  player.animations.add("left",[0,1],5, true);
+
 
     // Die Kamera folgt dem Spieler
   game.camera.follow(player);   
+  game.debug.body(player);
 }
 
+function createQuallen(){
+
+  //  Die Gruppe für Quallen wird erstellt
+  quallen = game.add.group();
+  // Quallen erhalten einen Körper
+  quallen.enableBody = true;
+  quallen.enableBodyDebug = true;
+  //  Alle Objecte im Object Layer mit der gid=1 erhalten den spritesheet qualle und werden der gruppe zugeordnet 
+  map.createFromObjects('Object Layer', 1, 'qualle', 0, true, false, quallen);
+
+  // ANNIMATION DER QUALEN
+  quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
+  quallen.callAll('animations.play', 'animations', 'wackeln');
+}
 // Funktion zum Einstellen der Steuerung
 function createControl(){
 
   cursors = game.input.keyboard.createCursorKeys();   
   sprungButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+}
+
+function createMusic(){
+// Variablen zuweisung, loop=true, lautstärke setzten von 0 bis 1, musik abspielen
+bMusic = game.add.audio('fun');
+bMusic.loop = true;
+bMusic.volume = 0.1;
+bMusic.play();
 }
 
 function updatePlayerControl(){
@@ -130,14 +174,21 @@ function updatePlayerControl(){
   {
     //Still stehenbleiben
     player.animations.stop();
-    player.frame = 4;
+    player.frame = 2;
   }
 
-  // Erlaubt das Springen, wenn der boden berührt wird.
-  if (sprungButton.isDown && player.body.onFloor())
+  // Erlaubt das Springen mit der Pfeiltaste ODER Leertaste, wenn der boden berührt wird.
+  if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor())
   {
     player.body.velocity.y = -350;
   }
+}
+
+function debug()
+{ 
+  // ANZEIGE DER HITBOXEN
+  game.debug.body(player);  // Spieler-Hitbox
+  pLayer.debug = true; // Plattform Hitbox
 }
 </script>
 
