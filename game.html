@@ -145,12 +145,15 @@ function createControl(){
   sprungButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
+// Funktion zum spielen der Musik
 function createMusic(){
-// Variablen zuweisung, loop=true, lautstärke setzten von 0 bis 1, musik abspielen
-bMusic = game.add.audio('fun');
-bMusic.loop = true;
-bMusic.volume = 0.5;
-bMusic.play();
+	bMusic = game.add.audio('fun');
+	bMusic.play('', 0, 0.5, true);
+	bMusic.onLoop.add(playBMusic, true);
+}
+// Funktion zum Loopen der Musik
+function playBMusic(){
+	bMusic.play('', 0, 0.5, true);
 }
 
 function updatePlayerControl(){
