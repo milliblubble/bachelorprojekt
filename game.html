@@ -37,17 +37,18 @@ game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");
 game.load.spritesheet("player", "assets/Sprites/Spongeboy.png",49,55); // Spieler-Sprite
 game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
 
-// LADEN DER MUSIK
-game.load.audio('fun', 'audio/fun.mp3');  // Backgroundmusik FUN-Song
-
+// LADEN DER Sounds
+game.load.audio('fun', 'assets/Audio/fun.mp3');  // Backgroundmusik FUN-Song
+game.load.audio('jump', 'assets/Audio/jump.mp3'); //Jump Sound
 }
 
 // KARTENVARIABLE
 var map;
 var bgLayer,wLayer,pLayer;
 
-// backgroundMusic
+// Soundvariablen
 var bMusic;
+var jSound;
 
 // VARIABLEN FÜR DEN SPIELER
 var player;
@@ -145,12 +146,17 @@ function createControl(){
   sprungButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
+// Funktion zum Musik abspielen
 function createMusic(){
-// Variablen zuweisung, loop=true, lautstärke setzten von 0 bis 1, musik abspielen
-bMusic = game.add.audio('fun');
-bMusic.loop = true;
-bMusic.volume = 0.1;
-bMusic.play();
+	bMusic = game.add.audio('fun');
+	bMusic.play('', 0, 0.5, true);
+	bMusic.onLoop.add(playBMusic, true);
+	
+	jSound = game.add.audio('jump');
+}
+// Funktion zum Loopen der Musik
+function playBMusic(){
+	bMusic.play('', 0, 0.5, true);
 }
 
 function updatePlayerControl(){
@@ -181,6 +187,7 @@ function updatePlayerControl(){
   if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor())
   {
     player.body.velocity.y = -350;
+	jSound.play('', 0, 0.5, false);
   }
 }
 
