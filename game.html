@@ -37,10 +37,13 @@ game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");
 game.load.spritesheet("player", "assets/Sprites/Spongeboy.png",49,55); // Spieler-Sprite
 game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
 game.load.image("catcher", "Sprites/net.png"); //Catcher- Sprites
+game.load.image("burger", "assets/Sprites/burger.png"); 
 
-// LADEN DER Sounds
+
+//EINSTELLEN DER MUSIK 
 game.load.audio('fun', 'assets/Audio/fun.mp3');  // Backgroundmusik FUN-Song
 game.load.audio('jump', 'assets/Audio/jump.mp3'); //Jump Sound
+
 }
 
 // KARTENVARIABLE
@@ -51,13 +54,22 @@ var bgLayer,wLayer,pLayer;
 var bMusic;
 var jSound;
 
-// VARIABLEN FÜR DEN SPIELER
-var armedPlayer; 
+// VARIABLEN FÜR DEN SPIELER 
 var player;
-var catcher; 
+var catcher;
+var burger;  
+
+
+var life = 100; 
+var score= 0; 
+var test; 
+
 
 // GRUPPENVARIABLE
 var quallen;
+
+//HEALTH & SCORE VARIABLEN 
+
 
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -66,42 +78,74 @@ function create() {
   createWorld();  // ERSTELLT DIE WELT
   createMusic();  // EINSTELLUNGEN DER MUSIK
   createPlayer(); // ERSTELLT DEN SPIELER
+  createCatcher(); //ERSTELLT DEN KESCHER
   createControl();  // ERSTELLUNG DER STEUERUNG
   createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
-
-   //create score and healtbar
+  createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
+  createBurger(); //HEALTHPOTION
     
-    scoreText = game.add.text(60 ,16, 'Score: 0', { fontSize: '32px', fill: '#000'}); 
-    scoreText.anchor.set(0.5); 
-    scoreText.fixedToCamera= true;
-
-    lifeText = game.add.text(92, 40, 'Health: 100 %', {fontSize: '32px', fill: '#000'} ); 
-    lifeText.anchor.set(0.5); 
-    lifeText.fixedToCamera =true; 
-
-
 }
 
 function update() {
 
   game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
-  game.physics.arcade.overlap(player,quallen, killPlayer, null, this); // Verletzt/ tötet Player 
-  //game.physics.arcade.overlap(player,quallen, collectJellyfish, null, this); //problem
+  game.physics.arcade.overlap(player,quallen, killPlayer, null, this); // VERLETZT SPIELER 
+  game.physics.arcade.overlap(catcher,quallen, collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
   game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
+  game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
 
   updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
+  updateCatcherControl(); 
 
+  //catcher.x = player.x -80; //Positioniert den Catcher vor dem Dude 
+  //catcher.y = player.y -120; //Math.floor hat wakeln verursacht, deshalb raus!
 
-  catcher.x = Math.floor(player.x -20 ); //Positioniert den Catcher vor dem Dude 
-  catcher.y = Math.floor(player.y - 20 );
+  if (checkOverlap(burger, player))
+    {
+         
+        if (life < 100)
+        {         
+          life += 10;  
+          lifeText.text = 'Health: '+ life +' %';
+          burger.kill(); 
+        }
+     } 
+  
+  /*if (checkCatch(quallen,catcher)) //Funktioniert leider nicht, da quallen eine Gruppe darstellen
+  {
+    test.text = 'Die Funktion wird aufgerufen'; 
+    //collectJellyfish(); 
+
+  }
+   else
+    {
+        test.text = 'Die Funktion wird NICHT aufgerufen!!!';
+    
+*/
   
   // ZEIGT HITBOXEN
   //debug();
 }
 
+/*function checkCatch(spriteA, spriteB){
+   var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+}*/
+
+function checkOverlap(spriteA, spriteB) { //OVERLAP OHNE PYHSICS
+
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+
+}
+
 function createWorld()
 {
-    game.stage.backgroundColor ="#15DAFF";
+   game.stage.backgroundColor ="#15DAFF";
    background = game.add.sprite(0,0, "bikiniBottomBG");
    background.fixedToCamera = true;
 
@@ -114,31 +158,23 @@ function createWorld()
     bgLayer2 = map.createLayer("Background Layer 2");
     bgLayer1 = map.createLayer("Background Layer 1");
     pLayer = map.createLayer("Platform Layer");
+
     // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
-    map.setCollisionBetween(1, 500, true, 'Platform Layer');
+    map.setCollisionBetween(1, 500, true, 'Platform Layer'); 
+
 
     // Anzeigen der Kollisionbox
-
     pLayer.resizeWorld();
 }
 
 //Funtkion zum Erstellen des Spielers
 function createPlayer(){
 
-  armedPlayer = game.add.group(); 
-  armedPlayer.x  = 100; 
-  armedPlayer.y = 100; 
-
-  player = armedPlayer.create(40, game.height+400 , 'player'); 
-
-
-  //player = game.add.sprite(40,game.height +400, "player"); //Player wird erstellt == parennt
- 
-  //catcher = player.addChild(game.make.sprite(40,game.height +400, 'catcher'));  
-
+  player = game.add.sprite(40,game.height +400, "player"); //Player wird erstellt == parennt
+  player.inputEnabled = true;
+  
   // Player Physic wird geladen
   game.physics.enable(player, Phaser.Physics.ARCADE);  
-  
 
   // Physic für den Player wird gesetzt
   player.body.bounce.y = 0.1;
@@ -146,14 +182,22 @@ function createPlayer(){
 
   // Animation erstellen
   player.animations.add("right",[2,3],5,true);
-  player.animations.add("left",[0,1],5, true); 
+  player.animations.add("left",[0,1],5, true);
 
+  //Definition des Kescher  
+  /*catcher = armedPlayer.create(-30,game.height +300, "catcher"); 
+  catcher.scale.setTo(0.1,0.1);// verändert Größe des Sheets
+  catcher.anchor.setTo(0.5);
+  catcher.enableBody = true; 
+ catcher.inputEnabled = true; 
+ catcher.physicsBodyType = Phaser.Physics.ARCADE; //der Catcher bekommt arcade physics
+game.physics.enable(catcher, Phaser.Physics.ARCADE); 
 
-  catcher = armedPlayer.create(40, game.height+400,  'catcher');   
-  catcher.scale.setTo(0.1,0.1); 
-  catcher.anchor.setTo(0.5);   
-   //player.addChild(catcher);
-   //game.physics.enable(catcher, Phaser.Physics.ARCADE);  
+  //armedPlayer.catcher.body.allowGravity = false; //Schwerkraft abschalten 
+  //catcher.body.collideWorldBounds =true; 
+   //catcher.anchor.setTo(0.5);   
+   //player.addChild(catcher);*/
+    
 
 
 
@@ -162,12 +206,60 @@ function createPlayer(){
   game.debug.body(player);
   
 }
+
+function createCatcher(){
+
+  catcher = game.add.sprite(40, game.height+450,"catcher");  
+  catcher.scale.setTo(0.1,0.1); 
+  catcher.anchor.setTo(0.5); 
+  game.physics.enable(catcher, Phaser.Physics.ARCADE); //Problem  
+  catcher.body.bounce.y = 0.1;
+ 
+  //catcher.immovable = true;  
+ 
+  catcher.body.collideWorldBounds = true; 
+}
+
+function updateCatcherControl(){ // Idee für weitere Bearbeitung: updatePlayerControl für die Gruppe armedPlayer überarbeiten
+  // Resetet die Player Velocity
+  catcher.body.velocity.x = 0;
+
+  if(cursors.left.isDown)
+  {
+    // Bewegt sich nach links
+    catcher.body.velocity.x = -150;
+  
+  }
+
+  else if (cursors.right.isDown)
+  {
+    // Bewegt sich nach rechts
+    catcher.body.velocity.x = 150;
+    
+  }
+  else
+  {
+    //Still stehenbleiben
+   catcher.animations.stop();
+    catcher.frame = 2;
+  }
+
+  // Erlaubt das Springen mit der Pfeiltaste ODER Leertaste, wenn der boden berührt wird.
+  if ((sprungButton.isDown || cursors.up.isDown && catcher.body.onFloor()))
+  {
+   catcher.body.velocity.y = -200; //spring noch zu hoch :/
+  
+  }
+}
+
+
 function createQuallen(){
 
   quallen = game.add.group();
   quallen.enableBody =true; //apply Physics
   quallen.physicsBodyType = Phaser.Physics.ARCADE; 
   game.physics.enable(quallen, Phaser.Physics.ARCADE); 
+  quallen.inputEnabled = true; 
   
 
   for (var i = 0; i < 50; i++)
@@ -207,6 +299,16 @@ function createQuallen(){
   quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
   quallen.callAll('animations.play', 'animations', 'wackeln');*/
 }
+
+//ERSTELLT DIE HEALTHPOTION  
+function createBurger(){
+
+  burger = game.add.sprite(400, game.height+400, "burger"); 
+  burger.scale.setTo(0.2,0.2); 
+  burger.inputEnabled = true; //TEST 
+  burger.input.enableDrag(); //TEST
+
+}
 // Funktion zum Einstellen der Steuerung
 function createControl(){
 
@@ -222,12 +324,26 @@ function createMusic(){
 	
 	jSound = game.add.audio('jump');
 }
+
 // Funktion zum Loopen der Musik
 function playBMusic(){
+
 	bMusic.play('', 0, 0.5, true);
 }
 
-function updatePlayerControl(){
+//ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
+function createScoreBar(){
+
+    scoreText = game.add.text(60 ,16, 'Score: 0', { fontSize: '32px', fill: '#000'}); 
+    scoreText.anchor.set(0.5); 
+    scoreText.fixedToCamera= true;
+
+    lifeText = game.add.text(92, 40, 'Health: 100 %', {fontSize: '32px', fill: '#000'} ); 
+    lifeText.anchor.set(0.5); 
+    lifeText.fixedToCamera =true; 
+}
+
+function updatePlayerControl(){ // Idee für weitere Bearbeitung: updatePlayerControl für die Gruppe armedPlayer überarbeiten
   // Resetet die Player Velocity
   player.body.velocity.x = 0;
 
@@ -235,7 +351,7 @@ function updatePlayerControl(){
   {
     // Bewegt sich nach links
     player.body.velocity.x = -150;
-    player.animations.play("left");
+   player.animations.play("left");
   }
 
   else if (cursors.right.isDown)
@@ -247,7 +363,7 @@ function updatePlayerControl(){
   else
   {
     //Still stehenbleiben
-    player.animations.stop();
+   player.animations.stop();
     player.frame = 2;
   }
 
@@ -255,24 +371,17 @@ function updatePlayerControl(){
   if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor())
   {
     player.body.velocity.y = -400;
-	jSound.play('', 0, 0.5, false);
+  jSound.play('', 0, 0.5, false);
   }
 }
 
-function collectJellyfish(player, quallen) {
-  
+// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
+function collectJellyfish(catcher, quallen) {   
   score += 1;
   scoreText.text = 'Score: ' + score;   
   quallen.kill();
+} 
 
-}
-/*
-function checkOverlap(quallen, armedPlayer.catcher){
-  var boundsA = quallen.getBounds(); 
-  var boundsB = armedPlayer.catcher.getBounds(); 
-
-  return Phaser.Rectangle.intersects(boundsA, boundsB); 
-}*/
 
  function killPlayer(player,quallen){  
   if(life > 0) {
