@@ -55,11 +55,6 @@ var player;
 // GRUPPENVARIABLE
 var quallen;
 
-var score = 0; 
-var scoreText;  
-var life = 100; 
-var lifeText;
-
 function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.gravity.y = 500;
@@ -70,26 +65,15 @@ function create() {
   createControl();  // ERSTELLUNG DER STEUERUNG
   createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
 
-  //create score and healtbar
-    
-    scoreText = game.add.text(60 ,16, 'Score: 0', { fontSize: '32px', fill: '#000'}); 
-    scoreText.anchor.set(0.5); 
-    scoreText.fixedToCamera= true;
-
-    lifeText = game.add.text(92, 40, 'Health: 100 %', {fontSize: '32px', fill: '#000'} ); 
-    lifeText.anchor.set(0.5); 
-    lifeText.fixedToCamera =true; 
-
 
 }
 
 function update() {
 
   game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT
-  game.physics.arcade.overlap(player,quallen, killPlayer, null, this); // Verletzt/ tötet Player 
+  game.physics.arcade.collide(player,quallen); // KOLLISION SPIELER MIT QUALLEN WIRD AKTIVIERT
   game.physics.arcade.collide(quallen,pLayer);  // KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
   updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
-
   
   // ZEIGT HITBOXEN
   //debug();
@@ -196,43 +180,9 @@ function updatePlayerControl(){
   // Erlaubt das Springen mit der Pfeiltaste ODER Leertaste, wenn der boden berührt wird.
   if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor())
   {
-    player.body.velocity.y = -400;
+    player.body.velocity.y = -350;
   }
 }
-
-function collectJellyfish(catcher,jellyfish) {
-  
-  score += 1;
-  scoreText.text = 'Score: ' + score;   
-  jellyfish.kill();
-
-}
-
- function killPlayer(player,quallen){  
-  if(life > 0) {
-    life -= 50;  
-    lifeText.text = 'Health: '+ life +' %';
-    quallen.kill();
-  }
-  if (life == 0) {
-    this.player.kill(); 
-   createPlayer(); 
-
-
-  } 
-
-   }
-
-   /*function restart(){
-    player.resetPosition(40,game.height + 400); 
-    score = 0;
-    scoreText.text = 'Score: ' + score; 
-    life = 100; 
-    lifeText.text = 'Health: '+ life +' %';
-    quallen.kill(); 
-    createQuallen(); 
-
-   }*/
 
 function debug()
 { 
