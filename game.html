@@ -3,7 +3,7 @@
 <head> 
 	<meta charset="UTF-8" />
 	<title>Spongboy goes Quallenfisching!</title>
-	<script type="text/javascript" src="js/phaser.min.js"></script>
+	<script type="text/javascript" src="js/phaser.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -33,7 +33,6 @@ game.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");  
 game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
 
 // LADEN DER SPRITESHEETS
-//game.load.spritesheet("player", "assets/Sprites/dude.png",32,48); // Spieler-Sprite
 game.load.spritesheet("player", "assets/Sprites/Spongeboy.png",49,55); // Spieler-Sprite
 game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
 game.load.image("catcher", "Sprites/net.png"); //Catcher- Sprites
@@ -75,18 +74,29 @@ function create() {
   game.physics.startSystem(Phaser.Physics.ARCADE);
   game.physics.arcade.gravity.y = 500;
 
+  // FPS ANZEIGE
+  game.time.advancedTiming = true;
+
   createWorld();  // ERSTELLT DIE WELT
   createMusic();  // EINSTELLUNGEN DER MUSIK
   createPlayer(); // ERSTELLT DEN SPIELER
   createCatcher(); //ERSTELLT DEN KESCHER
   createControl();  // ERSTELLUNG DER STEUERUNG
   createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
+<<<<<<< HEAD
   createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
   createBurger(); //HEALTHPOTION
+=======
+
+ //debug();
+   //create score and healtbar
+>>>>>>> origin/master
     
 }
 
 function update() {
+  // FPS ANZEIGE
+  game.debug.text(game.time.fps, game.width-50, 50, "#00ff00");
 
   game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
   game.physics.arcade.overlap(player,quallen, killPlayer, null, this); // VERLETZT SPIELER 
@@ -160,7 +170,11 @@ function createWorld()
     pLayer = map.createLayer("Platform Layer");
 
     // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
+<<<<<<< HEAD
     map.setCollisionBetween(1, 500, true, 'Platform Layer'); 
+=======
+    map.setCollisionBetween(1, 100, true, 'Platform Layer');
+>>>>>>> origin/master
 
 
     // Anzeigen der Kollisionbox
@@ -203,7 +217,6 @@ game.physics.enable(catcher, Phaser.Physics.ARCADE);
 
    // Die Kamera folgt dem Spieler
   game.camera.follow(player);   
-  game.debug.body(player);
   
 }
 
@@ -320,7 +333,7 @@ function createControl(){
 function createMusic(){
 	bMusic = game.add.audio('fun');
 	bMusic.play('', 0, 0.5, true);
-	bMusic.onLoop.add(playBMusic, true);
+	//bMusic.onLoop.add(playBMusic, true);
 	
 	jSound = game.add.audio('jump');
 }
@@ -400,6 +413,7 @@ function debug()
   // ANZEIGE DER HITBOXEN
   game.debug.body(player);  // Spieler-Hitbox
   pLayer.debug = true; // Plattform Hitbox
+
 }
 
 
