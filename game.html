@@ -26,6 +26,8 @@ game.load.image("tiles","assets/Tiles/tile-sheet.png");
 
 // LADEN DER HINTERGRUENDE
 game.load.image("bikiniBottomBG","assets/BG/sky.png");
+game.load.image("sandBG","assets/BG/sand.png");
+game.load.image("vordergrundBG","assets/BG/vordergrund_01.png");
 
 // LADEN DER OBJEKTE
 game.load.image("spongeboy_house", "assets/Object/Spongeboy_House.png");  // Spongeboys Haus
@@ -46,6 +48,7 @@ game.load.audio('jump', 'assets/Audio/jump.mp3'); //Jump Sound
 }
 
 // KARTENVARIABLE
+var background, foreground;
 var map;
 var bgLayer,wLayer,pLayer;
 
@@ -83,7 +86,7 @@ function create() {
   createCatcher(); //ERSTELLT DEN KESCHER
   createControl();  // ERSTELLUNG DER STEUERUNG
   createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
-
+  createForeground(); // ERSTELLT DEN VORDERGRUND
   createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
   createBurger(); //HEALTHPOTION
 
@@ -106,6 +109,8 @@ function update() {
 
   updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
   updateCatcherControl(); 
+
+  updateParallax();
 
   //catcher.x = player.x -80; //Positioniert den Catcher vor dem Dude 
   //catcher.y = player.y -120; //Math.floor hat wakeln verursacht, deshalb raus!
@@ -156,8 +161,9 @@ function checkOverlap(spriteA, spriteB) { //OVERLAP OHNE PYHSICS
 function createWorld()
 {
    game.stage.backgroundColor ="#15DAFF";
-   background = game.add.sprite(0,0, "bikiniBottomBG");
-   background.fixedToCamera = true;
+   background = game.add.tileSprite(0,game.height+320, 10000, 320, "sandBG");
+
+   //background.fixedToCamera = true;
 
     map = game.add.tilemap("level_01");
     map.addTilesetImage("tile-sheet","tiles");
@@ -179,6 +185,16 @@ function createWorld()
 
     // Anzeigen der Kollisionbox
     pLayer.resizeWorld();
+}
+function createForeground()
+  {
+    foreground = game.add.tileSprite(0,game.height+500, 8000, 147, "vordergrundBG");
+  }
+
+function updateParallax()
+{
+  foreground.tilePosition.x = -(game.camera.x * 0.7);
+  background.tilePosition.x = -(game.camera.x * 0.1); 
 }
 
 //Funtkion zum Erstellen des Spielers
@@ -213,12 +229,11 @@ game.physics.enable(catcher, Phaser.Physics.ARCADE);
    //player.addChild(catcher);*/
     
 
-
-
    // Die Kamera folgt dem Spieler
   game.camera.follow(player);   
   
 }
+
 
 function createCatcher(){
 
@@ -307,7 +322,7 @@ function createQuallen(){
   quallen.enableBodyDebug = true;
   //  Alle Objecte im Object Layer mit der gid=1 erhalten den spritesheet qualle und werden der gruppe zugeordnet 
   map.createFromObjects('Object Layer', 1, 'qualle', 0, true, false, quallen);
-*/
+ */
   // ANNIMATION DER QUALEN
   quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
   quallen.callAll('animations.play', 'animations', 'wackeln');
