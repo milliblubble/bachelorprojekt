@@ -289,7 +289,7 @@ function createQuallen(){
   game.physics.enable(quallen, Phaser.Physics.ARCADE); 
   quallen.inputEnabled = true; 
   
-
+/*
   for (var i = 0; i < 50; i++)
     {
         
@@ -310,19 +310,15 @@ function createQuallen(){
 
        //game.physics.collide(quallen, layer);  //**new 
     }
-
-       // quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
-        //quallen.callAll('animations.play', 'animations', 'wackeln');
-    //map.createFromObjects('Object Layer', 1, 'qualle', 0, true, false, quallen);
-
-  /*//  Die Gruppe für Quallen wird erstellt
+*/
+  //  Die Gruppe für Quallen wird erstellt
   quallen = game.add.group();
   // Quallen erhalten einen Körper
   quallen.enableBody = true;
   quallen.enableBodyDebug = true;
   //  Alle Objecte im Object Layer mit der gid=1 erhalten den spritesheet qualle und werden der gruppe zugeordnet 
   map.createFromObjects('Object Layer', 1, 'qualle', 0, true, false, quallen);
- */
+ 
   // ANNIMATION DER QUALEN
   quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
   quallen.callAll('animations.play', 'animations', 'wackeln');
