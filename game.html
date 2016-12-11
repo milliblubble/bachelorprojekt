@@ -35,7 +35,7 @@ game.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");  
 game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
 
 // LADEN DER SPRITESHEETS
-game.load.spritesheet("player", "assets/Sprites/Spongeboy.png",49,55); // Spieler-Sprite
+game.load.spritesheet("player", "assets/Sprites/Spongeboy2.png",63,55); // Spieler-Sprite
 game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
 game.load.image("catcher", "assets/Object/net.png"); //Catcher- Sprites
 game.load.image("burger", "assets/Object/burger.png"); 
@@ -213,6 +213,8 @@ function createPlayer(){
   // Animation erstellen
   player.animations.add("right",[2,3],5,true);
   player.animations.add("left",[0,1],5, true);
+  player.animations.add("catch", [4], 5, true);
+  player.animations.add("die", [5,6,7], 5, true)
 
   //Definition des Kescher  
   /*catcher = armedPlayer.create(-30,game.height +300, "catcher"); 
@@ -338,6 +340,7 @@ function createControl(){
 
   cursors = game.input.keyboard.createCursorKeys();   
   sprungButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  catchButton = game.input.keyboard.addKey(Phaser.Keyboard.C);
 }
 
 // Funktion zum Musik abspielen
@@ -397,6 +400,11 @@ function updatePlayerControl(){ // Idee für weitere Bearbeitung: updatePlayerCo
     player.body.velocity.y = -400;
   jSound.play('', 0, 0.5, false);
   }
+  
+  if(catchButton.isDown)
+	{
+		player.animations.play("catch");
+	}
 }
 
 // ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
@@ -414,6 +422,7 @@ function collectJellyfish(catcher, quallen) {
     quallen.kill();
   }
   if (life == 0) {
+	player.animations.play("die");
     game.state.restart(); 
   } 
 
