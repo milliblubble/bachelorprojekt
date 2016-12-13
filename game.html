@@ -114,20 +114,6 @@ function update()
 	updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
 	
 	updateParallax();
-
-	
-	if (checkOverlap(burger, player))
-	{
-		if (life < 100)
-		{         
-			life += 10;  
-			lifeText.text = 'Health: '+ life +' %';
-			burger.kill(); 
-		}
-	} 
-	  
-  
-  
   // ZEIGT HITBOXEN
   //debug();
 }
