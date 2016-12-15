@@ -36,7 +36,7 @@ function preload()
 	game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
 
 	// LADEN DER SPRITESHEETS
-	game.load.spritesheet("player", "assets/Sprites/Spongeboy2.png",63,55); // Spieler-Sprite
+	game.load.spritesheet("player", "assets/Sprites/Spongeboy3.png",63,62); // Spieler-Sprite
 	game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
 	game.load.image("catcher", "assets/Object/net.png"); //Catcher- Sprites
 	game.load.image("burger", "assets/Object/burger.png"); 
@@ -45,6 +45,9 @@ function preload()
 	//EINSTELLEN DER MUSIK 
 	game.load.audio('fun', 'assets/Audio/fun.mp3');  // Backgroundmusik FUN-Song
 	game.load.audio('jump', 'assets/Audio/jump.mp3'); //Jump Sound
+	game.load.audio('woosh1', 'assets/Audio/woosh01.mp3'); // catcher sound
+	game.load.audio('woosh2', 'assets/Audio/woosh02.mp3');
+	game.load.audio('woosh3', 'assets/Audio/woosh03.mp3');
 }
 
 // KARTENVARIABLE
@@ -55,6 +58,9 @@ var bgLayer,wLayer,pLayer;
 // Soundvariablen
 var bMusic;
 var jSound;
+var woosh1;
+var woosh2;
+var woosh3;
 
 // VARIABLEN FÜR DEN SPIELER 
 var player;
@@ -178,7 +184,9 @@ function createPlayer()
 	player.animations.add("right",[2,3],5,true);
 	player.animations.add("left",[0,1],5, true);
 	player.animations.add("catch", [4], 5, true);
-	player.animations.add("die", [5,6,7], 5, true)
+	//player.animations.add("catch", [4], 5, true);
+	//player.animations.add("jump", [5],5,true);
+	player.animations.add("die", [6,7,8], 5, true);
 
   
 	// Die Kamera folgt dem Spieler
@@ -248,6 +256,10 @@ function createMusic()
 	//bMusic.onLoop.add(playBMusic, true);
 	
 	jSound = game.add.audio('jump');
+	woosh1 = game.add.audio('woosh1');
+	woosh2 = game.add.audio('woosh2');
+	woosh3 = game.add.audio('woosh3');
+	
 }
 
 // Funktion zum Loopen der Musik
@@ -301,11 +313,28 @@ function updatePlayerControl()
 		player.body.velocity.y = -400;
 		jSound.play('', 0, 0.5, false);
 	}
-	  
-	if(catchButton.isDown)
+	if(player.body.onFloor() !== true)
 	{
-		player.animations.play("catch");
+		player.frame = 5;
 	}
+	
+	  
+	catchButton.onDown.add(function(){
+		
+		player.frame = 4;
+					
+		var x = Math.floor(Math.random()*3+1);
+			
+		if(x===1){
+			woosh1.play('', 0, 0.5, false);
+		}
+		if(x===2){
+			woosh2.play('', 0, 0.5, false);
+		}
+		if(x===3){
+			woosh3.play('', 0, 0.5, false);
+		}
+	});
 }
 
 /// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
