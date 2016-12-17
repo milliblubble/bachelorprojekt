@@ -299,11 +299,30 @@ function updatePlayerControl()
 			player.body.velocity.x = 150;
 			player.animations.play("right");
 		}
-		else
-		{
-			//Still stehenbleiben
-			player.animations.stop();
-			player.frame = 2;
+		else{
+			if(catchButton.isDown){
+				catchButton.onDown.add(function(){
+					randomeWoosh = Math.floor(Math.random()*3+1);
+				
+					player.frame = 4;
+								
+					if(randomeWoosh==1){
+						woosh1.play('', 0, 0.5, false);
+					}
+					if(randomeWoosh==2){
+						woosh2.play('', 0, 0.5, false);
+					}
+					if(randomeWoosh==3){
+						woosh3.play('', 0, 0.5, false);
+					}
+				});
+			}
+			else
+			{
+				//Still stehenbleiben
+				player.animations.stop();
+				player.frame = 2;
+			}
 		}
 	}
 
@@ -317,24 +336,6 @@ function updatePlayerControl()
 	{
 		player.frame = 5;
 	}
-	
-	  
-	catchButton.onDown.add(function(){
-		
-		player.frame = 4;
-					
-		var x = Math.floor(Math.random()*3+1);
-			
-		if(x===1){
-			woosh1.play('', 0, 0.5, false);
-		}
-		if(x===2){
-			woosh2.play('', 0, 0.5, false);
-		}
-		if(x===3){
-			woosh3.play('', 0, 0.5, false);
-		}
-	});
 }
 
 /// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
