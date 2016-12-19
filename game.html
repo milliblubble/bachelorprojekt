@@ -21,6 +21,7 @@ function preload()
 
 	// LADEN DER TILEMAP
 	game.load.tilemap("level_01", "assets/Level/level_01.json",null,Phaser.Tilemap.TILED_JSON);
+  game.load.tilemap("level_02", "assets/Level/level_02.json",null,Phaser.Tilemap.TILED_JSON);
 
 	// LADEN DER TILEMAP
 	game.load.image("tiles","assets/Tiles/tile-sheet.png");
@@ -54,6 +55,7 @@ function preload()
 var background, foreground;
 var map;
 var bgLayer,wLayer,pLayer;
+var level = 1
 
 // Soundvariablen
 var bMusic;
@@ -133,12 +135,18 @@ function createWorld()
 
 	//background.fixedToCamera = true;
 
+  if(level == 1)
+  {
     map = game.add.tilemap("level_01");
-    map.addTilesetImage("tile-sheet","tiles");
     map.addTilesetImage("Spongeboy_House","spongeboy_house");
     map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
     map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
-
+  }
+  else if(level == 2)
+  {
+    map = game.add.tilemap("level_02");
+  }
+    map.addTilesetImage("tile-sheet","tiles");
     bgLayer2 = map.createLayer("Background Layer 2");
     bgLayer1 = map.createLayer("Background Layer 1");
     pLayer = map.createLayer("Platform Layer");
@@ -157,7 +165,14 @@ function createWorld()
 
 function createForeground()
 {
+  if (level == 1)
+  {
 	foreground = game.add.tileSprite(0,game.height+500, 8000, 147, "vordergrundBG");
+  }
+  else
+  {
+    foreground = game.add.tileSprite(0,map.height, 8000, 147, "vordergrundBG");
+  }
 }
 
 function updateParallax()
@@ -169,8 +184,7 @@ function updateParallax()
 //Funtkion zum Erstellen des Spielers
 function createPlayer()
 {
-
-	player = game.add.sprite(40,game.height +400, "player"); //Player wird erstellt == parennt
+	player = game.add.sprite(map.objects["Player Layer"][0].x,map.objects["Player Layer"][0].y, "player"); //PLAYER WIRD AUF VORDEFINIERTEN BEREICH GESETZT
 	player.inputEnabled = true;
 	player.input.enableDrag(); 
 	  
