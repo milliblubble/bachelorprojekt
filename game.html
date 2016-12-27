@@ -35,10 +35,12 @@ function preload()
 	game.load.image("spongeboy_house", "assets/Object/Spongeboy_House.png");  // Spongeboys Haus
 	game.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");  // Rusty Cancer Gebauede
 	game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
+  game.load.image("steeringWheel", "assets/Object/SteeringWheel.png");  // Rusty Cancer Schild
 
 	// LADEN DER SPRITESHEETS
 	game.load.spritesheet("player", "assets/Sprites/Spongeboy4.png",64,63); // Spieler-Sprite
 	game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
+  game.load.spritesheet("bubble", "assets/Sprites/Bubble.png", 64, 64);  // Quallen-Sprite
 	game.load.image("catcher", "assets/Object/net.png"); //Catcher- Sprites
 	game.load.image("burger", "assets/Object/burger.png"); 
 
@@ -55,7 +57,7 @@ function preload()
 var background, foreground;
 var map;
 var bgLayer,wLayer,pLayer;
-var level = 1;
+var level = 2;
 
 // Soundvariablen
 var bMusic;
@@ -77,7 +79,7 @@ var playerDead = false;
 
 
 // GRUPPENVARIABLE
-var quallen;
+var quallen, bubbles;
 
 //HEALTH & SCORE VARIABLEN 
 
@@ -89,13 +91,14 @@ function create()
 
 	// FPS ANZEIGE
 	game.time.advancedTiming = true;
-
+  createBubbleGroup();
 	createWorld();  // ERSTELLT DIE WELT
 	createMusic();  // EINSTELLUNGEN DER MUSIK
 	createPlayer(); // ERSTELLT DEN SPIELER
 	createCatcher(); //ERSTELLT DEN KESCHER
 	createControl();  // ERSTELLUNG DER STEUERUNG
 	createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
+
 	createForeground(); // ERSTELLT DEN VORDERGRUND
 	createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
 	createBurger(); //HEALTHPOTION
@@ -116,8 +119,16 @@ function update()
 	game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
 	game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
 
+
+
+
+  game.physics.arcade.collide(bubbles,pLayer, destroyBubble, null,this);  //KOLLISION BUBBLE MIT DEN PLATTFORMEN WIRD AKTIVERT
+  game.physics.arcade.collide(player,bubbles);  //KOLLISION BUBBLE MIT DEM PLAYER WIRD AKTIVERT
+
+
+
 	catcher.x = Math.floor(player.x +30); //Kescher folgt Spongeboy
-    catcher.y = Math.floor(player.y -10);
+  catcher.y = Math.floor(player.y -10);
 
 
 	updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
@@ -131,7 +142,7 @@ function update()
 function createWorld()
 {
 	game.stage.backgroundColor ="#15DAFF";
-	background = game.add.tileSprite(0,game.height+320, 10000, 320, "sandBG");
+
 
 	//background.fixedToCamera = true;
 
@@ -141,15 +152,21 @@ function createWorld()
     map.addTilesetImage("Spongeboy_House","spongeboy_house");
     map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
     map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
+    background = game.add.tileSprite(0,map.height+320, 10000, 320, "sandBG");
   }
   else if(level == 2)
   {
-    map = game.add.tilemap("level_02");
+  map = game.add.tilemap("level_02");
+    background = game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
+        map.addTilesetImage("SteeringWheel","steeringWheel");
+  createBubble();
+  game.time.events.loop(Phaser.Timer.SECOND * 10, createBubble, this);
   }
     map.addTilesetImage("tile-sheet","tiles");
     bgLayer2 = map.createLayer("Background Layer 2");
     bgLayer1 = map.createLayer("Background Layer 1");
     pLayer = map.createLayer("Platform Layer");
+
 
     // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
 
@@ -223,26 +240,40 @@ function createCatcher(){
 
 function createQuallen()
 {
-
-	quallen = game.add.group();
-	quallen.enableBody =true; //apply Physics
-	quallen.physicsBodyType = Phaser.Physics.ARCADE; 
-	game.physics.enable(quallen, Phaser.Physics.ARCADE); 
-	quallen.inputEnabled = true; 
-
 	//  Die Gruppe für Quallen wird erstellt
 	quallen = game.add.group();
 	// Quallen erhalten einen Körper
 	quallen.enableBody = true;
-	quallen.enableBodyDebug = true;
-	//  Alle Objecte im Object Layer mit der gid=1 erhalten den spritesheet qualle und werden der gruppe zugeordnet 
-	map.createFromObjects('Object Layer', 1, 'qualle', 0, true, false, quallen);
+
+	map.createFromObjects('Object Layer', "Qualle", 'qualle', 0, true, false, quallen);
 	 
 	// ANNIMATION DER QUALEN
 	quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
 	quallen.callAll('animations.play', 'animations', 'wackeln');
 }
 
+function createBubbleGroup()
+{
+  bubbles = game.add.group();
+  bubbles.enableBody = true;
+  bubbles.physicsBodyType = Phaser.Physics.ARCADE;
+}
+function createBubble()
+{
+
+
+map.createFromObjects('Object Layer', "Bubble", "bubble", 3, true, false, bubbles);
+
+bubbles.setAll("body.allowGravity", false);
+bubbles.setAll("body.immovable", true);
+
+}
+
+
+function destroyBubble(bubbles, pLayer)
+{
+  bubbles.kill();
+}
 //ERSTELLT DIE HEALTHPOTION  
 function createBurger()
 {
