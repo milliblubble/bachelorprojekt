@@ -21,7 +21,7 @@ function preload()
 
 	// LADEN DER TILEMAP
 	game.load.tilemap("level_01", "assets/Level/level_01.json",null,Phaser.Tilemap.TILED_JSON);
-  game.load.tilemap("level_02", "assets/Level/level_02.json",null,Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap("level_02", "assets/Level/level_02.json",null,Phaser.Tilemap.TILED_JSON);
 
 	// LADEN DER TILEMAP
 	game.load.image("tiles","assets/Tiles/tile-sheet.png");
@@ -35,14 +35,21 @@ function preload()
 	game.load.image("spongeboy_house", "assets/Object/Spongeboy_House.png");  // Spongeboys Haus
 	game.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");  // Rusty Cancer Gebauede
 	game.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
-  game.load.image("steeringWheel", "assets/Object/SteeringWheel.png");  // Rusty Cancer Schild
+	game.load.image("steeringWheel", "assets/Object/SteeringWheel.png");  // Rusty Cancer Schild
 
+	//LADEN DER SCHILDER
+	/*game.load.image("schild_laufen", "assets/Object/laufen.png");  
+	game.load.image("schild_springen", "assets/Object/springen.png"); 
+	game.load.image("schild_fangen", "assets/Object/fangen.png"); 
+	game.load.image("schild_gefahr", "assets/Object/danger.png"); 
+	game.load.image("schild_burger", "assets/Object/power.png");*/
+	
 	// LADEN DER SPRITESHEETS
-	game.load.spritesheet("player", "assets/Sprites/Spongeboy4.png",64,63); // Spieler-Sprite
+	game.load.spritesheet("player", "assets/Sprites/Spongeboy3.png",64,62); // Spieler-Sprite
 	game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
-  game.load.spritesheet("bubble", "assets/Sprites/Bubble.png", 64, 64);  // Quallen-Sprite
-	game.load.image("catcher", "assets/Object/net.png"); //Catcher- Sprites
-	game.load.image("burger", "assets/Object/burger.png"); 
+	game.load.spritesheet("bubble", "assets/Sprites/Bubble.png", 64, 64);  // Quallen-Sprite
+	game.load.spritesheet("catcher", "assets/Sprites/Kescher.png",64,128); //Catcher- Sprites
+	game.load.spritesheet("burger", "assets/Object/burger.png"); 
 
 
 	//EINSTELLEN DER MUSIK 
@@ -70,12 +77,11 @@ var woosh3;
 var player;
 var catcher;
 var burger;  
-
+var playerDead = false;
 
 var life = 100; 
 var score= 0; 
 var test;
-var playerDead = false;
 
 
 // GRUPPENVARIABLE
@@ -91,11 +97,13 @@ function create()
 
 	// FPS ANZEIGE
 	game.time.advancedTiming = true;
-  createBubbleGroup();
+	
 	createWorld();  // ERSTELLT DIE WELT
 	createMusic();  // EINSTELLUNGEN DER MUSIK
+	
 	createPlayer(); // ERSTELLT DEN SPIELER
 	createCatcher(); //ERSTELLT DEN KESCHER
+	
 	createControl();  // ERSTELLUNG DER STEUERUNG
 	createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
 
@@ -103,7 +111,8 @@ function create()
 	createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
 	createBurger(); //HEALTHPOTION
 
-
+	createBubbleGroup();
+	
 	//debug();
 	//create score and healtbar
 }
@@ -119,23 +128,19 @@ function update()
 	game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
 	game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
 
-
-
-
-  game.physics.arcade.collide(bubbles,pLayer, destroyBubble, null,this);  //KOLLISION BUBBLE MIT DEN PLATTFORMEN WIRD AKTIVERT
-  game.physics.arcade.collide(player,bubbles);  //KOLLISION BUBBLE MIT DEM PLAYER WIRD AKTIVERT
-
-
-
-	catcher.x = Math.floor(player.x +30); //Kescher folgt Spongeboy
-  catcher.y = Math.floor(player.y -10);
-
-
-	updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
+	catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
+    catcher.y = Math.floor(player.y -65);
 	
+	
+	updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
+	updateCatcherControl(); 
+	
+	game.physics.arcade.collide(bubbles,pLayer, destroyBubble, null,this);  //KOLLISION BUBBLE MIT DEN PLATTFORMEN WIRD AKTIVERT
+	game.physics.arcade.collide(player,bubbles);  //KOLLISION BUBBLE MIT DEM PLAYER WIRD AKTIVERT
+
 	updateParallax();
-  // ZEIGT HITBOXEN
-  //debug();
+	// ZEIGT HITBOXEN
+	//debug();
 }
 
 
@@ -146,22 +151,29 @@ function createWorld()
 
 	//background.fixedToCamera = true;
 
-  if(level == 1)
-  {
-    map = game.add.tilemap("level_01");
-    map.addTilesetImage("Spongeboy_House","spongeboy_house");
-    map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
-    map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
-    background = game.add.tileSprite(0,map.height+320, 10000, 320, "sandBG");
-  }
-  else if(level == 2)
-  {
-  map = game.add.tilemap("level_02");
-    background = game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
+	if(level == 1)
+	{
+		map = game.add.tilemap("level_01");
+		map.addTilesetImage("Spongeboy_House","spongeboy_house");
+		map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
+		map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
+		background = game.add.tileSprite(0,map.height+320, 10000, 320, "sandBG");
+	
+		 /*map.addTilesetImage("Sign_Walk", "schild_laufen");
+		map.addTilesetImage("Sign_Jump", "schild_springen");
+		map.addTilesetImage("Sign_Catch", "schild_fangen");
+		map.addTilesetImage("Sign_Power", "schild_burger");
+		map.addTilesetImage("Sign_Danger", "schild_gefahr"); */
+		
+	}
+	else if(level == 2)
+	{
+		map = game.add.tilemap("level_02");
+		background = game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
         map.addTilesetImage("SteeringWheel","steeringWheel");
-  createBubble();
-  game.time.events.loop(Phaser.Timer.SECOND * 10, createBubble, this);
-  }
+		createBubble();
+		game.time.events.loop(Phaser.Timer.SECOND * 10, createBubble, this);
+	}
     map.addTilesetImage("tile-sheet","tiles");
     bgLayer2 = map.createLayer("Background Layer 2");
     bgLayer1 = map.createLayer("Background Layer 1");
@@ -214,9 +226,13 @@ function createPlayer()
 
 	// Animation erstellen
 	player.animations.add("right",[2,3],5,true);
-	player.animations.add("left",[0,1],5, true);
-	player.animations.add("catch", [4], 5, true);
-	player.animations.add("die", [5,6,7], 2, false);
+	player.animations.add("left",[0,1],11, true);
+	player.animations.add("catchR", [3,4,6], 11, true);
+	player.animations.add("catchL", [0,11,2], 11, true);
+	//player.animations.add("catch", [4], 5, true);
+	player.animations.add("jumpR", [5],11,true);
+	player.animations.add("jumpL", [10],11,true);
+	player.animations.add("die", [6,7,8], 2, false);
 
   
 	// Die Kamera folgt dem Spieler
@@ -227,14 +243,22 @@ function createPlayer()
 
 function createCatcher(){
 
-  catcher = game.add.sprite(player.x, player.y,'catcher'); 
-  catcher.scale.setTo(0.1,0.1); 
-  catcher.anchor.set(0.5); 
-  catcher.inputEnabled = true;
-  catcher.input.enableDrag();
-  game.physics.enable(catcher, Phaser.Physics.ARCADE); //Problem  
-  catcher.body.moves = false;
-  catcher.body.collideWorldBounds = true; 
+	catcher = game.add.sprite(player.x, player.y,'catcher'); 
+	catcher.scale.setTo(1.5,1.5); 
+	catcher.anchor.set(0.5);
+
+	catcher.inputEnabled = true;
+	catcher.input.enableDrag();
+	game.physics.enable(catcher, Phaser.Physics.ARCADE); //Problem  
+	catcher.body.moves = false;
+	catcher.body.collideWorldBounds = true; 
+
+	catcher.animations.add("idler", [0],6, true); 
+	catcher.animations.add("idlel", [2], 6, true); 
+	catcher.animations.add("activeR", [1,0], 6, true); 
+	catcher.animations.add("activeL", [3,2], 6, true); 
+	catcher.animations.add("jumpR", [4], 6);
+	catcher.animations.add("jumpL", [5], 6);
 }
 
 
@@ -244,7 +268,12 @@ function createQuallen()
 	quallen = game.add.group();
 	// Quallen erhalten einen Körper
 	quallen.enableBody = true;
-
+	quallen.enableBodyDebug = true;
+	
+	quallen.physicsBodyType = Phaser.Physics.ARCADE; 
+	game.physics.enable(quallen, Phaser.Physics.ARCADE); 
+	quallen.inputEnabled = true; 
+	
 	map.createFromObjects('Object Layer', "Qualle", 'qualle', 0, true, false, quallen);
 	 
 	// ANNIMATION DER QUALEN
@@ -254,25 +283,22 @@ function createQuallen()
 
 function createBubbleGroup()
 {
-  bubbles = game.add.group();
-  bubbles.enableBody = true;
-  bubbles.physicsBodyType = Phaser.Physics.ARCADE;
+	bubbles = game.add.group();
+	bubbles.enableBody = true;
+	bubbles.physicsBodyType = Phaser.Physics.ARCADE;
 }
 function createBubble()
 {
+	map.createFromObjects('Object Layer', "Bubble", "bubble", 3, true, false, bubbles);
 
-
-map.createFromObjects('Object Layer', "Bubble", "bubble", 3, true, false, bubbles);
-
-bubbles.setAll("body.allowGravity", false);
-bubbles.setAll("body.immovable", true);
-
+	bubbles.setAll("body.allowGravity", false);
+	bubbles.setAll("body.immovable", true);
 }
 
 
 function destroyBubble(bubbles, pLayer)
 {
-  bubbles.kill();
+	bubbles.kill();
 }
 //ERSTELLT DIE HEALTHPOTION  
 function createBurger()
@@ -325,77 +351,172 @@ function createScoreBar(){
 }
 
 function updatePlayerControl()
-{ // Idee für weitere Bearbeitung: updatePlayerControl für die Gruppe armedPlayer überarbeiten
-	// Resetet die Player Velocity
-	player.body.velocity.x = 0;
+{
+// Resetet die Player Velocity
+	player.body.velocity.x = 0; 
 
-	
-	if(playerDead != true)
-	{
-		if(cursors.left.isDown)
+	if(playerDead != true){
+
+		player.body.velocity.x = 0;
+
+		if(cursors.left.isDown)     //funktioniert
 		{
 			// Bewegt sich nach links
-			player.body.velocity.x = -150;
+			player.body.velocity.x = -250;
 			player.animations.play("left");
 		}
 		else
 		{
-			if (cursors.right.isDown)
+			if (cursors.right.isDown)  //funktioniert
 			{
 				// Bewegt sich nach rechts
-				player.body.velocity.x = 150;
+				player.body.velocity.x = 250;
 				player.animations.play("right");
 			}
-			else
+			else 						// funtioniert
 			{
-				if(catchButton.isDown)
-				{
-					catchButton.onDown.add(function(){
-						randomeWoosh = Math.floor(Math.random()*3)+1;
-				
-						player.frame = 4;
-									
-						if(randomeWoosh==1){
-							woosh1.play('', 0, 0.5, false);
-						}
-						if(randomeWoosh==2){
-							woosh2.play('', 0, 0.5, false);
-						}
-						if(randomeWoosh==3){
-							woosh3.play('', 0, 0.5, false);
-						}
-					});
-				}
-				else
-				{
-				
-					//Still stehenbleiben
-					player.animations.stop();
-					player.frame = 2;
-				}
+				//Still stehenbleiben
+				player.animations.stop();
+				player.frame = 2;
 			}
 		}
-			
+
 		// Erlaubt das Springen mit der Pfeiltaste ODER Leertaste, wenn der boden berührt wird.
-		if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor())
+		if ((sprungButton.isDown || cursors.up.isDown) && cursors.left.isDown && player.body.onFloor())    //funktioniert
 		{
-			player.body.velocity.y = -400;
-			jSound.play('', 0, 0.5, false);	
+		//	player.frame = 9;
+			player.animations.play("jumpL");
+			player.body.velocity.y = -500;
+			jSound.play('', 0, 0.5, false);
 		}
-		if (player.body.onFloor() !== true)
+		else if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor() && cursors.right.isDown) {  //funktioniert
+			player.animations.play("jumpR");
+			player.body.velocity.y = -500;
+			jSound.play('', 0, 0.5, false);
+		}
+		else if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor()) {    //funktioniert
+			//player.animations.play("jumpR");
+			player.frame = 5;
+			player.body.velocity.y = -400;
+			jSound.play('', 0, 0.5, false);
+		}
+		else if(player.body.onFloor() !== true && cursors.right.isDown)
 		{
-			player.frame = 8;
+			player.frame = 5;
+		}
+		else if(player.body.onFloor() !== true && cursors.left.isDown)
+		{
+			player.frame = 9;
+		}
+		else if(player.body.onFloor() !== true) {
+			player.frame = 5;
+		}
+		
+		  
+		//catchButton.onDown.add(function(){
+		if(catchButton.isDown) {
+
+			if(cursors.left.isDown) {
+				player.frame = 10;
+			}
+			else if(cursors.right.isDown){
+				player.frame = 4;
+			}
+			else {
+				player.frame = 4;
+			}
+		
+
+						
+			var x = Math.floor(Math.random()*3+1);
+				
+			if(x===1){
+				woosh1.play('', 0, 0.5, false);
+			}
+			if(x===2){
+				woosh2.play('', 0, 0.5, false);
+			}
+			if(x===3){
+				woosh3.play('', 0, 0.5, false);
+			}
 		}
 	}
+}
+
+function updateCatcherControl()
+{
+
+	if (cursors.right.isDown)
+	{
+		catcher.animations.play("idler"); 
+	}
+	else if (cursors.left.isDown)
+	{
+ 	  	catcher.animations.play("idlel"); 
+ 	  	catcher.x = Math.floor(player.x +60); //Kescher folgt Spongeboy
+        catcher.y = Math.floor(player.y -65);
+	}
+
+ 	else
+	{
+		catcher.animations.stop(); 
+ 	  	catcher.frame = 0; 
+ 	}
+
+
+	if (catchButton.isDown ) 
+	{
+		if(cursors.right.isDown) 
+		{
+			catcher.animations.play("activeR"); 
+		}
+		else if (cursors.left.isDown)
+		{
+			catcher.animations.play("activeL");
+			catcher.x = Math.floor(player.x); //Kescher folgt Spongeboy
+			catcher.y = Math.floor(player.y -60); 
+		}
+		else if (sprungButton.isDown && cursors.right.isDown) 
+		{
+			catcher.animation.play("jumpR"); 
+		}
+		else if (sprungButton.isDown && cursors.left.isDown) 
+		{
+			catcher.animations.play("jumpL"); 
+		}
+		else 
+		{
+			catcher.animations.play("activeR"); 
+		}
+	}
+
+	/*if(sprungButton.isDown){
+		if(cursors.left.isDown){
+			catcher.animations.play("idlel");
+			catcher.x = Math.floor(player.x +65 ); //Kescher folgt Spongeboy
+			catcher.y = Math.floor(player.y -80 );
+
+		}
+
+		else {
+			catcher.animations.play("idler");
+			catcher.x = Math.floor(player.x +65 ); //Kescher folgt Spongeboy
+			catcher.y = Math.floor(player.y -80);
+
+		}
+	}*/
 }
 
 /// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
 
 function collectJellyfish(catcher, quallen)
 {   
-	score += 1;
-	scoreText.text = 'Score: ' + score;   
-	quallen.kill();
+	if (catchButton.isDown)
+	{
+		score += 1;
+		scoreText.text = 'Score: ' + score;   
+		quallen.kill();
+	}
 } 
 
 function killPlayer(player,quallen)
@@ -418,11 +539,19 @@ function gameOver()
 	catcher.kill();
 	playerDead = true;
 	player.animations.play("die");
-	deathSound.play('', 0, 0.5, false);
-	
-	//game.state.restart();
-	score = 0;
-	life = 100;
+	//deathSound.play('', 0, 0.5, false);
+
+	var gameOvertext = game.add.text(80,80, 'Press to restart', 
+									{font: '50px Arial', fill: '#ffffff'}); 
+
+	var restartKey = game.input.keyboard.addKey(Phaser.Keyboard.R); 
+	restartKey.onDown.addOnce(function(){
+		//game.state.restart(); 
+		score = 0;
+		life = 100;
+
+
+	}); 
 }
 
 function debug()
