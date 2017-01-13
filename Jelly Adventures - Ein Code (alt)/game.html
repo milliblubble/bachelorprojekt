@@ -38,11 +38,11 @@ function preload()
 	game.load.image("steeringWheel", "assets/Object/SteeringWheel.png");  // Rusty Cancer Schild
 
 	//LADEN DER SCHILDER
-	/*game.load.image("schild_laufen", "assets/Object/laufen.png");  
+	game.load.image("schild_laufen", "assets/Object/laufen.png");  
 	game.load.image("schild_springen", "assets/Object/springen.png"); 
 	game.load.image("schild_fangen", "assets/Object/fangen.png"); 
 	game.load.image("schild_gefahr", "assets/Object/danger.png"); 
-	game.load.image("schild_burger", "assets/Object/power.png");*/
+	game.load.image("schild_burger", "assets/Object/power.png");
 	
 	// LADEN DER SPRITESHEETS
 	game.load.spritesheet("player", "assets/Sprites/Spongeboy3.png",64,62); // Spieler-Sprite
@@ -50,7 +50,7 @@ function preload()
 	game.load.spritesheet("bubble", "assets/Sprites/Bubble.png", 64, 64);  // Quallen-Sprite
 	game.load.spritesheet("catcher", "assets/Sprites/Kescher.png",64,128); //Catcher- Sprites
 	game.load.spritesheet("burger", "assets/Object/burger.png"); 
-
+	game.load.spritesheet("cancer", "assets/Sprites/MrCancer.png",48,62);
 
 	//EINSTELLEN DER MUSIK 
 	game.load.audio('fun', 'assets/Audio/fun.mp3');  // Backgroundmusik FUN-Song
@@ -85,7 +85,7 @@ var test;
 
 
 // GRUPPENVARIABLE
-var quallen, bubbles;
+var quallen, bubbles, mrcancer;
 
 //HEALTH & SCORE VARIABLEN 
 
@@ -107,6 +107,8 @@ function create()
 	createControl();  // ERSTELLUNG DER STEUERUNG
 	createQuallen();  // ERSTELLT QUALLEN AUF DER MAP	
 
+	createMrCancer(); // Erstellt MrCancer
+	
 	createForeground(); // ERSTELLT DEN VORDERGRUND
 	createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
 	createBurger(); //HEALTHPOTION
@@ -159,11 +161,11 @@ function createWorld()
 		map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
 		background = game.add.tileSprite(0,map.height+320, 10000, 320, "sandBG");
 	
-		 /*map.addTilesetImage("Sign_Walk", "schild_laufen");
+		map.addTilesetImage("Sign_Walk", "schild_laufen");
 		map.addTilesetImage("Sign_Jump", "schild_springen");
 		map.addTilesetImage("Sign_Catch", "schild_fangen");
 		map.addTilesetImage("Sign_Power", "schild_burger");
-		map.addTilesetImage("Sign_Danger", "schild_gefahr"); */
+		map.addTilesetImage("Sign_Danger", "schild_gefahr");
 		
 	}
 	else if(level == 2)
@@ -279,6 +281,20 @@ function createQuallen()
 	// ANNIMATION DER QUALEN
 	quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
 	quallen.callAll('animations.play', 'animations', 'wackeln');
+}
+
+function createMrCancer()
+{
+	mrcancer = game.add.group();
+	mrcancer.enableBody = true;
+	mrcancer.enableBodyDebug = true;
+	
+	mrcancer.physicsBodyType = Phaser.Physics.ARCADE; 
+	game.physics.enable(mrcancer, Phaser.Physics.ARCADE); 
+	mrcancer.inputEnabled = true; 
+	
+	map.createFromObjects('Object Layer', "Cancer", 'cancer', 0, true, false, mrcancer);
+	
 }
 
 function createBubbleGroup()
