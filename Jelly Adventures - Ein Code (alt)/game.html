@@ -51,7 +51,7 @@ function preload()
 	game.load.image("spongeMouthClosed","assets/Sprites/SpongeboyDialogueMouthClosed.png");
 	
 	// LADEN DER SPRITESHEETS
-	game.load.spritesheet("player", "assets/Sprites/Spongeboy3.png",64,62); // Spieler-Sprite
+	game.load.spritesheet("player", "assets/Sprites/Spongeboy4.png",64,64); // Spieler-Sprite
 	game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
 	game.load.spritesheet("bubble", "assets/Sprites/Bubble.png", 64, 64);  // Quallen-Sprite
 	game.load.spritesheet("catcher", "assets/Sprites/Kescher.png",64,128); //Catcher- Sprites
@@ -258,13 +258,13 @@ function createPlayer()
 	player.body.collideWorldBounds = true;
 
 	// Animation erstellen
-	player.animations.add("right",[2,3],5,true);
+	player.animations.add("right",[2,3],11,true);
 	player.animations.add("left",[0,1],11, true);
-	player.animations.add("catchR", [3,4,6], 11, true);
-	player.animations.add("catchL", [0,11,2], 11, true);
+	player.animations.add("catchR", [3,4,2], 11, true);
+	player.animations.add("catchL", [0,10,2], 11, true);
 	//player.animations.add("catch", [4], 5, true);
 	player.animations.add("jumpR", [5],11,true);
-	player.animations.add("jumpL", [10],11,true);
+	player.animations.add("jumpL", [9],11,true);
 	player.animations.add("die", [6,7,8], 2, false);
 
   
