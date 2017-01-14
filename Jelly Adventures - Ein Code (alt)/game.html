@@ -190,7 +190,7 @@ function createWorld()
 		map.addTilesetImage("Spongeboy_House","spongeboy_house");
 		map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
 		map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
-		background = game.add.tileSprite(0,map.height+800, 10000, 320, "sandBG");
+		background = game.add.tileSprite(0,map.height + 850, 10000, 320, "sandBG");
 	
 		map.addTilesetImage("Schild_Laufen", "schild_laufen");
 		map.addTilesetImage("Schild_Springen", "schild_springen");
@@ -254,18 +254,21 @@ function createPlayer()
 	game.physics.enable(player, Phaser.Physics.ARCADE);  
 
 	// Physic für den Player wird gesetzt
+	player.body.gravity.y = 300;
 	player.body.bounce.y = 0.1;
 	player.body.collideWorldBounds = true;
 
 	// Animation erstellen
-	player.animations.add("right",[2,3],11,true);
-	player.animations.add("left",[0,1],11, true);
+	player.animations.add("right",[2,3],5,true);
+	player.animations.add("left",[0,1],5, true);
 	player.animations.add("catchR", [3,4,2], 11, true);
 	player.animations.add("catchL", [0,10,2], 11, true);
 	//player.animations.add("catch", [4], 5, true);
 	player.animations.add("jumpR", [5],11,true);
 	player.animations.add("jumpL", [9],11,true);
 	player.animations.add("die", [6,7,8], 2, false);
+
+	player.direction = "right";
 
   
 	// Die Kamera folgt dem Spieler
@@ -296,10 +299,8 @@ function createCatcher(){
 	catcher.body.moves = false;
 	catcher.body.collideWorldBounds = true; 
 
-	catcher.animations.add("idler", [0],6, true); 
-	catcher.animations.add("idlel", [2], 6, true); 
-	catcher.animations.add("activeR", [1,0], 6, true); 
-	catcher.animations.add("activeL", [3,2], 6, true); 
+	catcher.direction = "right";
+
 	catcher.animations.add("jumpR", [4], 6);
 	catcher.animations.add("jumpL", [5], 6);
 }
@@ -430,91 +431,110 @@ function createScoreBar(){
 
 function updatePlayerControl()
 {
-// Resetet die Player Velocity
+	// Resetet die Player Velocity
 	player.body.velocity.x = 0; 
 
 	if(playerDead != true){
 
-		player.body.velocity.x = 0;
-
 		if(cursors.left.isDown)     //funktioniert
 		{
 			// Bewegt sich nach links
+			player.direction = "left";
 			player.body.velocity.x = -250;
 			player.animations.play("left");
 		}
-		else
+		else if (cursors.right.isDown)  //funktioniert
 		{
-			if (cursors.right.isDown)  //funktioniert
-			{
-				// Bewegt sich nach rechts
-				player.body.velocity.x = 250;
-				player.animations.play("right");
+			// Bewegt sich nach rechts
+			player.direction = "right";
+			player.body.velocity.x = 250;
+			player.animations.play("right");
+		}
+		else 						// funtioniert, aber soll verbessert werden
+		{
+			//Still stehenbleiben		
+			player.animations.stop();
+			if(player.direction == "left"); {
+				player.frame = 1;		
 			}
-			else 						// funtioniert
-			{
-				//Still stehenbleiben
-				player.animations.stop();
-				player.frame = 2;
+			if(player.direction == "right"){
+				player.frame = 2;			
 			}
 		}
-
+	
 		// Erlaubt das Springen mit der Pfeiltaste ODER Leertaste, wenn der boden berührt wird.
 		if ((sprungButton.isDown || cursors.up.isDown) && cursors.left.isDown && player.body.onFloor())    //funktioniert
 		{
-		//	player.frame = 9;
+			player.direction = "left";
 			player.animations.play("jumpL");
 			player.body.velocity.y = -500;
 			jSound.play('', 0, 0.5, false);
 		}
-		else if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor() && cursors.right.isDown) {  //funktioniert
+		else if ((sprungButton.isDown || cursors.up.isDown)  && cursors.right.isDown && player.body.onFloor()) 	//funktioniert
+		{  
+			player.direction = "right";
 			player.animations.play("jumpR");
 			player.body.velocity.y = -500;
 			jSound.play('', 0, 0.5, false);
 		}
-		else if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor()) {    //funktioniert
-			//player.animations.play("jumpR");
-			player.frame = 5;
+		else if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor()) 	//funktioniert nicht
+		{    
+			if(player.direction == "left") {
+				player.frame = 9;
+			}
+			if(player.direction == "right") {
+				player.frame = 5;
+			}
 			player.body.velocity.y = -400;
 			jSound.play('', 0, 0.5, false);
 		}
-		else if(player.body.onFloor() !== true && cursors.right.isDown)
+		else if(player.body.onFloor() !== true && cursors.right.isDown) 	//funktioniert
 		{
+			player.direction = "right"
 			player.frame = 5;
 		}
-		else if(player.body.onFloor() !== true && cursors.left.isDown)
+		else if(player.body.onFloor() !== true && cursors.left.isDown) 		//funktioiert
 		{
+			player.direction = "left"
 			player.frame = 9;
 		}
-		else if(player.body.onFloor() !== true) {
-			player.frame = 5;
+		else if (player.body.onFloor() !== true) {
+			if(player.direction == "left") {
+				player.frame = 9;
+			}
+			if(player.direction == "right") {
+				player.frame = 5;
+			}
 		}
-		
-		  
+	
 		//catchButton.onDown.add(function(){
-		if(catchButton.isDown) {
-
+    	if(catchButton.isDown) 
+    	{
 			if(cursors.left.isDown) {
+				player.direction = "left";
 				player.frame = 10;
 			}
-			else if(cursors.right.isDown){
+			else if(cursors.right.isDown) {
+				player.direction = "right";
 				player.frame = 4;
 			}
 			else {
-				player.frame = 4;
+				if(player.direction == "left") {
+					player.frame = 10;		
+				}
+				if(player.direction == "right"){
+					player.frame = 4;			
+				}
 			}
-		
-
-						
+    
 			var x = Math.floor(Math.random()*3+1);
-				
-			if(x===1){
+			if(x===1) {
 				woosh1.play('', 0, 0.5, false);
 			}
-			if(x===2){
+			if(x===2) {
 				woosh2.play('', 0, 0.5, false);
 			}
-			if(x===3){
+			if(x===3) {
 				woosh3.play('', 0, 0.5, false);
 			}
 		}
@@ -526,63 +546,66 @@ function updateCatcherControl()
 
 	if (cursors.right.isDown)
 	{
-		catcher.animations.play("idler"); 
+		catcher.direction = "right";
+		catcher.frame = 0; 
 	}
 	else if (cursors.left.isDown)
 	{
- 	  	catcher.animations.play("idlel"); 
- 	  	catcher.x = Math.floor(player.x +60); //Kescher folgt Spongeboy
-        catcher.y = Math.floor(player.y -65);
+		catcher.direction = "left";
+ 	  	catcher.frame = 2;
+ 	    catcher.x = Math.floor(player.x + 50); //Kescher folgt Spongeboy
+        catcher.y = Math.floor(player.y - 65);
 	}
-
  	else
 	{
-		catcher.animations.stop(); 
- 	  	catcher.frame = 0; 
+		if(catcher.direction == "left") {
+			catcher.frame = 2;	
+		 	catcher.x = Math.floor(player.x + 50); //Kescher folgt Spongeboy
+        	catcher.y = Math.floor(player.y - 65);
+		}
+		if(catcher.direction == "right"){
+			catcher.frame = 0;				
+		}
  	}
-
 
 	if (catchButton.isDown ) 
 	{
 		if(cursors.right.isDown) 
-		{
-			catcher.animations.play("activeR"); 
+		{	
+			catcher.direction = "right";
+			catcher.frame = 1;
+			catcher.x = Math.floor(player.x + 60);
 		}
 		else if (cursors.left.isDown)
 		{
-			catcher.animations.play("activeL");
+			catcher.direction = "left";
+			catcher.frame = 3;
 			catcher.x = Math.floor(player.x); //Kescher folgt Spongeboy
-			catcher.y = Math.floor(player.y -60); 
+			catcher.y = Math.floor(player.y - 60); 
 		}
 		else if (sprungButton.isDown && cursors.right.isDown) 
 		{
+			catcher.direction = "right";
 			catcher.animation.play("jumpR"); 
 		}
 		else if (sprungButton.isDown && cursors.left.isDown) 
 		{
+			catcher.direction = "left";
 			catcher.animations.play("jumpL"); 
 		}
 		else 
 		{
-			catcher.animations.play("activeR"); 
+			if(catcher.direction == "left") {
+				catcher.frame = 3;
+				catcher.x = Math.floor(player.x); //Kescher folgt Spongeboy
+				catcher.y = Math.floor(player.y - 60); 
+			}
+			if(catcher.direction == "right"){
+				catcher.frame = 1;	
+				catcher.x = Math.floor(player.x + 60);	
+			}
 		}
 	}
-
-	/*if(sprungButton.isDown){
-		if(cursors.left.isDown){
-			catcher.animations.play("idlel");
-			catcher.x = Math.floor(player.x +65 ); //Kescher folgt Spongeboy
-			catcher.y = Math.floor(player.y -80 );
-
-		}
-
-		else {
-			catcher.animations.play("idler");
-			catcher.x = Math.floor(player.x +65 ); //Kescher folgt Spongeboy
-			catcher.y = Math.floor(player.y -80);
-
-		}
-	}*/
 }
 
 /// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
