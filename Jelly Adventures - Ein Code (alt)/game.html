@@ -44,6 +44,12 @@ function preload()
 	game.load.image("schild_gefahr", "assets/Object/danger.png"); 
 	game.load.image("schild_burger", "assets/Object/power.png");
 	
+	//Laden Dialog
+	game.load.image("cancerMouthOpen","assets/Sprites/MrCancerDialogueMouthOpen.png");
+	game.load.image("cancerMouthClosed","assets/Sprites/MrCancerDialogueMouthClosed.png");
+	game.load.image("spongeMouthOpen","assets/Sprites/SpongeboyDialogueMouthOpen.png");
+	game.load.image("spongeMouthClosed","assets/Sprites/SpongeboyDialogueMouthClosed.png");
+	
 	// LADEN DER SPRITESHEETS
 	game.load.spritesheet("player", "assets/Sprites/Spongeboy3.png",64,62); // Spieler-Sprite
 	game.load.spritesheet('qualle', "assets/Sprites/Qualle01.png", 64, 64);  // Quallen-Sprite
@@ -83,6 +89,30 @@ var life = 100;
 var score= 0; 
 var test;
 
+// Variablen für den Dialog
+var dialog;
+var content = [];
+
+var dialogWinCancer = 
+[
+"[ Mr. Cancer ]\n Das hast Du gut gemacht, Spongeboy!\n Wag Dich hinaus auf die größeren Felder, dort sind noch viele weitere Quallen\n und Herausforderungen." 
+];
+
+var dialogWinSpongeboy = 
+[
+"[ Spongeboy ]\n Aye Are Mr. Cancer!"
+];
+
+var dialogLoseContent = 
+[
+"[ Mr. Cancer ]\n Immer langsam, Meen Jong, wir brauchen noch einige Quallen für unser Gelee.\n Geh noch mal zurück und sammel noch einige Quallen."
+];
+
+var line = [];
+var wordIndex = 0;
+var lineIndex = 0;
+var wordDelay = 120;
+var lineDelay = 400;
 
 // GRUPPENVARIABLE
 var quallen, bubbles, mrcancer;
@@ -113,9 +143,10 @@ function create()
 	createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
 	createBurger(); //HEALTHPOTION
 
+	createDialog(); // variablen zuweisung mit aussehen des textes
+	
 	createBubbleGroup();
 	
-	//debug();
 	//create score and healtbar
 }
 
@@ -133,6 +164,7 @@ function update()
 	catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
     catcher.y = Math.floor(player.y -65);
 	
+	levelOneDialog(); // Abspielen des Dialogs in Level 1
 	
 	updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
 	updateCatcherControl(); 
@@ -144,7 +176,6 @@ function update()
 	// ZEIGT HITBOXEN
 	//debug();
 }
-
 
 function createWorld()
 {
@@ -159,7 +190,7 @@ function createWorld()
 		map.addTilesetImage("Spongeboy_House","spongeboy_house");
 		map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
 		map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
-		background = game.add.tileSprite(0,map.height+320, 10000, 320, "sandBG");
+		background = game.add.tileSprite(0,map.height+800, 10000, 320, "sandBG");
 	
 		map.addTilesetImage("Schild_Laufen", "schild_laufen");
 		map.addTilesetImage("Schild_Springen", "schild_springen");
@@ -239,7 +270,17 @@ function createPlayer()
   
 	// Die Kamera folgt dem Spieler
 	game.camera.follow(player);   
-  
+	
+	// zuweisung der spongeboy bilder und positionierung
+	spongeOpen = game.add.sprite(0, 420, 'spongeMouthOpen');
+	spongeOpen.scale.setTo(2,2);
+	spongeOpen.fixedToCamera = true;
+	spongeOpen.visible = false;
+	
+	spongeClosed = game.add.sprite(0,420, 'spongeMouthClosed');
+	spongeClosed.scale.setTo(2,2);
+	spongeClosed.fixedToCamera = true;
+	spongeClosed.visible = false;
 }
 
 
@@ -283,6 +324,7 @@ function createQuallen()
 	quallen.callAll('animations.play', 'animations', 'wackeln');
 }
 
+// MrCancer erstellen
 function createMrCancer()
 {
 	mrcancer = game.add.group();
@@ -295,6 +337,26 @@ function createMrCancer()
 	
 	map.createFromObjects('Object Layer', "Cancer", 'cancer', 0, true, false, mrcancer);
 	
+	// zuweisung der mrcancer bilder und positionierung
+	cancerOpen = game.add.sprite(0, 420, 'cancerMouthOpen');
+	cancerOpen.scale.setTo(2,2);
+	cancerOpen.fixedToCamera = true;
+	cancerOpen.visible = false;
+	
+	cancerClosed = game.add.sprite(0,420, 'cancerMouthClosed');
+	cancerClosed.scale.setTo(2,2);
+	cancerClosed.fixedToCamera = true;
+	cancerClosed.visible = false;
+}
+
+function createDialog()
+{
+	dialog = game.add.text(125,420, '', {
+		fontSize: '18px', 
+		fill: '#000', 
+		backgroundColor: '#c2b280'		
+	});
+	dialog.fixedToCamera = true;
 }
 
 function createBubbleGroup()
@@ -569,6 +631,129 @@ function gameOver()
 
 	}); 
 }
+
+// starten des dialogs
+function levelOneDialog()
+{
+	if(checkOverlap(player, mrcancer))
+	{
+		if(score >= 1)
+		{	
+			nextLine(dialogWinCancer);
+			game.time.events.add(2000, cancerMouthC, this);
+			game.time.events.add(2000, cancerMouthO, this);
+			game.time.events.add(2000, cancerMouthC, this);
+			game.time.events.add(9000, levelOneWin, this);
+		}
+		else
+		{
+			nextLine(dialogLoseCancer);
+			cancerOpen.visible = false;
+			cancerClosed.visible = true;
+			game.time.events.add(1000, cancerMouth, this);
+		}
+	}
+	else
+	{
+		dialog.text = "";
+		cancerOpen.visible = false;
+		cancerClosed.visible = false;
+		spongeOpen.visible = false;
+		spongeClosed.visible = false;
+	}
+}
+
+// starten wenn man gewonnen hat -- im moment wird resetet muss aber zu level 2
+function levelOneWin()
+{
+	cancerOpen.destroy();
+	cancerClosed.destroy();
+	
+	spongeClosed.visible = true;
+	//dialog.text = "";
+	lineIndex = 0;
+	nextLine(dialogWinSpongeboy);
+	
+	game.time.events.add(2000, restart, this);
+}
+
+// restart funktion
+function restart()
+{
+	bMusic.stop();
+	game.state.restart();
+}
+
+// zum öffnen und schließen des mundes
+function spongeMouth()
+{
+	spongeOpen.visible = true;
+	spongeClosed.visible = false;
+}
+
+// zum öffnen und schließen des mundes
+function cancerMouthO()
+{
+	cancerOpen.visible = true;
+	cancerClosed.visible = false;
+}
+function cancerMouthC()
+{
+	cancerOpen.visible = false;
+	cancerClosed.visible = true;
+}
+
+// nextLine und nextWord ist gedacht um einzelne worte auszugeben und nicht den kompletten text
+function nextLine(c) {
+	content = c;
+	
+    if (lineIndex == 1)
+    {
+        //  We're finished
+        return;
+    }
+
+    //  Split the current line on spaces, so one word per array element
+    line = content[lineIndex].split(' ');
+
+    //  Reset the word index to zero (the first word in the line)
+    wordIndex = 0;
+
+    //  Call the 'nextWord' function once for each word in the line (line.length)
+    game.time.events.repeat(wordDelay, line.length, nextWord, this);
+
+    //  Advance to the next line
+    lineIndex++;
+}
+
+function nextWord() {
+
+    //  Add the next word onto the text string, followed by a space
+    dialog.text = dialog.text.concat(line[wordIndex] + " ");
+
+    //  Advance the word index to the next word in the line
+    wordIndex++;
+
+    //  Last word?
+    if (wordIndex == line.length)
+    {
+        //  Add a carriage return
+        dialog.text = dialog.text.concat("\n");
+
+        //  Get the next line after the lineDelay amount of ms has elapsed
+        game.time.events.add(lineDelay, nextLine, this);
+    }
+}
+
+function checkOverlap(spriteA, spriteB) {
+
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+
+}
+
 
 function debug()
 { 
