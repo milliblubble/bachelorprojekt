@@ -121,7 +121,9 @@ var lineDelay = 400;
 // GRUPPENVARIABLE
 var quallen, bubbles, mrcancer;
 
-//HEALTH & SCORE VARIABLEN 
+var firstCollision = true;
+var firstCollisionDying = true;
+var timeCheck;
 
 
 function create() 
@@ -131,6 +133,7 @@ function create()
 
 	// FPS ANZEIGE
 	game.time.advancedTiming = true;
+	//game.time.events.add(Phaser.Timer.SECOND * 4, killPlayer, this);
 	
 	createWorld();  // ERSTELLT DIE WELT
 	createMusic();  // EINSTELLUNGEN DER MUSIK
@@ -161,7 +164,12 @@ function update()
 	game.debug.text(game.time.fps, game.width-50, 50, "#00ff00");
 
 	game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
-	game.physics.arcade.overlap(player,quallen, killPlayer, null, this); // VERLETZT SPIELER 
+	if(firstCollision == true  && firstCollisionDying == true) {
+		game.physics.arcade.overlap(player,quallen, killPlayer, null, this); // VERLETZT SPIELER 
+	}
+	if(game.time.now - timeCheck > 2000) {
+		firstCollision = true;
+	}
 	game.physics.arcade.overlap(catcher,quallen, collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
 	game.physics.arcade.overlap(player,burger, getPower, null, this);
 	game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
@@ -644,19 +652,22 @@ function killPlayer(player,quallen)
 		life -= 10;  
 		shock.play('', 0, 0.3, false);
 		lifeText.text = 'Health: '+ life +' %';
-		quallen.kill();
 		if(player.direction == "right") {
 			player.frame = 11;
 		}
 		if(player.direction == "left") {
 			player.frame = 12;
 		}
+		firstCollision = false;
+		timeCheck = game.time.now;
 	}
 	if (life <= 0)
 	{
+		firstCollisionDying = false;
 		gameOver();
-	} 
+	}
 }
+
 
 function gameOver()
 {
