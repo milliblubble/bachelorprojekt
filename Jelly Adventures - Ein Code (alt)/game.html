@@ -133,7 +133,6 @@ function create()
 
 	// FPS ANZEIGE
 	game.time.advancedTiming = true;
-	//game.time.events.add(Phaser.Timer.SECOND * 4, killPlayer, this);
 	
 	createWorld();  // ERSTELLT DIE WELT
 	createMusic();  // EINSTELLUNGEN DER MUSIK
@@ -154,8 +153,6 @@ function create()
 	
 	createBubbleGroup();
 	createBubble();
-	
-	//create score and healtbar
 }
 
 function update() 
@@ -196,8 +193,6 @@ function update()
 function createWorld()
 {
 	game.stage.backgroundColor ="#15DAFF";
-
-
 	//background.fixedToCamera = true;
 
 	if(level == 1)
@@ -227,14 +222,10 @@ function createWorld()
     bgLayer1 = map.createLayer("Background Layer 1");
     pLayer = map.createLayer("Platform Layer");
 
-
-    // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
+   // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
 
     map.setCollisionBetween(1, 500, true, 'Platform Layer'); 
-
-    map.setCollisionBetween(1, 100, true, 'Platform Layer');
-
-
+	map.setCollisionBetween(1, 100, true, 'Platform Layer');
 
     // Anzeigen der Kollisionbox
     pLayer.resizeWorld();
@@ -286,10 +277,11 @@ function createPlayer()
 	player.animations.add("jumpL", [9],11,true);
 	player.animations.add("die", [6,7,8], 2, false);
 
+
+	//Richtung
 	player.direction = "right";
 
-  
-	// Die Kamera folgt dem Spieler
+  	// Die Kamera folgt dem Spieler
 	game.camera.follow(player);   
 	
 	// zuweisung des spongeboy sprites und positionierung
@@ -376,6 +368,7 @@ function createBubbleGroup()
 	bubbles.enableBody = true;
 	bubbles.physicsBodyType = Phaser.Physics.ARCADE;
 }
+
 function createBubble()
 {
 	map.createFromObjects('Object Layer', "Bubble", "bubble", 3, true, false, bubbles);
@@ -384,11 +377,11 @@ function createBubble()
 	bubbles.setAll("body.immovable", true);
 }
 
-
 function destroyBubble(bubbles, pLayer)
 {
 	bubbles.kill();
 }
+
 //ERSTELLT DIE HEALTHPOTION  
 function createBurger()
 {
@@ -400,8 +393,8 @@ function createBurger()
 	burger.body.collideWorldBounds = true; 
 	burger.inputEnabled = true; //TEST 
 	burger.input.enableDrag(); //TEST
-
 }
+
 // Funktion zum Einstellen der Steuerung
 function createControl()
 {
@@ -424,7 +417,6 @@ function createMusic()
 	deathSound = game.add.audio('deathSound');
 	eatingSound = game.add.audio('eatingSound');
 	shock = game.add.audio('shock');
-	
 }
 
 // Funktion zum Loopen der Musik
@@ -450,7 +442,7 @@ function updatePlayerControl()
 	// Resetet die Player Velocity
 	player.body.velocity.x = 0; 
 
-	if(playerDead != true){
+//	if(playerDead != true){
 
 		if(cursors.left.isDown)     //funktioniert
 		{
@@ -554,7 +546,7 @@ function updatePlayerControl()
 				woosh3.play('', 0, 0.5, false);
 			}
 		}
-	}
+	//}
 }
 
 function updateCatcherControl()
@@ -676,17 +668,18 @@ function gameOver()
 	playerDead = true;
 	player.animations.play("die");
 	deathSound.play('', 0, 0.5, false);
+	firstCollisionDying = false;
 
-	var gameOvertext = game.add.text(80,80, 'Press to restart', 
+	var gameOvertext = game.add.text(400,150, 'Game over! Press R to restart', 
 									{font: '50px Arial', fill: '#ffffff'}); 
+	gameOvertext.anchor.set(0.5); 
+    gameOvertext.fixedToCamera= true;
 
 	var restartKey = game.input.keyboard.addKey(Phaser.Keyboard.R); 
 	restartKey.onDown.addOnce(function(){
-		//game.state.restart(); 
+		game.state.restart(); 
 		score = 0;
 		life = 100;
-
-
 	}); 
 }
 
@@ -790,7 +783,7 @@ function checkOverlap(spriteA, spriteB) {
 // wenn spongebob zu weit unten ist stirbt er
 function checkOverlapAbyss()
 {
-	if(player.y == 1151)
+	if(player.y == 1151 && firstCollisionDying == true)
 	{
 		gameOver();
 	}
