@@ -146,6 +146,7 @@ function create()
 	createDialog(); // variablen zuweisung mit aussehen des textes
 	
 	createBubbleGroup();
+	createBubble();
 	
 	//create score and healtbar
 }
@@ -205,7 +206,6 @@ function createWorld()
 		map = game.add.tilemap("level_02");
 		background = game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
         map.addTilesetImage("SteeringWheel","steeringWheel");
-		createBubble();
 		game.time.events.loop(Phaser.Timer.SECOND * 10, createBubble, this);
 	}
     map.addTilesetImage("tile-sheet","tiles");
