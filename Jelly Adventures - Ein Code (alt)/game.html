@@ -125,7 +125,6 @@ var firstCollision = true;
 var firstCollisionDying = true;
 var timeCheck;
 
-
 function create() 
 {
 	game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -164,7 +163,7 @@ function update()
 	if(firstCollision == true  && firstCollisionDying == true) {
 		game.physics.arcade.overlap(player,quallen, killPlayer, null, this); // VERLETZT SPIELER 
 	}
-	if(game.time.now - timeCheck > 2000) {
+	if(game.time.now - timeCheck > 1000) {
 		firstCollision = true;
 	}
 	game.physics.arcade.overlap(catcher,quallen, collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
@@ -442,7 +441,7 @@ function updatePlayerControl()
 	// Resetet die Player Velocity
 	player.body.velocity.x = 0; 
 
-//	if(playerDead != true){
+	if(playerDead !== true){
 
 		if(cursors.left.isDown)     //funktioniert
 		{
@@ -546,7 +545,7 @@ function updatePlayerControl()
 				woosh3.play('', 0, 0.5, false);
 			}
 		}
-	//}
+	}
 }
 
 function updateCatcherControl()
@@ -677,6 +676,7 @@ function gameOver()
 
 	var restartKey = game.input.keyboard.addKey(Phaser.Keyboard.R); 
 	restartKey.onDown.addOnce(function(){
+		playerDead = false;
 		game.state.restart(); 
 		score = 0;
 		life = 100;
@@ -794,7 +794,6 @@ function debug()
 	// ANZEIGE DER HITBOXEN
 	game.debug.body(player);  // Spieler-Hitbox
 	pLayer.debug = true; // Plattform Hitbox
-
 }
 
 
