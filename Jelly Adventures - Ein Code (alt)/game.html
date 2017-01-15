@@ -45,10 +45,8 @@ function preload()
 	game.load.image("schild_burger", "assets/Object/power.png");
 	
 	//Laden Dialog
-	game.load.image("cancerMouthOpen","assets/Sprites/MrCancerDialogueMouthOpen.png");
-	game.load.image("cancerMouthClosed","assets/Sprites/MrCancerDialogueMouthClosed.png");
-	game.load.image("spongeMouthOpen","assets/Sprites/SpongeboyDialogueMouthOpen.png");
-	game.load.image("spongeMouthClosed","assets/Sprites/SpongeboyDialogueMouthClosed.png");
+	game.load.spritesheet("cancerFace", "assets/Sprites/MrCancerDialogue.png",62,62);
+	game.load.spritesheet("spongeFace", "assets/Sprites/SpongeboyDialogue.png",64,64);
 	
 	// LADEN DER SPRITESHEETS
 	game.load.spritesheet("player", "assets/Sprites/Spongeboy4.png",64,64); // Spieler-Sprite
@@ -275,16 +273,12 @@ function createPlayer()
 	// Die Kamera folgt dem Spieler
 	game.camera.follow(player);   
 	
-	// zuweisung der spongeboy bilder und positionierung
-	spongeOpen = game.add.sprite(0, 420, 'spongeMouthOpen');
-	spongeOpen.scale.setTo(2,2);
-	spongeOpen.fixedToCamera = true;
-	spongeOpen.visible = false;
-	
-	spongeClosed = game.add.sprite(0,420, 'spongeMouthClosed');
-	spongeClosed.scale.setTo(2,2);
-	spongeClosed.fixedToCamera = true;
-	spongeClosed.visible = false;
+	// zuweisung des spongeboy sprites und positionierung
+	spongeFace = game.add.sprite(0,420, 'spongeFace');
+	spongeFace.scale.setTo(2,2);
+	spongeFace.fixedToCamera = true;
+	spongeFace.visible = false;
+	spongeFace.animations.add('talk', [0,1],2, true);
 }
 
 
@@ -339,16 +333,12 @@ function createMrCancer()
 	
 	map.createFromObjects('Object Layer', "Cancer", 'cancer', 0, true, false, mrcancer);
 	
-	// zuweisung der mrcancer bilder und positionierung
-	cancerOpen = game.add.sprite(0, 420, 'cancerMouthOpen');
-	cancerOpen.scale.setTo(2,2);
-	cancerOpen.fixedToCamera = true;
-	cancerOpen.visible = false;
-	
-	cancerClosed = game.add.sprite(0,420, 'cancerMouthClosed');
-	cancerClosed.scale.setTo(2,2);
-	cancerClosed.fixedToCamera = true;
-	cancerClosed.visible = false;
+	// zuweisung des mrcancer sprites und positionierung
+	cancerFace = game.add.sprite(0,420, 'cancerFace');
+	cancerFace.scale.setTo(2,2);
+	cancerFace.fixedToCamera = true;
+	cancerFace.visible = false;
+	cancerFace.animations.add('talk', [0,1],2, true);
 }
 
 function createDialog()
@@ -681,37 +671,31 @@ function levelOneDialog()
 		if(score >= 1)
 		{	
 			nextLine(dialogWinCancer);
-			game.time.events.add(2000, cancerMouthC, this);
-			game.time.events.add(2000, cancerMouthO, this);
-			game.time.events.add(2000, cancerMouthC, this);
-			game.time.events.add(9000, levelOneWin, this);
+			cancerFace.visible = true;
+			cancerFace.play("talk");
+			game.time.events.add(5000, levelOneWin, this);
 		}
 		else
 		{
-			nextLine(dialogLoseCancer);
-			cancerOpen.visible = false;
-			cancerClosed.visible = true;
-			game.time.events.add(1000, cancerMouth, this);
+			nextLine(dialogLoseContent);
+			cancerFace.play("talk");
 		}
 	}
 	else
 	{
 		dialog.text = "";
-		cancerOpen.visible = false;
-		cancerClosed.visible = false;
-		spongeOpen.visible = false;
-		spongeClosed.visible = false;
+		cancerFace.visible = false;
+		spongeFace.visible = false;
 	}
 }
 
 // starten wenn man gewonnen hat -- im moment wird resetet muss aber zu level 2
 function levelOneWin()
 {
-	cancerOpen.destroy();
-	cancerClosed.destroy();
-	
-	spongeClosed.visible = true;
-	//dialog.text = "";
+	cancerFace.destroy();
+	spongeFace.visible = true;
+	spongeFace.play("talk");
+	dialog.text = "";
 	lineIndex = 0;
 	nextLine(dialogWinSpongeboy);
 	
@@ -721,27 +705,9 @@ function levelOneWin()
 // restart funktion
 function restart()
 {
+	level = 2;
 	bMusic.stop();
 	game.state.restart();
-}
-
-// zum öffnen und schließen des mundes
-function spongeMouth()
-{
-	spongeOpen.visible = true;
-	spongeClosed.visible = false;
-}
-
-// zum öffnen und schließen des mundes
-function cancerMouthO()
-{
-	cancerOpen.visible = true;
-	cancerClosed.visible = false;
-}
-function cancerMouthC()
-{
-	cancerOpen.visible = false;
-	cancerClosed.visible = true;
 }
 
 // nextLine und nextWord ist gedacht um einzelne worte auszugeben und nicht den kompletten text
