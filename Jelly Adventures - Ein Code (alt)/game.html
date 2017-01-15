@@ -62,6 +62,9 @@ function preload()
 	game.load.audio('woosh1', 'assets/Audio/woosh01.mp3'); // catcher sound
 	game.load.audio('woosh2', 'assets/Audio/woosh02.mp3');
 	game.load.audio('woosh3', 'assets/Audio/woosh03.mp3');
+	game.load.audio('deathSound', 'assets/Audio/deathSound.mp3');
+	game.load.audio('eatingSound', 'assets/Audio/eating.mp3');
+	game.load.audio('shock', 'assets/Audio/shock.mp3');
 }
 
 // KARTENVARIABLE
@@ -76,6 +79,9 @@ var jSound;
 var woosh1;
 var woosh2;
 var woosh3;
+var deathSound;
+var eatingSound;
+var shock;
 
 // VARIABLEN FÜR DEN SPIELER 
 var player;
@@ -405,6 +411,9 @@ function createMusic()
 	woosh1 = game.add.audio('woosh1');
 	woosh2 = game.add.audio('woosh2');
 	woosh3 = game.add.audio('woosh3');
+	deathSound = game.add.audio('deathSound');
+	eatingSound = game.add.audio('eatingSound');
+	shock = game.add.audio('shock');
 	
 }
 
@@ -622,6 +631,7 @@ function getPower(player,burger) {
 		life = 100;
 		lifeText.text = 'Health:' + life + '%';
 		burger.kill();
+		eatingSound.play('', 0, 0.5, false);
 	}
 }
 
@@ -630,6 +640,7 @@ function killPlayer(player,quallen)
 	if(life > 0)
 	{
 		life -= 10;  
+		shock.play('', 0, 0.3, false);
 		lifeText.text = 'Health: '+ life +' %';
 		quallen.kill();
 		if(player.direction == "right") {
@@ -651,7 +662,7 @@ function gameOver()
 	catcher.kill();
 	playerDead = true;
 	player.animations.play("die");
-	//deathSound.play('', 0, 0.5, false);
+	deathSound.play('', 0, 0.5, false);
 
 	var gameOvertext = game.add.text(80,80, 'Press to restart', 
 									{font: '50px Arial', fill: '#ffffff'}); 
