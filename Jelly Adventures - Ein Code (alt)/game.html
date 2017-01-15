@@ -172,6 +172,8 @@ function update()
 	
 	levelOneDialog(); // Abspielen des Dialogs in Level 1
 	
+	checkOverlapAbyss(); //Überprüfung ob spongebob runtergefallen ist
+	
 	updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
 	updateCatcherControl(); 
 	
@@ -713,11 +715,11 @@ function levelOneWin()
 	lineIndex = 0;
 	nextLine(dialogWinSpongeboy);
 	
-	game.time.events.add(2000, restart, this);
+	game.time.events.add(2000, level2, this);
 }
 
-// restart funktion
-function restart()
+// level2 funktion
+function level2()
 {
 	level = 2;
 	bMusic.stop();
@@ -772,9 +774,16 @@ function checkOverlap(spriteA, spriteB) {
     var boundsB = spriteB.getBounds();
 
     return Phaser.Rectangle.intersects(boundsA, boundsB);
-
 }
 
+// wenn spongebob zu weit unten ist stirbt er
+function checkOverlapAbyss()
+{
+	if(player.y == 1151)
+	{
+		gameOver();
+	}
+}
 
 function debug()
 { 
