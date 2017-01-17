@@ -1,5 +1,7 @@
 var preload = function (game) {
   this.ready = false;
+  console.log("%cStarting Preloader", "color: white; background: red"); 
+    
 };
 
 

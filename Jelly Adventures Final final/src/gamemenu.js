@@ -1,6 +1,9 @@
 
 
-var gameMenu = function(game){}; 
+var gameMenu = function(game){
+	console.log("%cGameMenu also working", "color: white; background: red"); 
+    
+}; 
 
 gameMenu.prototype = {
 

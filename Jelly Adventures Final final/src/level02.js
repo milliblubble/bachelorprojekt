@@ -1,12 +1,5 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-
-var level01 = function(game){};
-
+var level02 = function(game){};
 // KARTENVARIABLE
 var background;
 var foreground; 
@@ -21,60 +14,29 @@ var woosh1;
 var woosh2;
 var woosh3;
 var deathSound;
-var eatingSound;
+
 var shock;
 
 // VARIABLEN FÜR DEN SPIELER 
 var player;
-var catcher;
-var burger;  
+var catcher;  
 var playerDead = false;
 
 var life = 100; 
 var score= 0; 
 var test;
 
-// Variablen für den Dialog
-var dialog;
-var content = [];
-
-var dialogWinCancer = 
-[
-"[ Mr. Cancer ]\n Das hast Du gut gemacht, Spongeboy!\n Wag Dich hinaus auf die größeren Felder, dort sind noch viele weitere Quallen\n und Herausforderungen." 
-];
-
-var dialogWinSpongeboy = 
-[
-"[ Spongeboy ]\n Aye Are Mr. Cancer!"
-];
-
-var dialogLoseContent = 
-[
-"[ Mr. Cancer ]\n Immer langsam, Meen Jong, wir brauchen noch einige Quallen für unser Gelee.\n Geh noch mal zurück und sammel noch einige Quallen."
-];
-
-var line = [];
-var wordIndex = 0;
-var lineIndex = 0;
-var wordDelay = 120;
-var lineDelay = 400;
-
 // GRUPPENVARIABLE
-var quallen, bubbles, mrcancer;
+var quallen, bubbles;
 
 var firstCollision = true;
 var firstCollisionDying = true;
 var timeCheck;
 
-
-
-level01.prototype = {
-
-create:function () 
+level02.prototype = {
+	create:function () 
 {
-  
-
-    // FPS ANZEIGE
+	// FPS ANZEIGE
     this.game.time.advancedTiming = true;
 
     this.createWorld();  // ERSTELLT DIE WELT
@@ -86,20 +48,17 @@ create:function ()
     this.createControl();  // ERSTELLUNG DER STEUERUNG
     this.createQuallen();  // ERSTELLT QUALLEN AUF DER MAP  
 
-    this.createMrCancer(); // Erstellt MrCancer
-    this.createDialog(); // variablen zuweisung mit aussehen des textes
-
-
     this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
-    this.createBurger(); //HEALTHPOTION
     
-    
+    this.createBubbleGroup();
+    this.createBubble()
+
     //debug();
     //create score and healtbar
-},
 
- update:function() 
+}, 
+update:function() 
 {
     // FPS ANZEIGE
     this.game.debug.text(this.game.time.fps, this.game.width-50, 50, "#00ff00");
@@ -119,7 +78,6 @@ create:function ()
     catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
     catcher.y = Math.floor(player.y -65);
     
-    this.levelOneDialog(); // Abspielen des Dialogs in Level 1
     
     this.checkOverlapAbyss(); //Überprüfung ob spongebob runtergefallen ist
     
@@ -136,43 +94,35 @@ create:function ()
 
 createWorld: function()
 {
-    this.game.stage.backgroundColor ="#15DAFF";
-    //background.fixedToCamera = true;
-    map = this.game.add.tilemap("level_01");
-       map.addTilesetImage("Spongeboy_House","spongeboy_house");
-        map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
-        map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
-        background = this.game.add.tileSprite(0,map.height + 850, 10000, 320, "sandBG");
-    
-        map.addTilesetImage("Schild_Laufen", "schild_laufen");
-        map.addTilesetImage("Schild_Springen", "schild_springen");
-        map.addTilesetImage("Schild_Fangen", "schild_fangen");
-        map.addTilesetImage("Schild_Power", "schild_burger");
-        map.addTilesetImage("Schild_Danger", "schild_gefahr");
+	this.game.stage.backgroundColor ="#15DAFF";
+	//background.fixedToCamera = true;
+	map = this.game.add.tilemap("level_02");
+	background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
+    map.addTilesetImage("SteeringWheel","steeringWheel");
+	this.game.time.events.loop(Phaser.Timer.SECOND * 10, this.createBubble, this);
 
-        map.addTilesetImage("tile-sheet","tiles");
-        bgLayer2 = map.createLayer("Background Layer 2");
-        bgLayer1 = map.createLayer("Background Layer 1");
-        pLayer = map.createLayer("Platform Layer");
+	map.addTilesetImage("tile-sheet","tiles");
+    bgLayer2 = map.createLayer("Background Layer 2");
+    bgLayer1 = map.createLayer("Background Layer 1");
+    pLayer = map.createLayer("Platform Layer");
 
-    // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
+   // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
 
     map.setCollisionBetween(1, 500, true, 'Platform Layer'); 
-    map.setCollisionBetween(1, 100, true, 'Platform Layer');
+	map.setCollisionBetween(1, 100, true, 'Platform Layer');
 
     // Anzeigen der Kollisionbox
     pLayer.resizeWorld();
 },
+createForeground: function(){
+	foreground = this.game.add.tileSprite(0,map.height, 8000, 147, "vordergrundBG");
 
-createForeground: function()
-{foreground = this.game.add.tileSprite(0,this.game.height+500, 8000, 147, "vordergrundBG")}, 
-
+}, 
 updateParallax:function ()
 {
     foreground.tilePosition.x = -(this.game.camera.x * 0.7);
     background.tilePosition.x = -(this.game.camera.x * 0.1); 
 },
-
 //Funtkion zum Erstellen des Spielers
 createPlayer:function()
 {
@@ -255,51 +205,24 @@ createQuallen:function()
     quallen.callAll('animations.play', 'animations', 'wackeln');
 },
 
-// MrCancer erstellen
-createMrCancer:function()
+createBubbleGroup: function()
 {
-    mrcancer = this.game.add.group();
-    mrcancer.enableBody = true;
-    mrcancer.enableBodyDebug = true;
-    
-    mrcancer.physicsBodyType = Phaser.Physics.ARCADE; 
-    this.game.physics.enable(mrcancer, Phaser.Physics.ARCADE); 
-    mrcancer.inputEnabled = true; 
-    
-    map.createFromObjects('Object Layer', "Cancer", 'cancer', 0, true, false, mrcancer);
-    
-    // zuweisung des mrcancer sprites und positionierung
-    cancerFace = this.game.add.sprite(0,420, 'cancerFace');
-    cancerFace.scale.setTo(2,2);
-    cancerFace.fixedToCamera = true;
-    cancerFace.visible = false;
-    cancerFace.animations.add('talk', [0,1],2, true);
+	bubbles = this.game.add.group();
+	bubbles.enableBody = true;
+	bubbles.physicsBodyType = Phaser.Physics.ARCADE;
+},
+createBubble: function()
+{
+	map.createFromObjects('Object Layer', "Bubble", "bubble", 3, true, false, bubbles);
+
+	bubbles.setAll("body.allowGravity", false);
+	bubbles.setAll("body.immovable", true);
 },
 
-createDialog:function()
+destroyBubble: function(bubbles, pLayer)
 {
-    dialog = this.game.add.text(125,420, '', {
-        fontSize: '18px', 
-        fill: '#000', 
-        backgroundColor: '#c2b280'      
-    });
-    dialog.fixedToCamera = true;
+	bubbles.kill();
 },
-
-
-//ERSTELLT DIE HEALTHPOTION  
-createBurger:function()
-{
-
-    burger = this.game.add.sprite(3550, this.game.height + 80, "burger"); 
-    burger.scale.setTo(1.5,1.5); 
-    this.game.physics.enable(burger, Phaser.Physics.ARCADE); 
-    burger.body.moves = false;
-    burger.body.collideWorldBounds = true; 
-    burger.inputEnabled = true; //TEST 
-    burger.input.enableDrag(); //TEST
-},
-
 // Funktion zum Einstellen der Steuerung
 createControl:function()
 {
@@ -522,7 +445,6 @@ updateCatcherControl:function()
 },
 
 /// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
-
 collectJellyfish:function(catcher, quallen)
 {   
     if (catchButton.isDown)
@@ -531,17 +453,7 @@ collectJellyfish:function(catcher, quallen)
         scoreText.text = 'Score: ' + score;   
         quallen.kill();
     }
-} ,
-
-getPower:function(player,burger) {
-    if(life < 100) {
-        life = 100;
-        lifeText.text = 'Health:' + life + '%';
-        burger.kill();
-        eatingSound.play('', 0, 0.5, false);
-    }
 },
-
 killPlayer:function(player,quallen)
 {  
     if(life > 0)
@@ -589,96 +501,12 @@ gameOver:function()
         life = 100;
      
 },
-
-// starten des dialogs
-levelOneDialog:function()
-{
-    if(this.checkOverlap(player, mrcancer))
-    {
-        if(score >= 1)
-        {   
-            this.nextLine(dialogWinCancer);
-            cancerFace.visible = true;
-            cancerFace.play("talk");
-            this.game.time.events.add(5000, this.levelOneWin, this);
-        }
-        else
-        {
-            this.nextLine(dialogLoseContent);
-            cancerFace.play("talk");
-        }
-    }
-    else
-    {
-        dialog.text = "";
-        cancerFace.visible = false;
-        spongeFace.visible = false;
-    }
-},
-
-// starten wenn man gewonnen hat -- im moment wird resetet muss aber zu level 2
-levelOneWin:function()
-
-{   this.game.state.start("Level02");
-    /*cancerFace.destroy();
-    spongeFace.visible = true;
-    spongeFace.play("talk");
-    dialog.text = "";
-    lineIndex = 0;
-    this.nextLine(dialogWinSpongeboy);
-    this.game.state("Level02"); */
-    
-    //this.game.time.events.add(2000, this.level2, this);
-}, 
-
 // level2 funktion
-level2:function()
+level2: function()
 {
-    //level = 2;
-    bMusic.stop();
-    this.game.state.restart();
-},
-// nextLine und nextWord ist gedacht um einzelne worte auszugeben und nicht den kompletten text
-nextLine:function(c) {
-    content = c;
-    
-    if (lineIndex == 1)
-    {
-        //  We're finished
-        return;
-    }
-
-    //  Split the current line on spaces, so one word per array element
-    line = content[lineIndex].split(' ');
-
-    //  Reset the word index to zero (the first word in the line)
-    wordIndex = 0;
-
-    //  Call the 'nextWord' function once for each word in the line (line.length)
-    this.game.time.events.repeat(wordDelay, line.length, this.nextWord, this);
-
-    //  Advance to the next line
-    lineIndex++;
-},
-
-nextWord:function() {
-
-    //  Add the next word onto the text string, followed by a space
-    dialog.text = dialog.text.concat(line[wordIndex] + " ");
-
-    //  Advance the word index to the next word in the line
-    wordIndex++;
-
-    //  Last word?
-    if (wordIndex == line.length)
-    {
-        //  Add a carriage return
-        dialog.text = dialog.text.concat("\n");
-
-        //  Get the next line after the lineDelay amount of ms has elapsed
-        this.game.time.events.add(lineDelay,this.nextLine, this);
-    }
-},
+	bMusic.stop();
+	this.game.state.restart();
+}, 
 
 checkOverlap:function(spriteA, spriteB) {
 
@@ -703,4 +531,5 @@ debug:function()
     this.game.debug.body(player);  // Spieler-Hitbox
     pLayer.debug = true; // Plattform Hitbox
 }
-}
+} 
+
