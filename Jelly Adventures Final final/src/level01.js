@@ -36,6 +36,7 @@ var test;
 
 // Variablen für den Dialog
 var dialog;
+var dialogS;
 var content = [];
 
 var dialogWinCancer = 
@@ -53,11 +54,12 @@ var dialogLoseContent =
 "[ Mr. Cancer ]\n Immer langsam, Meen Jong, wir brauchen noch einige Quallen für unser Gelee.\n Geh noch mal zurück und sammel noch einige Quallen."
 ];
 
-var line = [];
+/*var line = [];
 var wordIndex = 0;
 var lineIndex = 0;
 var wordDelay = 120;
 var lineDelay = 400;
+*/
 
 // GRUPPENVARIABLE
 var quallen, bubbles, mrcancer;
@@ -584,14 +586,21 @@ gameOver:function()
     gameOvertext.anchor.set(0.5); 
     gameOvertext.fixedToCamera= true;
 
+	/*
     var restartKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R); 
     restartKey.onDown.addOnce(this.level2);
-       // playerDead = false;
-        //this.level2(); 
-        playerDead = false; 
-        score = 0;
-        life = 100;
-     
+	*/
+	this.game.time.events.add(4000, this.level1Restart, this); 
+},
+
+level1Restart:function()
+{
+	life=100;
+	score=0;
+	playerDead = false;
+	firstCollisionDying = true;
+	firstCollision = true;
+	this.game.state.start('Level01');
 },
 
 // starten des dialogs
@@ -601,14 +610,15 @@ levelOneDialog:function()
     {
         if(score >= 1)
         {   
-            this.nextLine(dialogWinCancer);
+            dialog.text = dialogWinCancer;
             cancerFace.visible = true;
             cancerFace.play("talk");
             this.game.time.events.add(5000, this.levelOneWin, this);
         }
         else
         {
-            this.nextLine(dialogLoseContent);
+            dialog.text = dialogLoseContent;
+			cancerFace.visible = true;
             cancerFace.play("talk");
         }
     }
@@ -623,25 +633,23 @@ levelOneDialog:function()
 // starten wenn man gewonnen hat -- im moment wird resetet muss aber zu level 2
 levelOneWin:function()
 
-{   this.game.state.start("Level02");
-    /*cancerFace.destroy();
+{   
+	cancerFace.destroy();
     spongeFace.visible = true;
     spongeFace.play("talk");
-    dialog.text = "";
-    lineIndex = 0;
-    this.nextLine(dialogWinSpongeboy);
-    this.game.state("Level02"); */
-    
-    //this.game.time.events.add(2000, this.level2, this);
+	dialog.kill();
+    dialogS.text = dialogWinSpongeboy;
+
+    this.game.time.events.add(2000, this.level2, this);
 }, 
 
 // level2 funktion
 level2:function()
 {
-    //level = 2;
-    bMusic.stop();
-    this.game.state.restart();
+	bMusic.stop();
+    this.game.state.start("Level02");
 },
+/*
 // nextLine und nextWord ist gedacht um einzelne worte auszugeben und nicht den kompletten text
 nextLine:function(c) {
     content = c;
@@ -683,6 +691,7 @@ nextWord:function() {
         this.game.time.events.add(lineDelay,this.nextLine, this);
     }
 },
+*/
 
 checkOverlap:function(spriteA, spriteB) {
 
