@@ -47,7 +47,8 @@ level02.prototype = {
     this.createCatcher(); //ERSTELLT DEN KESCHER
     
     this.createControl();  // ERSTELLUNG DER STEUERUNG
-    this.createQuallen();  // ERSTELLT QUALLEN AUF DER MAP  
+    this.createQuallen();  // ERSTELLT QUALLEN AUF DER MAP 
+
 
     this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
@@ -57,6 +58,7 @@ level02.prototype = {
 
     this.createSoundButton();
     this.createPauseButton();
+    this.createMonster();
 
     //debug();
     //create score and healtbar
@@ -73,6 +75,9 @@ update:function()
     }
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
+    }
+    if(this.checkOverlap(player,monster)) {
+        this.gameOver();
     }
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.overlap(player,burger, this.getPower, null, this);
@@ -220,6 +225,7 @@ createQuallen:function()
     quallen.callAll('animations.play', 'animations', 'wackeln');
 },
 
+
 createBubbleGroup: function()
 {
 	bubbles = this.game.add.group();
@@ -295,6 +301,29 @@ musicOnOff: function()
         soundButton.frame = 0;
     }
 },
+
+createMonster: function() {
+    monster = this.game.add.sprite(200, 2000, "seeungeheuer");
+    monster.animations.add("bite", [0,1], 2, true);
+    monster.animations.play("bite");
+    monster.inputEnabled = true;
+    this.game.physics.enable(monster, Phaser.Physics.ARCADE); 
+    monster.body.moves = false;
+    monster.collideWorldBounds = true;
+    var tween = this.game.add.tween(monster).to({y:1500},5000, "Linear", true, 0, -1);
+    tween.start();
+    tween.yoyo(true, 500);
+},
+
+checkOverlap: function(spriteA, spriteB) {
+
+    var boundsA = spriteA.getBounds();
+    var boundsB = spriteB.getBounds();
+
+    return Phaser.Rectangle.intersects(boundsA, boundsB);
+},
+
+
 
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
 createScoreBar:function(){
@@ -505,6 +534,9 @@ collectJellyfish:function(catcher, quallen)
         quallen.kill();
     }
 },
+
+
+
 killPlayer:function(player,quallen)
 {  
     if(life > 0)
@@ -529,6 +561,7 @@ killPlayer:function(player,quallen)
 },
 
 
+
 gameOver:function()
 {
     bMusic.stop();
@@ -538,7 +571,7 @@ gameOver:function()
     if(soundOn == true) {
         deathSound.play('', 0, 0.5, false);
     }
-    firstCollisionDying = false;
+   // firstCollisionDying = false;
 
     var gameOvertext = this.game.add.text(400,150, 'Game over! Press R to restart', 
                                     {font: '50px Arial', fill: '#ffffff'}); 

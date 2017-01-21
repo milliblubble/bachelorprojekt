@@ -626,7 +626,7 @@ gameOver:function()
     if(soundOn == true) {
         deathSound.play('', 0, 0.5, false);
     }
-    firstCollisionDying = false;
+  //  firstCollisionDying = false;
 
     var gameOvertext = this.game.add.text(400,150, 'Game over! Press R to restart', 
                                     {font: '50px Arial', fill: '#ffffff'}); 
