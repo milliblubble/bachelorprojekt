@@ -28,6 +28,7 @@ var catcher;
 var burger;  
 var playerDead = false;
 var soundOn = true;
+var pause = false;;
 
 var life = 100; 
 var score= 0; 
@@ -96,6 +97,7 @@ create:function ()
     this.createBurger(); //HEALTHPOTION
 
     this.createSoundButton();
+    this.createPauseButton();
     
     
     //debug();
@@ -575,6 +577,18 @@ getPower:function(player,burger) {
             eatingSound.play('', 0, 0.5, false);
         }
     }
+},
+
+createPauseButton: function() {
+    pauseButton = this.game.add.sprite(750, 15, 'pause');
+    pauseButton.scale.setTo(0.5,0.5);
+    pauseButton.inputEnabled = true;
+    pauseButton.fixedToCamera = true;
+    if(pause == false) {
+        pauseButton.frame = 0;
+    }
+    pauseButton.events.onInputDown.add(function () {this.game.paused = true; pauseButton.frame = 1;},this);
+    this.game.input.onDown.add(function () {if(this.game.paused)this.game.paused = false; pauseButton.frame = 0;},this);
 },
 
 killPlayer:function(player,quallen)

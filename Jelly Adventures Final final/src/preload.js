@@ -104,6 +104,7 @@ preload.prototype = {
 
      //MUSIC AN/AUS UND PAUSE BUTTON
     this.game.load.spritesheet("sound", "assets/Sprites/soundOnOff.png", 64, 64);
+    this.game.load.spritesheet("pause", "assets/Sprites/pauseandplay.png", 64, 64);
 },
 
   update: function () {

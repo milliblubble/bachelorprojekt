@@ -15,6 +15,7 @@ var woosh2;
 var woosh3;
 var deathSound;
 
+var soundOn = true;
 var shock;
 
 // VARIABLEN FÜR DEN SPIELER 
@@ -53,6 +54,9 @@ level02.prototype = {
     
     this.createBubbleGroup();
     this.createBubble()
+
+    this.createSoundButton();
+    this.createPauseButton();
 
     //debug();
     //create score and healtbar
@@ -185,6 +189,17 @@ createCatcher:function(){
     catcher.animations.add("jumpL", [5], 6);
 },
 
+createPauseButton: function() {
+    pauseButton = this.game.add.sprite(750, 15, 'pause');
+    pauseButton.scale.setTo(0.5,0.5);
+    pauseButton.inputEnabled = true;
+    pauseButton.fixedToCamera = true;
+    if(pause == false) {
+        pauseButton.frame = 0;
+    }
+    pauseButton.events.onInputDown.add(function () {this.game.paused = true; pauseButton.frame = 1;},this);
+    this.game.input.onDown.add(function () {if(this.game.paused)this.game.paused = false; pauseButton.frame = 0;},this);
+},
 
 createQuallen:function()
 {
@@ -253,6 +268,34 @@ playBMusic:function()
     bMusic.play('', 0, 0.5, true);
 },
 
+createSoundButton: function() 
+{
+    soundButton = this.game.add.sprite(700, 15, "sound");
+    soundButton.scale.setTo(0.5,0.5);
+    soundButton.events.onInputDown.add(this.musicOnOff);
+    soundButton.inputEnabled = true;
+    soundButton.collideWorldBounds = true;
+    soundButton.fixedToCamera = true;
+    if(soundOn == true) {
+        soundButton.frame = 0;
+    }
+    
+},
+
+musicOnOff: function() 
+{
+    if(soundOn == true) {
+        bMusic.stop();
+        soundOn = false;
+        soundButton.frame = 1; 
+    }
+    else {
+        bMusic.play();        
+        soundOn = true;
+        soundButton.frame = 0;
+    }
+},
+
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
 createScoreBar:function(){
 
@@ -304,14 +347,18 @@ updatePlayerControl:function()
             player.direction = "left";
             player.animations.play("jumpL");
             player.body.velocity.y = -500;
-            jSound.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                jSound.play('', 0, 0.5, false);
+            }
         }
         else if ((sprungButton.isDown || cursors.up.isDown)  && cursors.right.isDown && player.body.onFloor())  //funktioniert
         {  
             player.direction = "right";
             player.animations.play("jumpR");
             player.body.velocity.y = -500;
-            jSound.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                jSound.play('', 0, 0.5, false);
+            }
         }
         else if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor())   //funktioniert
         {    
@@ -322,7 +369,9 @@ updatePlayerControl:function()
                 player.frame = 5;
             }
             player.body.velocity.y = -400;
-            jSound.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                jSound.play('', 0, 0.5, false);
+            }
         }
         else if(player.body.onFloor() !== true && cursors.right.isDown)     //funktioniert
         {
@@ -364,14 +413,16 @@ updatePlayerControl:function()
             }
     
             var x = Math.floor(Math.random()*3+1);
-            if(x===1) {
-                woosh1.play('', 0, 0.5, false);
-            }
-            if(x===2) {
-                woosh2.play('', 0, 0.5, false);
-            }
-            if(x===3) {
-                woosh3.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                if(x===1) {
+                    woosh1.play('', 0, 0.5, false);
+                }
+                if(x===2) {
+                    woosh2.play('', 0, 0.5, false);
+                }
+                if(x===3) {
+                    woosh3.play('', 0, 0.5, false);
+                }
             }
         }
     }
@@ -484,7 +535,9 @@ gameOver:function()
     catcher.kill();
     playerDead = true;
     player.animations.play("die");
-    deathSound.play('', 0, 0.5, false);
+    if(soundOn == true) {
+        deathSound.play('', 0, 0.5, false);
+    }
     firstCollisionDying = false;
 
     var gameOvertext = this.game.add.text(400,150, 'Game over! Press R to restart', 

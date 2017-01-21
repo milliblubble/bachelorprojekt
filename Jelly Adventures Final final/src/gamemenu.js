@@ -92,6 +92,7 @@ gameMenu.prototype = {
 		this.game.state.start('Level01');
 	}, 
 	startLevel02:function(){
+		music.stop();
 		this.game.state.start('Level02');
 	}
 	
