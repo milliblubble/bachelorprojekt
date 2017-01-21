@@ -27,6 +27,7 @@ var player;
 var catcher;
 var burger;  
 var playerDead = false;
+var soundOn = true;
 
 var life = 100; 
 var score= 0; 
@@ -93,6 +94,8 @@ create:function ()
     this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
     this.createBurger(); //HEALTHPOTION
+
+    this.createSoundButton();
     
     
     //debug();
@@ -308,6 +311,34 @@ createControl:function()
     catchButton =this.game.input.keyboard.addKey(Phaser.Keyboard.C);
 },
 
+createSoundButton: function() 
+{
+    soundButton = this.game.add.sprite(700, 15, "sound");
+    soundButton.scale.setTo(0.5,0.5);
+    soundButton.events.onInputDown.add(this.musicOnOff);
+    soundButton.inputEnabled = true;
+    soundButton.collideWorldBounds = true;
+    soundButton.fixedToCamera = true;
+    if(soundOn == true) {
+        soundButton.frame = 0;
+    }
+    
+},
+
+musicOnOff: function() 
+{
+    if(soundOn == true) {
+        bMusic.stop();
+        soundOn = false;
+        soundButton.frame = 1; 
+    }
+    else {
+        bMusic.play();        
+        soundOn = true;
+        soundButton.frame = 0;
+    }
+},
+
 // Funktion zum Musik abspielen
 createMusic:function()
 {
@@ -381,14 +412,18 @@ updatePlayerControl:function()
             player.direction = "left";
             player.animations.play("jumpL");
             player.body.velocity.y = -500;
-            jSound.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                jSound.play('', 0, 0.5, false);
+            }
         }
         else if ((sprungButton.isDown || cursors.up.isDown)  && cursors.right.isDown && player.body.onFloor())  //funktioniert
         {  
             player.direction = "right";
             player.animations.play("jumpR");
             player.body.velocity.y = -500;
-            jSound.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                jSound.play('', 0, 0.5, false);
+            }
         }
         else if ((sprungButton.isDown || cursors.up.isDown) && player.body.onFloor())   //funktioniert
         {    
@@ -399,7 +434,9 @@ updatePlayerControl:function()
                 player.frame = 5;
             }
             player.body.velocity.y = -400;
-            jSound.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                jSound.play('', 0, 0.5, false);
+            }
         }
         else if(player.body.onFloor() !== true && cursors.right.isDown)     //funktioniert
         {
@@ -439,7 +476,9 @@ updatePlayerControl:function()
                     player.frame = 4;           
                 }
             }
-            woosh3.play('', 0, 0.5, false);
+            if(soundOn == true) {
+                woosh3.play('', 0, 0.5, false);
+            }
         }
     }
 },
@@ -532,7 +571,9 @@ getPower:function(player,burger) {
         life = 100;
         lifeText.text = 'Health:' + life + '%';
         burger.kill();
-        eatingSound.play('', 0, 0.5, false);
+        if(soundOn == true) { 
+            eatingSound.play('', 0, 0.5, false);
+        }
     }
 },
 
@@ -541,7 +582,9 @@ killPlayer:function(player,quallen)
     if(life > 0)
     {
         life -= 10;  
-        shock.play('', 0, 0.3, false);
+        if(soundOn == true) {  
+            shock.play('', 0, 0.3, false);
+        }
         lifeText.text = 'Health: '+ life +' %';
         if(player.direction == "right") {
             player.frame = 11;
@@ -566,7 +609,9 @@ gameOver:function()
     catcher.kill();
     playerDead = true;
     player.animations.play("die");
-    deathSound.play('', 0, 0.5, false);
+    if(soundOn == true) {
+        deathSound.play('', 0, 0.5, false);
+    }
     firstCollisionDying = false;
 
     var gameOvertext = this.game.add.text(400,150, 'Game over! Press R to restart', 

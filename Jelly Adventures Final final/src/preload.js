@@ -101,6 +101,9 @@ preload.prototype = {
     this.game.load.audio('deathSound', 'assets/Audio/deathSound.mp3');
     this.game.load.audio('eatingSound', 'assets/Audio/eating.mp3');
     this.game.load.audio('shock', 'assets/Audio/shock.mp3');
+
+     //MUSIC AN/AUS UND PAUSE BUTTON
+    this.game.load.spritesheet("sound", "assets/Sprites/soundOnOff.png", 64, 64);
 },
 
   update: function () {
