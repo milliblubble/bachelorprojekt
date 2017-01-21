@@ -189,7 +189,7 @@ createPlayer:function()
     player.body.collideWorldBounds = true;
     
     //Hitbox angepasst
-    player.body.setSize(40,55,0,10);
+    player.body.setSize(45,55,5,10);
 
     // Animation erstellen
     player.animations.add("right",[2,3],5,true);
