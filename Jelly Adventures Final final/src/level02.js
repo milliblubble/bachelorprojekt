@@ -6,6 +6,8 @@ var foreground;
 var map;
 var bgLayer,wLayer,pLayer;
 
+var ghost;
+var chest;
 
 // Soundvariablen
 var bMusic;
@@ -48,8 +50,10 @@ level02.prototype = {
     
     this.createControl();  // ERSTELLUNG DER STEUERUNG
     this.createQuallen();  // ERSTELLT QUALLEN AUF DER MAP 
-
-
+	
+	this.createGhost();
+	this.createChest();
+	
     this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
     
@@ -204,6 +208,38 @@ createPauseButton: function() {
     }
     pauseButton.events.onInputDown.add(function () {this.game.paused = true; pauseButton.frame = 1;},this);
     this.game.input.onDown.add(function () {if(this.game.paused)this.game.paused = false; pauseButton.frame = 0;},this);
+},
+
+createGhost:function()
+{
+	ghost = this.game.add.group();
+	ghost.enableBody = true;
+    ghost.enableBodyDebug = true;
+	
+	ghost.physicsBodyType = Phaser.Physics.ARCADE; 
+    this.game.physics.enable(ghost, Phaser.Physics.ARCADE); 
+    ghost.inputEnabled = true; 
+    
+    map.createFromObjects('Object Layer', "SleepingDutchman", 'sleepingDutchman', 0, true, false, ghost);
+    
+	ghost.callAll('animations.add', 'animations', 'sleep', [0, 1], 2, true);
+    ghost.callAll('animations.play', 'animations', 'sleep');
+},
+
+createChest:function()
+{
+	chest = this.game.add.group();
+	chest.enableBody = true;
+    chest.enableBodyDebug = true;
+	
+	chest.physicsBodyType = Phaser.Physics.ARCADE; 
+    this.game.physics.enable(chest, Phaser.Physics.ARCADE); 
+    chest.inputEnabled = true; 
+    
+    map.createFromObjects('Object Layer', "Chest", 'treasureChest', 0, true, false, chest);
+    
+	chest.callAll('animations.add', 'animations', 'open', [0, 1], 2, true);
+    //chest.callAll('animations.play', 'animations', 'open');
 },
 
 createQuallen:function()

@@ -185,6 +185,46 @@
                  "width":32,
                  "x":4280,
                  "y":1947.33333333333
+                }, 
+                {
+                 "gid":259,
+                 "height":89,
+                 "id":16,
+                 "name":"SleepingDutchman",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":127,
+                 "x":2594.5,
+                 "y":957.5
+                }, 
+                {
+                 "gid":259,
+                 "height":30.875,
+                 "id":17,
+                 "name":"Chest",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":31.375,
+                 "x":2435.3125,
+                 "y":828.5625
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -216,7 +256,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":14,
+ "nextobjectid":18,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -244,6 +284,19 @@
          "name":"SteeringWheel",
          "spacing":0,
          "tilecount":2,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "columns":16,
+         "firstgid":259,
+         "image":"..\/..\/..\/..\/Jelly Adventures Final final - kopie\/assets\/Tiles\/tile-sheet.png",
+         "imageheight":512,
+         "imagewidth":512,
+         "margin":0,
+         "name":"tile-sheet",
+         "spacing":0,
+         "tilecount":256,
          "tileheight":32,
          "tilewidth":32
         }],

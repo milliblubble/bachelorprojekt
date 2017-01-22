@@ -91,6 +91,9 @@ preload.prototype = {
     this.game.load.spritesheet("cancer", "assets/Sprites/MrCancer.png",48,62);
 
     this.game.load.spritesheet("seeungeheuer", "assets/Sprites/seeungeheuerDummy.png", 64, 64);
+	
+	this.game.load.spritesheet("treasureChest", "assets/Sprites/TreasureChest2.png",67,61);
+	this.game.load.spritesheet("sleepingDutchman", "assets/Sprites/SleepingDutchman.png",256,256);
 
 
     //EINSTELLEN DER MUSIK 
