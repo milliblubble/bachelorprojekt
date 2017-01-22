@@ -36,6 +36,9 @@ var firstCollision = true;
 var firstCollisionDying = true;
 var timeCheck;
 
+var cButtonRemove = false;
+var catchCounter = 0;
+
 level02.prototype = {
 	create:function () 
 {
@@ -50,6 +53,7 @@ level02.prototype = {
     
     this.createControl();  // ERSTELLUNG DER STEUERUNG
     this.createQuallen();  // ERSTELLT QUALLEN AUF DER MAP 
+    this.createQuallenG();
 	
 	this.createGhost();
 	this.createChest();
@@ -76,12 +80,23 @@ update:function()
     this.game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     if(firstCollision == true  && firstCollisionDying == true) {
         this.game.physics.arcade.overlap(player,quallen, this.killPlayer, null, this); // VERLETZT SPIELER 
+        this.game.physics.arcade.overlap(player,quallenG, this.killPlayerTwo, null, this);
     }
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
     }
     if(this.checkOverlap(player,monster)) {
         this.gameOver();
+    }
+   /* if(this.checkOverlap(catcher, quallen2) == true) {
+       catchButton.onDown.add(this.collectJellyfish2, this);
+    }*/
+  //  this.game.physics.arcade.overlap(catcher,quallen2, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
+    if(this.checkOverlap(catcher, quallenG)) {
+    	catchButton.onDown.add(this.collectJellyfishG);
+    	if(cButtonRemove == true) {
+    		catchButton.onDown.remove(this.collectJellyfishG);
+    	}
     }
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.overlap(player,burger, this.getPower, null, this);
@@ -259,6 +274,15 @@ createQuallen:function()
     // ANNIMATION DER QUALEN
     quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
     quallen.callAll('animations.play', 'animations', 'wackeln');
+},
+
+createQuallenG: function() {
+	quallenG = this.game.add.sprite(500, 1950, "qualle2");
+	quallenG.animations.add("move", [0, 1, 2 , 3], 3, true);
+	quallenG.animations.play("move");
+	this.game.physics.enable(quallenG, Phaser.Physics.ARCADE); 
+	quallenG.body.moves = false;
+	quallenG.body.immovable = false;	
 },
 
 
@@ -561,6 +585,19 @@ collectJellyfish:function(catcher, quallen)
     }
 },
 
+collectJellyfishG: function()
+{
+	catchCounter += 1;
+	score += 1;
+	scoreText.text = 'Score: ' + score;
+	if(catchCounter == 2) {
+		quallenG.kill();
+		cButtonRemove = true;
+		catchCounter = 0;
+	}
+	
+},
+
 
 
 killPlayer:function(player,quallen)
@@ -568,6 +605,29 @@ killPlayer:function(player,quallen)
     if(life > 0)
     {
         life -= 10;  
+        shock.play('', 0, 0.3, false);
+        lifeText.text = 'Health: '+ life +' %';
+        if(player.direction == "right") {
+            player.frame = 11;
+        }
+        if(player.direction == "left") {
+            player.frame = 12;
+        }
+        firstCollision = false;
+        timeCheck = this.game.time.now;
+    }
+    if (life <= 0)
+    {
+        firstCollisionDying = false;
+        this.gameOver();
+    }
+},
+
+killPlayerTwo:function(player,QuallenG)
+{  
+    if(life > 0)
+    {
+        life -= 20;  
         shock.play('', 0, 0.3, false);
         lifeText.text = 'Health: '+ life +' %';
         if(player.direction == "right") {

@@ -70,6 +70,8 @@ var timeCheck;
 
 
 
+
+
 level01.prototype = {
 
 create:function () 
@@ -115,7 +117,7 @@ create:function ()
     }
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
-    }
+    }    
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.overlap(player,burger, this.getPower, null, this);
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
@@ -567,13 +569,14 @@ updateCatcherControl:function()
 
 collectJellyfish:function(catcher, quallen)
 {   
-    if (catchButton.isDown)
-    {
+    if(catchButton.isDown){
         score += 1;
         scoreText.text = 'Score: ' + score;   
-        quallen.kill();
+        quallen.kill(); 
     }
-} ,
+},
+
+
 
 getPower:function(player,burger) {
     if(life < 100) {
