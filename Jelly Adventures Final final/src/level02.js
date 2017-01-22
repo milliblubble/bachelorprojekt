@@ -476,18 +476,8 @@ updatePlayerControl:function()
                     player.frame = 4;           
                 }
             }
-    
-            var x = Math.floor(Math.random()*3+1);
             if(soundOn == true) {
-                if(x===1) {
-                    woosh1.play('', 0, 0.5, false);
-                }
-                if(x===2) {
-                    woosh2.play('', 0, 0.5, false);
-                }
-                if(x===3) {
-                    woosh3.play('', 0, 0.5, false);
-                }
+                woosh3.play('', 0, 0.5, false);
             }
         }
     }
