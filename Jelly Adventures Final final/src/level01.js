@@ -289,6 +289,13 @@ createDialog:function()
         backgroundColor: '#c2b280'      
     });
     dialog.fixedToCamera = true;
+	
+	dialogS = this.game.add.text(125,420, '', {
+        fontSize: '18px', 
+        fill: '#000', 
+        backgroundColor: '#c2b280'      
+    });
+    dialogS.fixedToCamera = true;
 },
 
 
