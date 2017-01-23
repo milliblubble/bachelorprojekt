@@ -71,6 +71,7 @@ preload.prototype = {
     this.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
     this.load.image("steeringWheel", "assets/Object/SteeringWheel.png");  // Rusty Cancer Schild
 
+
     //Laden Dialog
     this.load.spritesheet("cancerFace", "assets/Sprites/MrCancerDialogue.png",62,62);
     this.load.spritesheet("spongeFace", "assets/Sprites/SpongeboyDialogue.png",64,64);
@@ -91,7 +92,7 @@ preload.prototype = {
     this.game.load.spritesheet("cancer", "assets/Sprites/MrCancer.png",48,62);
     this.game.load.spritesheet("endboss", "assets/Sprites/Endboss.png", 256, 256); 
     this.game.load.spritesheet("attack01", "assets/Sprites/Attack01.png", 63, 256); 
-    this.game.load.spritesheet("attack02", "assets/Sprites/Attack02.png", 64,64);
+    this.game.load.spritesheet("attack02", "assets/Sprites/Attack02.png", 64,64); 
 
     this.game.load.spritesheet("qualle2","assets/Sprites/Qualle2.png",57, 70);
 

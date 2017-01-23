@@ -24,6 +24,7 @@ var shock;
 var player;
 var catcher;  
 var playerDead = false;
+ 
 
 var life = 100; 
 var score= 0; 
@@ -64,10 +65,10 @@ level02.prototype = {
 
     this.createQuallenG();
 
-    
-    this.createGhost();
-    this.createChest();
-    
+	
+	this.createGhost();
+	this.createChest();
+	
     this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
     
@@ -78,6 +79,8 @@ level02.prototype = {
     this.createPauseButton();
     this.createMonster();
 
+    //debug();
+    //create score and healtbar
 
 }, 
 update:function() 
@@ -96,6 +99,9 @@ update:function()
     if(this.checkOverlap(player,monster)) {
         this.gameOver();
     }
+
+    //if (this.checkOverlap(player, attack01))
+
    /* if(this.checkOverlap(catcher, quallen2) == true) {
        catchButton.onDown.add(this.collectJellyfish2, this);
     }*/
@@ -106,8 +112,8 @@ update:function()
     		catchButton.onDown.remove(this.collectJellyfishG);
     	}
     }
+
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
-    this.game.physics.arcade.overlap(player,burger, this.getPower, null, this);
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     this.game.physics.arcade.overlap(player,lightning, this.killPlayer, null, this);
@@ -322,6 +328,21 @@ createEndboss:function(){
     //this.time.events.add(20000, this.attack01.kill, this);
 
  }, 
+
+
+ attack02: function(){
+
+    lightningBall =this.game.add.sprite(300, 2020, "attack02");
+    this.game.physics.enable(lightningBall, Phaser.Physics.ARCADE); 
+    lightningBall.body.bounce.y = 0.9;
+    lightningBall.collideWorldBounds = true;
+    lightningBall.animations.add("rolling", [0,1], 6, true);
+    lightningBall.animations.play("rolling");
+    var tween = this.game.add.tween(lightningBall).to({x:150, y:2020}, 2000, "Linear", true); 
+   
+ },
+
+
 
 createQuallen:function()
 {
@@ -651,18 +672,6 @@ collectJellyfish:function(catcher, quallen)
     }
 },
 
-collectJellyfishG: function()
-{
-	catchCounter += 1;
-	score += 1;
-	scoreText.text = 'Score: ' + score;
-	if(catchCounter == 2) {
-		quallenG.kill();
-		cButtonRemove = true;
-		catchCounter = 0;
-	}
-	
-},
 killEndboss: function(catcher, endboss){
 
     if (catchButton.isDown && (lifeEndboss > 0))
@@ -680,6 +689,20 @@ killEndboss: function(catcher, endboss){
 
 }, 
 
+collectJellyfishG: function()
+{
+	catchCounter += 1;
+	score += 1;
+	scoreText.text = 'Score: ' + score;
+	if(catchCounter == 2) {
+		quallenG.kill();
+		cButtonRemove = true;
+		catchCounter = 0;
+	}
+	
+},
+
+
 
 
 killPlayer:function(player,quallen)
@@ -687,6 +710,7 @@ killPlayer:function(player,quallen)
     if(life > 0)
     {
         life -= 10;  
+        console.log("%c life : " +life , "color: white; background: red"); 
         shock.play('', 0, 0.3, false);
         lifeText.text = 'Health: '+ life +' %';
         if(player.direction == "right") {
