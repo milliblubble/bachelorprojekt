@@ -6,9 +6,6 @@ var foreground;
 var map;
 var bgLayer,wLayer,pLayer;
 
-var ghost;
-var chest;
-
 // Soundvariablen
 var bMusic;
 var jSound;
@@ -19,6 +16,13 @@ var deathSound;
 
 var soundOn = true;
 var shock;
+
+//Variablen für die Truhe
+var dialog;
+var bonusDialog = "Yeay Eine Truhe!";
+var ghost;
+var chest;
+var treasure;
 
 // VARIABLEN FÜR DEN SPIELER 
 var player;
@@ -68,6 +72,8 @@ level02.prototype = {
 	
 	this.createGhost();
 	this.createChest();
+	this.createDialog();
+	this.createTreasure();
 	
     this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
@@ -99,6 +105,12 @@ update:function()
     if(this.checkOverlap(player,monster)) {
         this.gameOver();
     }
+	if(this.game.time.now - timeCheck > 1000) // new
+	{
+		dialog.visible = false;
+		spongeFace.visible = false;
+		treasure.visible = false;
+	}
 
     //if (this.checkOverlap(player, attack01))
 
@@ -274,6 +286,25 @@ createChest:function()
 	chest.callAll('animations.add', 'animations', 'open', [0, 1], 2, true);
 	chest.frame = 0;
 },
+
+createTreasure:function()
+{
+	treasure = this.game.add.sprite(2435.31+10, 828.56-100, "treasure"); 
+    treasure.scale.setTo(1.5,1.5);
+	treasure.visible = false;
+	
+},
+
+createDialog:function()
+{
+    dialog = this.game.add.text(125,420, '', {
+        fontSize: '18px', 
+        fill: '#000', 
+        backgroundColor: '#c2b280'      
+    });
+    dialog.fixedToCamera = true;
+},
+
 createEndboss:function(){
     endboss = this.game.add.sprite(300,1950, "endboss");
     endboss.scale.setTo(0.3,0.3);
@@ -471,6 +502,24 @@ checkOverlap: function(spriteA, spriteB) {
     return Phaser.Rectangle.intersects(boundsA, boundsB);
 },
 
+collectBonus:function(catcher, chest)
+{
+	timeCheck = this.game.time.now;
+	if(chest.frame == 0)
+	{
+		if (catchButton.isDown)
+		{
+			spongeFace.visible = true;
+			spongeFace.play("talk");
+			dialog.text = bonusDialog;
+			score += 10;
+			scoreText.text = 'Score: ' + score;
+			chest.frame = 1;
+			treasure.visible = true;
+		}
+	}
+},
+
 
 
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
@@ -660,19 +709,6 @@ updateCatcherControl:function()
             }
         }
     }
-},
-
-collectBonus:function(catcher, chest)
-{
-	if(chest.frame == 0)
-	{
-		if (catchButton.isDown)
-		{
-			score += 10;
-			scoreText.text = 'Score: ' + score;
-			chest.frame = 1;
-		}
-	}
 },
 
 /// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
