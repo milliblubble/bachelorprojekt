@@ -797,7 +797,7 @@ checkOverlap:function(spriteA, spriteB) {
 // wenn spongebob zu weit unten ist stirbt er
 checkOverlapAbyss:function()
 {
-    if(player.y == 1151 && firstCollisionDying == true)
+    if(player.y == 2335 && firstCollisionDying == true)
     {
         this.gameOver();
     }
