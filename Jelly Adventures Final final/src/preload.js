@@ -89,6 +89,9 @@ preload.prototype = {
     this.game.load.spritesheet("catcher", "assets/Sprites/Kescher.png",64,128); //Catcher- Sprites
     this.game.load.spritesheet("burger", "assets/Object/burger.png"); 
     this.game.load.spritesheet("cancer", "assets/Sprites/MrCancer.png",48,62);
+    this.game.load.spritesheet("endboss", "assets/Sprites/Endboss.png", 256, 256); 
+    this.game.load.spritesheet("attack01", "assets/Sprites/Attack01.png", 63, 256); 
+    this.game.load.spritesheet("attack02", "assets/Sprites/Attack02.png", 64,64);
 
     this.game.load.spritesheet("qualle2","assets/Sprites/Qualle2.png",57, 70);
 
