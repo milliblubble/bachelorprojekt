@@ -124,6 +124,7 @@ update:function()
     		catchButton.onDown.remove(this.collectJellyfishG);
     	}
     }
+   
 
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
@@ -312,6 +313,8 @@ createEndboss:function(){
     endboss.enableBodyDebug = true;
     endboss.physicsBodyType = Phaser.Physics.ARCADE;
     this.game.physics.enable(endboss, Phaser.Physics.ARCADE); 
+    
+   
 
     endboss.animations.add("moving", [0,1], 4, true);
     endboss.animations.play("moving"); 
@@ -737,7 +740,7 @@ killEndboss: function(catcher, endboss){
         endboss.kill(); 
     }
 
-}, 
+},
 
 collectJellyfishG: function()
 {
