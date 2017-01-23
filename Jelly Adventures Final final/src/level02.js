@@ -125,6 +125,7 @@ update:function()
     
     
     this.checkOverlapAbyss(); //Überprüfung ob spongebob runtergefallen ist
+	this.game.physics.arcade.overlap(catcher, chest, this.collectBonus, null, this); // truhe öffnen
     
     this.updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
     this.updateCatcherControl(); 
@@ -271,7 +272,7 @@ createChest:function()
     map.createFromObjects('Object Layer', "Chest", 'treasureChest', 0, true, false, chest);
     
 	chest.callAll('animations.add', 'animations', 'open', [0, 1], 2, true);
-    //chest.callAll('animations.play', 'animations', 'open');
+	chest.frame = 0;
 },
 createEndboss:function(){
     endboss = this.game.add.sprite(300,1950, "endboss");
@@ -659,6 +660,19 @@ updateCatcherControl:function()
             }
         }
     }
+},
+
+collectBonus:function(catcher, chest)
+{
+	if(chest.frame == 0)
+	{
+		if (catchButton.isDown)
+		{
+			score += 10;
+			scoreText.text = 'Score: ' + score;
+			chest.frame = 1;
+		}
+	}
 },
 
 /// ERHÖHT DEN SCORE UND TÖTEN GEFANGENE QUALLEN 
