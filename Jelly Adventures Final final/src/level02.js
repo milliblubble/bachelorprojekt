@@ -107,7 +107,7 @@ update:function()
     }
 	if(this.game.time.now - timeCheck > 1000) // new
 	{
-		dialog.visible = false;
+		dialog.text = '';
 		spongeFace.visible = false;
 		treasure.visible = false;
 	}
