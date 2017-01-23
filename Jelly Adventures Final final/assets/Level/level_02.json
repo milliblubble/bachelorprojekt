@@ -55,8 +55,8 @@
                  "type":"qualle",
                  "visible":true,
                  "width":32,
-                 "x":269.030303030303,
-                 "y":2024.30303030303
+                 "x":575.69696969697,
+                 "y":2010.9696969697
                 }, 
                 {
                  "ellipse":true,
@@ -225,6 +225,186 @@
                  "width":31.375,
                  "x":2435.3125,
                  "y":828.5625
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":18,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":735.69696969697,
+                 "y":1088.30303030303
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":19,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":1057.0303030303,
+                 "y":1441.63636363636
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":20,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":1182.36363636364,
+                 "y":1982.9696969697
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":21,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":2022.36363636364,
+                 "y":1500.30303030303
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":22,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":1775.69696969697,
+                 "y":2342.9696969697
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":23,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":3069.0303030303,
+                 "y":1250.9696969697
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":24,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":1941.0303030303,
+                 "y":640.30303030303
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":25,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":3869.0303030303,
+                 "y":1920.30303030303
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":26,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool"
+                    },
+                 "rotation":0,
+                 "type":"qualle",
+                 "visible":true,
+                 "width":32,
+                 "x":3361.0303030303,
+                 "y":1985.63636363636
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -256,7 +436,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":18,
+ "nextobjectid":27,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -290,7 +470,7 @@
         {
          "columns":16,
          "firstgid":259,
-         "image":"..\/..\/..\/..\/Jelly Adventures Final final - kopie\/assets\/Tiles\/tile-sheet.png",
+         "image":"..\/Tiles\/tile-sheet.png",
          "imageheight":512,
          "imagewidth":512,
          "margin":0,
