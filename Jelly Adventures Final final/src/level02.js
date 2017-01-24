@@ -1,5 +1,7 @@
 
 var level02 = function(game){};
+
+
 // KARTENVARIABLE
 var background;
 var foreground; 
@@ -39,6 +41,8 @@ var endboss;
 var lightning; 
 var lightningBall;
 var lifeEndboss = 100; 
+var hitCounter = 0; 
+var hButtonRemove = false; 
 
 // GRUPPENVARIABLE
 var quallen, bubbles;
@@ -112,6 +116,8 @@ update:function()
 		treasure.visible = false;
 	}
 
+   
+
     //if (this.checkOverlap(player, attack01))
 
    /* if(this.checkOverlap(catcher, quallen2) == true) {
@@ -124,14 +130,23 @@ update:function()
     		catchButton.onDown.remove(this.collectJellyfishG);
     	}
     }
+
+    if(this.checkOverlap(catcher, endboss)) {
+        catchButton.onDown.add(this.killEndboss);
+        if(hButtonRemove == true) {
+            catchButton.onDown.remove(this.killEndboss);
+            hButtonRemove = false; 
+        }
+    }
    
+
 
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     this.game.physics.arcade.overlap(player,lightning, this.killPlayer, null, this);
     this.game.physics.arcade.overlap(player,lightningBall, this.killPlayer, null, this);
-    this.game.physics.arcade.overlap(catcher,endboss, this.killEndboss, null, this);
+   // this.game.physics.arcade.overlap(catcher,endboss, this.killEndboss, null, this);
 
     catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
     catcher.y = Math.floor(player.y -65);
@@ -313,23 +328,31 @@ createEndboss:function(){
     endboss.enableBodyDebug = true;
     endboss.physicsBodyType = Phaser.Physics.ARCADE;
     this.game.physics.enable(endboss, Phaser.Physics.ARCADE); 
+    endboss.inputEnabled = true;
+    if (lifeEndboss == 70){
+    var tween = this.game.add.tween(endboss).to({y:1800},2000, "Linear", true);
+    tween.onComplete.addOnce(this.tween2, this); 
+    tween.start();
+    tween.yoyo(true, 500); 
+    }
     
    
 
     endboss.animations.add("moving", [0,1], 4, true);
     endboss.animations.play("moving"); 
     endboss.body.moves = false;
-    endboss.collideWorldBounds = true;
-    this.tween1(); 
-    //var tween = this.game.add.tween(endboss).to({y:1800},2000, "Linear", true);
-    //tween.onComplete.addOnce(this.tween2, this); 
-    //tween.start();
-    //tween.yoyo(true, 500);
+    endboss.collideWorldBounds = true;  
+
 
 
 }, 
+
+
  tween1: function(){
-    var tween1 = this.game.add.tween(endboss).to({x:300, y:1800},2000, "Linear", true, 5000);  //wartet 2 Sekunden bis der nächste tween aufgerufen wird 
+
+    console.log("%cEnter Tween test ", "color: white; background: green");        
+    
+    var tween1 = this.game.add.tween(endboss).to({x:300, y:1800},2000, "Linear", true);  //wartet 2 Sekunden bis der nächste tween aufgerufen wird 
     this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
     tween1.onComplete.addOnce(this.tween2,this); 
     
@@ -348,7 +371,7 @@ createEndboss:function(){
  }, 
  tween4:function(){
     var tween4 = this.game.add.tween(endboss).to({x: 300, y:1950}, 2000, "Linear", true);
-    tween4.onComplete.addOnce(this.tween1,this); 
+    tween4.onComplete.addOnce(this.tween,this); 
 
  }, 
  attack01: function(){
@@ -720,25 +743,40 @@ collectJellyfish:function(catcher, quallen)
     if (catchButton.isDown)
     {
         score += 1;
-        scoreText.text = 'Score: ' + score;   
+        scoreText.text = 'Score: ' + score + 'Endboss : ' + lifeEndboss;   
         quallen.kill();
     }
 },
 
-killEndboss: function(catcher, endboss){
+killEndboss: function(){    
 
-    if (catchButton.isDown && (lifeEndboss > 0))
-    {
-        lifeEndboss -= 10;  
-        console.log("%cEndboss: " + lifeEndboss, "color: white; background: red");        
+     lifeEndboss = (lifeEndboss - 10); 
+     hButtonRemove = true; 
+     console.log("%cLifespan Endeboss"+ lifeEndboss, "color: white; background: red"); 
+
+    
+    if (lifeEndboss ==70){
+    console.log("%cLifespan Endeboss"+ lifeEndboss, "color: white; background: blue");  
+
     }
 
-    else if(lifeEndboss = 0)
-    {
-        lightning.kill(); 
-        lightningBall.kill(); //TODO
+    else  if (lifeEndboss == 40){
+        console.log("%cLifespan Endeboss"+ lifeEndboss, "color: white; background: green");
+        this.tween1(); 
+
+    }
+    else if (lifeEndboss == 10){
+
+         console.log("%cMaaan you really got me ", "color: white; background: green");
         endboss.kill(); 
+        lightning.kill(); 
+        lightningBall.kill();
+
     }
+
+
+   
+
 
 },
 
@@ -746,14 +784,15 @@ collectJellyfishG: function()
 {
 	catchCounter += 1;
 	score += 1;
-	scoreText.text = 'Score: ' + score;
+	scoreText.text = 'Score: ' + score + lifeEndboss;
 	if(catchCounter == 2) {
 		quallenG.kill();
 		cButtonRemove = true;
 		catchCounter = 0;
 	}
+}, 
 	
-},
+
 
 
 
