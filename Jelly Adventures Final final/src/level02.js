@@ -704,6 +704,7 @@ updateCatcherControl:function()
             catcher.direction = "right";
             catcher.frame = 1;
             catcher.x = Math.floor(player.x + 60);
+			catcher.body.setSize(20,20,45,110);
         }
         else if (cursors.left.isDown)
         {
@@ -711,6 +712,7 @@ updateCatcherControl:function()
             catcher.frame = 3;
             catcher.x = Math.floor(player.x); //Kescher folgt Spongeboy
             catcher.y = Math.floor(player.y - 60); 
+			catcher.body.setSize(20,20,0,110);
         }
         else if (sprungButton.isDown && cursors.right.isDown) 
         {
@@ -727,11 +729,13 @@ updateCatcherControl:function()
             if(catcher.direction == "left") {
                 catcher.frame = 3;
                 catcher.x = Math.floor(player.x); //Kescher folgt Spongeboy
-                catcher.y = Math.floor(player.y - 60); 
+                catcher.y = Math.floor(player.y - 60);
+				catcher.body.setSize(20,20,0,110);
             }
             if(catcher.direction == "right"){
                 catcher.frame = 1;  
-                catcher.x = Math.floor(player.x + 60);  
+                catcher.x = Math.floor(player.x + 60);
+				catcher.body.setSize(20,20,45,110);
             }
         }
     }
