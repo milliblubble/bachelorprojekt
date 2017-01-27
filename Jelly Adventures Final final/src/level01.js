@@ -30,7 +30,7 @@ var playerDead = false;
 var soundOn = true;
 var pause = false;;
 var shockCheck = false;
-
+var qualleScore;
 
 var life = 100; 
 var score= 0; 
@@ -381,14 +381,16 @@ playBMusic:function()
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
 createScoreBar:function(){
 
-    scoreText = this.game.add.text(60 ,16, 'Score:' + score + '', { fontSize: '32px', fill: '#000'}); 
+    scoreText = this.game.add.text(80 ,16, 'x' + score + '', { fontSize: '32px', fill: '#000'}); 
     scoreText.anchor.set(0.5); 
-    scoreText.fixedToCamera= true;
+    scoreText.fixedToCamera = true;
+    qualleScore = this.game.add.sprite(50 ,16, "qualle_score"); 
+    qualleScore.anchor.setTo(0.5);
+    qualleScore.fixedToCamera = true;
 
-    lifeText = this.game.add.sprite(90, 40, "healthbar" ); 
-   // lifeText.frame = 0;
+    lifeText = this.game.add.sprite(90, 50, "healthbar" ); 
     lifeText.anchor.set(0.5); 
-    lifeText.fixedToCamera =true; 
+    lifeText.fixedToCamera = true; 
 },
 
 
@@ -589,7 +591,7 @@ collectJellyfish:function(catcher, quallen)
 {   
     if(catchButton.isDown){
         score += 1;
-        scoreText.text = 'Score: ' + score;   
+        scoreText.text = 'x' + score;   
         quallen.kill(); 
     }
 },

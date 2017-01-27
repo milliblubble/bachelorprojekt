@@ -31,6 +31,7 @@ var player;
 var catcher;  
 var playerDead = false;
 var shockCheck = false;
+var qualleScore;
  
 var frameNr = 0;
 var life = 100; 
@@ -555,9 +556,12 @@ collectBonus:function(catcher, chest)
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
 createScoreBar:function(){
 
-    scoreText = this.game.add.text(60 ,16, 'Score:' + score + '', { fontSize: '32px', fill: '#000'}); 
+    scoreText = this.game.add.text(60 ,16, 'x' + score + '', { fontSize: '32px', fill: '#000'}); 
     scoreText.anchor.set(0.5); 
     scoreText.fixedToCamera= true;
+    qualleScore = this.game.add.sprite(50 ,16, "qualle_score"); 
+    qualleScore.anchor.setTo(0.5);
+    qualleScore.fixedToCamera = true;
 
     lifeText = this.game.add.sprite(90, 40, "healthbar" );
     lifeText.anchor.set(0.5); 

@@ -84,6 +84,7 @@ preload.prototype = {
     this.game.load.image("schild_burger", "assets/Object/power.png");
 
     this.game.load.spritesheet("healthbar", "assets/Sprites/Healthbar3.png", 128, 17);
+    this.game.load.spritesheet("qualle_score", "assets/Sprites/QualleScore.png");
 
     
     // LADEN DER SPRITESHEETS
