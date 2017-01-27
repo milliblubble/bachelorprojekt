@@ -17,7 +17,7 @@ var woosh3;
 var deathSound;
 
 var soundOn = true;
-var shock;
+
 
 //Variablen für die Truhe
 var dialog;
@@ -30,6 +30,7 @@ var treasure;
 var player;
 var catcher;  
 var playerDead = false;
+var shockCheck = false;
  
 
 var life = 100; 
@@ -106,6 +107,9 @@ update:function()
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
     }
+     if(this.game.time.now - timeCheck > 400) {
+        shockCheck = false;
+    }  
     if(this.checkOverlap(player,monster)) {
         this.gameOver();
     }
@@ -667,6 +671,15 @@ updatePlayerControl:function()
                 woosh3.play('', 0, 0.5, false);
             }
         }
+
+        if(shockCheck == true) {
+             if(player.direction == "right") {
+            player.frame = 11;
+            }
+            if(player.direction == "left") {
+            player.frame = 12;
+            }
+        }
     }
 },
 
@@ -809,12 +822,7 @@ killPlayer:function(player,quallen)
         console.log("%c life : " +life , "color: white; background: red"); 
         shock.play('', 0, 0.3, false);
         lifeText.text = 'Health: '+ life +' %';
-        if(player.direction == "right") {
-            player.frame = 11;
-        }
-        if(player.direction == "left") {
-            player.frame = 12;
-        }
+      	shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
     }
@@ -832,12 +840,7 @@ killPlayerTwo:function(player,QuallenG)
         life -= 20;  
         shock.play('', 0, 0.3, false);
         lifeText.text = 'Health: '+ life +' %';
-        if(player.direction == "right") {
-            player.frame = 11;
-        }
-        if(player.direction == "left") {
-            player.frame = 12;
-        }
+        shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
     }

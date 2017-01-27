@@ -29,6 +29,7 @@ var burger;
 var playerDead = false;
 var soundOn = true;
 var pause = false;;
+var shockCheck = false;
 
 var life = 100; 
 var score= 0; 
@@ -118,6 +119,9 @@ create:function ()
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
     }    
+    if(this.game.time.now - timeCheck > 400) {
+        shockCheck = false;
+    }  
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.overlap(player,burger, this.getPower, null, this);
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
@@ -491,6 +495,15 @@ updatePlayerControl:function()
                 woosh3.play('', 0, 0.5, false);
             }
         }
+
+        if(shockCheck == true) {
+             if(player.direction == "right") {
+            player.frame = 11;
+            }
+            if(player.direction == "left") {
+            player.frame = 12;
+            }
+        }
     }
 },
 
@@ -610,12 +623,7 @@ killPlayer:function(player,quallen)
             shock.play('', 0, 0.3, false);
         }
         lifeText.text = 'Health: '+ life +' %';
-        if(player.direction == "right") {
-            player.frame = 11;
-        }
-        if(player.direction == "left") {
-            player.frame = 12;
-        }
+        shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
     }
