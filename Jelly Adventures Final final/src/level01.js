@@ -31,9 +31,11 @@ var soundOn = true;
 var pause = false;;
 var shockCheck = false;
 
+
 var life = 100; 
 var score= 0; 
 var test;
+var frameNr = 0;
 
 // Variablen für den Dialog
 var dialog;
@@ -383,10 +385,13 @@ createScoreBar:function(){
     scoreText.anchor.set(0.5); 
     scoreText.fixedToCamera= true;
 
-    lifeText = this.game.add.text(92, 40, 'Health:' + life + '%', {fontSize: '32px', fill: '#000'} ); 
+    lifeText = this.game.add.sprite(90, 40, "healthbar" ); 
+   // lifeText.frame = 0;
     lifeText.anchor.set(0.5); 
     lifeText.fixedToCamera =true; 
 },
+
+
 
 updatePlayerControl:function()
 {
@@ -622,7 +627,8 @@ killPlayer:function(player,quallen)
         if(soundOn == true) {  
             shock.play('', 0, 0.3, false);
         }
-        lifeText.text = 'Health: '+ life +' %';
+        lifeText.frame = frameNr + 1;
+        frameNr += 1;
         shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;

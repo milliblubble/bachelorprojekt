@@ -32,7 +32,7 @@ var catcher;
 var playerDead = false;
 var shockCheck = false;
  
-
+var frameNr = 0;
 var life = 100; 
 var score= 0; 
 var test;
@@ -559,7 +559,7 @@ createScoreBar:function(){
     scoreText.anchor.set(0.5); 
     scoreText.fixedToCamera= true;
 
-    lifeText = this.game.add.text(92, 40, 'Health:' + life + '%', {fontSize: '32px', fill: '#000'} ); 
+    lifeText = this.game.add.sprite(90, 40, "healthbar" );
     lifeText.anchor.set(0.5); 
     lifeText.fixedToCamera =true; 
 },
@@ -790,11 +790,6 @@ killEndboss: function(){
         lightningBall.kill();
 
     }
-
-
-   
-
-
 },
 
 collectJellyfishG: function()
@@ -820,8 +815,11 @@ killPlayer:function(player,quallen)
     {
         life -= 10;  
         console.log("%c life : " +life , "color: white; background: red"); 
-        shock.play('', 0, 0.3, false);
-        lifeText.text = 'Health: '+ life +' %';
+        if(soundOn == true) {  
+            shock.play('', 0, 0.3, false);
+        }
+        lifeText.frame = frameNr + 1;
+        frameNr += 1;
       	shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
@@ -838,8 +836,11 @@ killPlayerTwo:function(player,QuallenG)
     if(life > 0)
     {
         life -= 20;  
-        shock.play('', 0, 0.3, false);
-        lifeText.text = 'Health: '+ life +' %';
+        if(soundOn == true) {  
+            shock.play('', 0, 0.3, false);
+        }
+        lifeText.frame = frameNr + 2;
+        frameNr += 2;
         shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
@@ -901,6 +902,7 @@ checkOverlapAbyss:function()
         this.gameOver();
     }
 },
+
 
 debug:function()
 { 

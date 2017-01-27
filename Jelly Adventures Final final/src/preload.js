@@ -82,6 +82,9 @@ preload.prototype = {
     this.game.load.image("schild_fangen", "assets/Object/fangen.png"); 
     this.game.load.image("schild_gefahr", "assets/Object/danger.png"); 
     this.game.load.image("schild_burger", "assets/Object/power.png");
+
+    this.game.load.spritesheet("healthbar", "assets/Sprites/Healthbar3.png", 128, 17);
+
     
     // LADEN DER SPRITESHEETS
     this.game.load.spritesheet("player", "assets/Sprites/Spongeboy4.png",64,64); // Spieler-Sprite
