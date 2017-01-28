@@ -1,5 +1,5 @@
 
-var level02 = function(game){};
+var level03 = function(game){};
 
 
 // KARTENVARIABLE
@@ -54,7 +54,7 @@ var timeCheck;
 var cButtonRemove = false;
 var catchCounter = 0;
 
-level02.prototype = {
+level03.prototype = {
 	create:function () 
 {
 	// FPS ANZEIGE
@@ -73,21 +73,10 @@ level02.prototype = {
 
     this.createQuallenG();
 
-	
-	this.createGhost();
-	this.createChest();
-	this.createDialog();
-	this.createTreasure();
-	
-    this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
     
-    this.createBubbleGroup();
-    this.createBubble()
 
     this.createSoundButton();
-    this.createPauseButton();
-    this.createMonster();
 
     //debug();
     //create score and healtbar
@@ -106,14 +95,10 @@ update:function()
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
     }
-    if(this.checkOverlap(player,monster)) {
-        this.gameOver();
-    }
 	if(this.game.time.now - timeCheck > 1000) // new
 	{
 		dialog.text = '';
 		spongeFace.visible = false;
-		treasure.visible = false;
 	}
 
    
@@ -171,7 +156,7 @@ createWorld: function()
 	this.game.stage.backgroundColor ="#15DAFF";
 	//background.fixedToCamera = true;
 	map = this.game.add.tilemap("level_03");
-	background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
+	// background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
     map.addTilesetImage("SteeringWheel","steeringWheel");
 	this.game.time.events.loop(Phaser.Timer.SECOND * 10, this.createBubble, this);
 
@@ -189,13 +174,13 @@ createWorld: function()
     pLayer.resizeWorld();
 },
 createForeground: function(){
-	foreground = this.game.add.tileSprite(0,map.height, 8000, 147, "vordergrundBG");
+
 
 }, 
 updateParallax:function ()
 {
-    foreground.tilePosition.x = -(this.game.camera.x * 0.7);
-    background.tilePosition.x = -(this.game.camera.x * 0.1); 
+   // foreground.tilePosition.x = -(this.game.camera.x * 0.7);
+   // background.tilePosition.x = -(this.game.camera.x * 0.1); 
 },
 //Funtkion zum Erstellen des Spielers
 createPlayer:function()
@@ -271,45 +256,7 @@ createPauseButton: function() {
     this.game.input.onDown.add(function () {if(this.game.paused)this.game.paused = false; pauseButton.frame = 0;},this);
 },
 
-createGhost:function()
-{
-	ghost = this.game.add.group();
-	ghost.enableBody = true;
-    ghost.enableBodyDebug = true;
-	
-	ghost.physicsBodyType = Phaser.Physics.ARCADE; 
-    this.game.physics.enable(ghost, Phaser.Physics.ARCADE); 
-    ghost.inputEnabled = true; 
-    
-    map.createFromObjects('Object Layer', "SleepingDutchman", 'sleepingDutchman', 0, true, false, ghost);
-    
-	ghost.callAll('animations.add', 'animations', 'sleep', [0, 1], 2, true);
-    ghost.callAll('animations.play', 'animations', 'sleep');
-},
 
-createChest:function()
-{
-	chest = this.game.add.group();
-	chest.enableBody = true;
-    chest.enableBodyDebug = true;
-	
-	chest.physicsBodyType = Phaser.Physics.ARCADE; 
-    this.game.physics.enable(chest, Phaser.Physics.ARCADE); 
-    chest.inputEnabled = true; 
-    
-    map.createFromObjects('Object Layer', "Chest", 'treasureChest', 0, true, false, chest);
-    
-	chest.callAll('animations.add', 'animations', 'open', [0, 1], 2, true);
-	chest.frame = 0;
-},
-
-createTreasure:function()
-{
-	treasure = this.game.add.sprite(2435.31+10, 828.56-100, "treasure"); 
-    treasure.scale.setTo(1.5,1.5);
-	treasure.visible = false;
-	
-},
 
 createDialog:function()
 {
@@ -335,8 +282,7 @@ createEndboss:function(){
     tween.start();
     tween.yoyo(true, 500); 
     }
-    
-   
+  
 
     endboss.animations.add("moving", [0,1], 4, true);
     endboss.animations.play("moving"); 
@@ -431,24 +377,6 @@ createQuallenG: function() {
 },
 
 
-createBubbleGroup: function()
-{
-	bubbles = this.game.add.group();
-	bubbles.enableBody = true;
-	bubbles.physicsBodyType = Phaser.Physics.ARCADE;
-},
-createBubble: function()
-{
-	map.createFromObjects('Object Layer', "Bubble", "bubble", 3, true, false, bubbles);
-
-	bubbles.setAll("body.allowGravity", false);
-	bubbles.setAll("body.immovable", true);
-},
-
-destroyBubble: function(bubbles, pLayer)
-{
-	bubbles.kill();
-},
 // Funktion zum Einstellen der Steuerung
 createControl:function()
 {
@@ -507,18 +435,6 @@ musicOnOff: function()
     }
 },
 
-createMonster: function() {
-    monster = this.game.add.sprite(200, 2000, "seeungeheuer");
-    monster.animations.add("bite", [0,1], 2, true);
-    monster.animations.play("bite");
-    monster.inputEnabled = true;
-    this.game.physics.enable(monster, Phaser.Physics.ARCADE); 
-    monster.body.moves = false;
-    monster.collideWorldBounds = true;
-    var tween = this.game.add.tween(monster).to({y:1500},5000, "Linear", true, 0, -1);
-    tween.start();
-    tween.yoyo(true, 500);
-},
 
 checkOverlap: function(spriteA, spriteB) {
 
@@ -545,7 +461,6 @@ collectBonus:function(catcher, chest)
 		}
 	}
 },
-
 
 
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS

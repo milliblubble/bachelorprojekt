@@ -32,7 +32,8 @@ gameMenu.prototype = {
 		//this.gameTitle.anchor.setTo(0.5, 0.5);
 
 		 this.addLevel01(); 
-		 this.addLevel02(); 		
+		 this.addLevel02(); 
+ 		 this.addLevel03(); 	
 		 this.addArrow(); 	
 
 		//this.buttons = new MenuButtons(this.buttonSettings);
@@ -59,6 +60,14 @@ gameMenu.prototype = {
 		//level01_button.onInputOver.add(startLevel02, this);	
 		//level02_button.callbackFunction = this.startLevel02(); 
 		return level02_button;
+	}, 
+
+	addLevel03:function(key, yOffset, callback){
+		var level03_button = this.game.add.button(this.game.camera.width / 2, this.game.camera.height / 2 +160 , 'level_3_button', this.startLevel03, this);	
+		level03_button.anchor.setTo(0.5, 0.5);
+		level03_button.scale.x = 0.5;
+		level03_button.scale.y = 0.5;
+		return level03_button;
 	}, 
 
 	addArrow:function(){
@@ -94,9 +103,11 @@ gameMenu.prototype = {
 	startLevel02:function(){
 		music.stop();
 		this.game.state.start('Level02');
-	}
-	
-
+	},
+	startLevel03:function(){
+		music.stop();
+		this.game.state.start('Level03');
+	},
 
 }; 
 

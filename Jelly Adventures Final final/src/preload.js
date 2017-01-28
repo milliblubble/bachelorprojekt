@@ -42,6 +42,7 @@ preload.prototype = {
     // this.load.image('select_level', 'assets/sprites/menu/select_level.png');
     this.load.image('level_1_button', 'assets/sprites/menu/level_01_button.png');
     this.load.image('level_2_button', 'assets/sprites/menu/level_02_button.png');
+    this.load.image('level_3_button', 'assets/sprites/menu/level_03_button.png');
     this.load.image('back_button', 'assets/sprites/menu/back_button.png');
 
     // Load victory screen image
@@ -55,6 +56,7 @@ preload.prototype = {
         // LADEN DER TILEMAP
     this.load.tilemap("level_01", "assets/Level/level_01.json",null,Phaser.Tilemap.TILED_JSON);
     this.load.tilemap("level_02", "assets/Level/level_02.json",null,Phaser.Tilemap.TILED_JSON);
+    this.load.tilemap("level_03", "assets/Level/level_03.json",null,Phaser.Tilemap.TILED_JSON); 
 
     // LADEN DER TILEMAP
     this.load.image("tiles","assets/tiles/tile-sheet.png");
