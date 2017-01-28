@@ -716,12 +716,14 @@ levelOneWin:function()
     this.game.time.events.add(2000, this.level2, this);
 }, 
 
+
 // level2 funktion
 level2:function()
 {
 	bMusic.stop();
     this.game.state.start("Level02");
 },
+
 /*
 // nextLine und nextWord ist gedacht um einzelne worte auszugeben und nicht den kompletten text
 nextLine:function(c) {

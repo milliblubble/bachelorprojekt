@@ -37,7 +37,7 @@ var frameNr = 0;
 var life = 100; 
 var score= 0; 
 var test;
-
+var endObject;
 
 // GRUPPENVARIABLE
 var quallen, bubbles;
@@ -82,6 +82,7 @@ level02.prototype = {
     this.createSoundButton();
     this.createPauseButton();
     this.createMonster();
+    this.addEndObject();
 
     //debug();
     //create score and healtbar
@@ -127,7 +128,7 @@ update:function()
     		catchButton.onDown.remove(this.collectJellyfishG);
     	}
     }
-
+    this.game.physics.arcade.overlap(player,endObject, this.levelTwoWin, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
@@ -786,12 +787,39 @@ gameOver:function()
         life = 100;
      
 },
+
+addEndObject: function(){
+	endObject = this.game.add.sprite(4600, 2000, "level3end");
+	endObject.scale.setTo(0.2,0.2);
+	endObject.renderable = false;
+	this.game.physics.enable(endObject, Phaser.Physics.ARCADE); 
+    endObject.body.moves = false;
+    endObject.collideWorldBounds = true;
+},
+
+levelTwoWin: function(player, endObject)
+
+{   
+	if(score >= 1) {
+    	this.game.time.events.add(2000, this.level3, this);
+    }
+}, 
+
+
 // level2 funktion
-level2: function()
+level3: function()
+{
+	bMusic.stop();
+    this.game.state.start("Level03");
+},
+
+// level2 funktion
+/*level2: function()
 {
 	bMusic.stop();
 	this.game.state.restart();
 }, 
+*/
 
 checkOverlap:function(spriteA, spriteB) {
 
