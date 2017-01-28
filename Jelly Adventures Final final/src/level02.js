@@ -67,6 +67,7 @@ level02.prototype = {
 
     this.createQuallenG();
 
+    this.createBurger();
 	
 	this.createGhost();
 	this.createChest();
@@ -134,6 +135,7 @@ update:function()
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     this.game.physics.arcade.overlap(player,lightning, this.killPlayer, null, this);
     this.game.physics.arcade.overlap(player,lightningBall, this.killPlayer, null, this);
+	this.game.physics.arcade.overlap(player,burger, this.getPower, null, this);
 
     catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
     catcher.y = Math.floor(player.y -65);
@@ -457,6 +459,17 @@ collectBonus:function(catcher, chest)
 },
 
 
+//ERSTELLT DIE HEALTHPOTION  
+createBurger:function()
+{
+    burger = this.game.add.sprite(2000, 500, "burger"); 
+    burger.scale.setTo(1.5,1.5); 
+    this.game.physics.enable(burger, Phaser.Physics.ARCADE); 
+    burger.body.moves = false;
+    burger.body.collideWorldBounds = true; 
+    burger.inputEnabled = true; //TEST 
+    burger.input.enableDrag(); //TEST
+},
 
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
 createScoreBar:function(){
@@ -715,7 +728,17 @@ collectJellyfishG: function()
 	
 
 
-
+getPower:function(player,burger) {
+    if(life < 100) {
+        life = 100;
+        lifeText.frame = frameNr - 1;
+        frameNr -= 1;
+        burger.kill();
+        if(soundOn == true) { 
+            eatingSound.play('', 0, 0.5, false);
+        }
+    }
+},
 
 
 killPlayer:function(player,quallen)

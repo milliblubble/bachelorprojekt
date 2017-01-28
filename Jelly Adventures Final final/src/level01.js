@@ -601,7 +601,8 @@ collectJellyfish:function(catcher, quallen)
 getPower:function(player,burger) {
     if(life < 100) {
         life = 100;
-        lifeText.text = 'Health:' + life + '%';
+        lifeText.frame = frameNr - 1;
+        frameNr -= 1;
         burger.kill();
         if(soundOn == true) { 
             eatingSound.play('', 0, 0.5, false);
@@ -652,6 +653,8 @@ gameOver:function()
     if(soundOn == true) {
         deathSound.play('', 0, 0.5, false);
     }
+    lifeText.frame = 9;
+    frameNr = 9;
 	this.game.time.events.add(4000, this.gameOverState, this);
 	
 },
@@ -659,6 +662,8 @@ gameOver:function()
 gameOverState:function()
 {
 	life = 100;
+    lifeText.frame = 0;
+    frameNr = 0;
 	score = 0;
 	playerDead = false;
 	firstCollision = true;
