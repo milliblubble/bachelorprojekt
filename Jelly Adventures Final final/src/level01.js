@@ -671,7 +671,7 @@ levelOneDialog:function()
 {
     if(this.checkOverlap(player, mrcancer))
     {
-        if(score >= 1)
+        if(score >= 10)
         {   
             dialog.text = dialogWinCancer;
             cancerFace.visible = true;
