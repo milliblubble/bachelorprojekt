@@ -160,6 +160,7 @@ createWorld: function()
 	map = this.game.add.tilemap("level_02");
 	background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
     map.addTilesetImage("SteeringWheel","steeringWheel");
+    map.addTilesetImage("Sign_Jellyfish", "schild_qualle");
 	this.game.time.events.loop(Phaser.Timer.SECOND * 10, this.createBubble, this);
 
 	map.addTilesetImage("tile-sheet","tiles");
