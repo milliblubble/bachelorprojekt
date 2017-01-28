@@ -106,7 +106,10 @@ update:function()
         shockCheck = false;
     }  
     if(this.checkOverlap(player,monster)) {
-        this.gameOver();
+        if(playerDead == false)
+		{
+			this.gameOver();
+		}
     }
 	if(this.game.time.now - timeCheck > 1000) // new
 	{
@@ -420,14 +423,15 @@ musicOnOff: function()
 },
 
 createMonster: function() {
-    monster = this.game.add.sprite(1000, 2300, "seeungeheuer");
+    monster = this.game.add.sprite(3600, 2000, "seeungeheuer");
     monster.animations.add("bite", [0,1], 2, true);
     monster.animations.play("bite");
+	monster.scale.setTo(2.5,2.5);
     monster.inputEnabled = true;
     this.game.physics.enable(monster, Phaser.Physics.ARCADE); 
     monster.body.moves = false;
     monster.collideWorldBounds = true;
-    var tween = this.game.add.tween(monster).to({y:1500},4000, "Linear", true, 0, -1);
+    var tween = this.game.add.tween(monster).to({y:1857},3000, "Linear", true, 0, -1);
     tween.start();
     tween.yoyo(true, 500);
 },

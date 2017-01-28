@@ -104,7 +104,7 @@ preload.prototype = {
 
     this.game.load.spritesheet("qualle2","assets/Sprites/Qualle2.png",57, 70);
 
-    this.game.load.spritesheet("seeungeheuer", "assets/Sprites/Seamonster.png", 59, 202);
+    this.game.load.spritesheet("seeungeheuer", "assets/Sprites/Seamonster.png", 64, 202);
 	
 	this.game.load.spritesheet("treasureChest", "assets/Sprites/TreasureChest2.png",67,61);
 	this.game.load.spritesheet("sleepingDutchman", "assets/Sprites/SleepingDutchman.png",256,256);
