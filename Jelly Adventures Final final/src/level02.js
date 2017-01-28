@@ -418,14 +418,14 @@ musicOnOff: function()
 },
 
 createMonster: function() {
-    monster = this.game.add.sprite(200, 2000, "seeungeheuer");
+    monster = this.game.add.sprite(1000, 2300, "seeungeheuer");
     monster.animations.add("bite", [0,1], 2, true);
     monster.animations.play("bite");
     monster.inputEnabled = true;
     this.game.physics.enable(monster, Phaser.Physics.ARCADE); 
     monster.body.moves = false;
     monster.collideWorldBounds = true;
-    var tween = this.game.add.tween(monster).to({y:1500},5000, "Linear", true, 0, -1);
+    var tween = this.game.add.tween(monster).to({y:1500},4000, "Linear", true, 0, -1);
     tween.start();
     tween.yoyo(true, 500);
 },
@@ -461,7 +461,7 @@ collectBonus:function(catcher, chest)
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
 createScoreBar:function(){
 
-    scoreText = this.game.add.text(60 ,16, 'x' + score + '', { fontSize: '32px', fill: '#000'}); 
+    scoreText = this.game.add.text(80 ,16, 'x' + score + '', { fontSize: '32px', fill: '#000'}); 
     scoreText.anchor.set(0.5); 
     scoreText.fixedToCamera= true;
     qualleScore = this.game.add.sprite(50 ,16, "qualle_score"); 
