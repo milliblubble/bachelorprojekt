@@ -645,35 +645,25 @@ killPlayer:function(player,quallen)
 
 gameOver:function()
 {
-    bMusic.stop();
+	playerDead = true;
+	bMusic.stop();
     catcher.kill();
-    playerDead = true;
     player.animations.play("die");
     if(soundOn == true) {
         deathSound.play('', 0, 0.5, false);
     }
-  //  firstCollisionDying = false;
-
-    var gameOvertext = this.game.add.text(400,150, 'Game over! Press R to restart', 
-                                    {font: '50px Arial', fill: '#ffffff'}); 
-    gameOvertext.anchor.set(0.5); 
-    gameOvertext.fixedToCamera= true;
-
-	/*
-    var restartKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R); 
-    restartKey.onDown.addOnce(this.level2);
-	*/
-	this.game.time.events.add(4000, this.level1Restart, this); 
+	this.game.time.events.add(4000, this.gameOverState, this);
+	
 },
 
-level1Restart:function()
+gameOverState:function()
 {
-	life=100;
-	score=0;
+	life = 100;
+	score = 0;
 	playerDead = false;
-	firstCollisionDying = true;
 	firstCollision = true;
-	this.game.state.start('Level01');
+	firstCollisionDying = true;
+	this.game.state.start("GameOver", true, false, 1);
 },
 
 // starten des dialogs
@@ -724,50 +714,6 @@ level2:function()
     this.game.state.start("Level02");
 },
 
-/*
-// nextLine und nextWord ist gedacht um einzelne worte auszugeben und nicht den kompletten text
-nextLine:function(c) {
-    content = c;
-    
-    if (lineIndex == 1)
-    {
-        //  We're finished
-        return;
-    }
-
-    //  Split the current line on spaces, so one word per array element
-    line = content[lineIndex].split(' ');
-
-    //  Reset the word index to zero (the first word in the line)
-    wordIndex = 0;
-
-    //  Call the 'nextWord' function once for each word in the line (line.length)
-    this.game.time.events.repeat(wordDelay, line.length, this.nextWord, this);
-
-    //  Advance to the next line
-    lineIndex++;
-},
-
-nextWord:function() {
-
-    //  Add the next word onto the text string, followed by a space
-    dialog.text = dialog.text.concat(line[wordIndex] + " ");
-
-    //  Advance the word index to the next word in the line
-    wordIndex++;
-
-    //  Last word?
-    if (wordIndex == line.length)
-    {
-        //  Add a carriage return
-        dialog.text = dialog.text.concat("\n");
-
-        //  Get the next line after the lineDelay amount of ms has elapsed
-        this.game.time.events.add(lineDelay,this.nextLine, this);
-    }
-},
-*/
-
 checkOverlap:function(spriteA, spriteB) {
 
     var boundsA = spriteA.getBounds();
@@ -779,10 +725,13 @@ checkOverlap:function(spriteA, spriteB) {
 // wenn spongebob zu weit unten ist stirbt er
 checkOverlapAbyss:function()
 {
-    if(player.y == 1151 && firstCollisionDying == true)
-    {
-        this.gameOver();
-    }
+	if(playerDead == false)
+	{
+		if(player.y == 1151 && firstCollisionDying == true)
+		{
+			this.gameOver();
+		}
+	}
 },
 
 debug:function()
