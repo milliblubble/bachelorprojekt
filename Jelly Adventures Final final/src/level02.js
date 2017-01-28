@@ -38,13 +38,6 @@ var life = 100;
 var score= 0; 
 var test;
 
-//VARIABLEN FÜR DEN ENDBOSS 
-var endboss; 
-var lightning; 
-var lightningBall;
-var lifeEndboss = 100; 
-var hitCounter = 0; 
-var hButtonRemove = false; 
 
 // GRUPPENVARIABLE
 var quallen, bubbles;
@@ -71,7 +64,6 @@ level02.prototype = {
     this.createControl();  // ERSTELLUNG DER STEUERUNG
     this.createQuallen();  // ERSTELLT QUALLEN AUF DER MAP 
 
-    this.createEndboss(); //ERSTELLT DEN ENDBOSS
 
     this.createQuallenG();
 
@@ -136,22 +128,11 @@ update:function()
     	}
     }
 
-    if(this.checkOverlap(catcher, endboss)) {
-        catchButton.onDown.add(this.killEndboss);
-        if(hButtonRemove == true) {
-            catchButton.onDown.remove(this.killEndboss);
-            hButtonRemove = false; 
-        }
-    }
-   
-
-
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     this.game.physics.arcade.overlap(player,lightning, this.killPlayer, null, this);
     this.game.physics.arcade.overlap(player,lightningBall, this.killPlayer, null, this);
-   // this.game.physics.arcade.overlap(catcher,endboss, this.killEndboss, null, this);
 
     catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
     catcher.y = Math.floor(player.y -65);
@@ -326,84 +307,6 @@ createDialog:function()
     dialog.fixedToCamera = true;
 },
 
-createEndboss:function(){
-    endboss = this.game.add.sprite(300,1950, "endboss");
-    endboss.scale.setTo(0.3,0.3);
-    endboss.enableBody = true;
-    endboss.enableBodyDebug = true;
-    endboss.physicsBodyType = Phaser.Physics.ARCADE;
-    this.game.physics.enable(endboss, Phaser.Physics.ARCADE); 
-    endboss.inputEnabled = true;
-    if (lifeEndboss == 70){
-    var tween = this.game.add.tween(endboss).to({y:1800},2000, "Linear", true);
-    tween.onComplete.addOnce(this.tween2, this); 
-    tween.start();
-    tween.yoyo(true, 500); 
-    }
-    
-   
-
-    endboss.animations.add("moving", [0,1], 4, true);
-    endboss.animations.play("moving"); 
-    endboss.body.moves = false;
-    endboss.collideWorldBounds = true;  
-
-
-
-}, 
-
-
- tween1: function(){
-
-    console.log("%cEnter Tween test ", "color: white; background: green");        
-    
-    var tween1 = this.game.add.tween(endboss).to({x:300, y:1800},2000, "Linear", true);  //wartet 2 Sekunden bis der nächste tween aufgerufen wird 
-    this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
-    tween1.onComplete.addOnce(this.tween2,this); 
-    
-
- }, 
- tween2: function(){    
-     var tween2 = this.game.add.tween(endboss).to({x:100, y: 1800},2000, "Linear", true); //wartet 2 Sekunden bis der nächste tween aufgerufen wird      
-     tween2.onComplete.addOnce(this.tween3,this);  
- }, 
-
- tween3:function(){
-    var tween3 = this.game.add.tween(endboss).to({x:300, y:1800},2000, "Linear", true,5000);
-     this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack01, this); 
-    tween3.onComplete.addOnce(this.tween4,this); 
-
- }, 
- tween4:function(){
-    var tween4 = this.game.add.tween(endboss).to({x: 300, y:1950}, 2000, "Linear", true);
-    tween4.onComplete.addOnce(this.tween,this); 
-
- }, 
- attack01: function(){
-    lightning=this.game.add.sprite(100, 1950, "attack01");
-    lightning.scale.setTo(0.3,0.3); 
-    this.game.physics.enable(lightning, Phaser.Physics.ARCADE); 
-    //attack02.body.bounce.y = 0.9;
-    lightning.collideWorldBounds = true;
-    //attack02.animations.add("rolling", [0,1], 6, true);
-    //attack02.animations.play("rolling");
-    var tween = this.game.add.tween(lightning).to({x:100, y:2020}, 2000, "Linear", true); 
-    //this.time.events.add(20000, this.attack01.kill, this);
-
- }, 
-
-
- attack02: function(){
-
-    lightningBall =this.game.add.sprite(300, 2020, "attack02");
-    this.game.physics.enable(lightningBall, Phaser.Physics.ARCADE); 
-    lightningBall.body.bounce.y = 0.9;
-    lightningBall.collideWorldBounds = true;
-    lightningBall.animations.add("rolling", [0,1], 6, true);
-    lightningBall.animations.play("rolling");
-    var tween = this.game.add.tween(lightningBall).to({x:150, y:2020}, 2000, "Linear", true); 
-   
- },
 
 
 

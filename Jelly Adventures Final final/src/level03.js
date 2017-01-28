@@ -158,7 +158,6 @@ createWorld: function()
 	map = this.game.add.tilemap("level_03");
 	// background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
     map.addTilesetImage("SteeringWheel","steeringWheel");
-	this.game.time.events.loop(Phaser.Timer.SECOND * 10, this.createBubble, this);
 
 	map.addTilesetImage("tile-sheet","tiles");
     bgLayer2 = map.createLayer("Background Layer 2");
@@ -269,7 +268,7 @@ createDialog:function()
 },
 
 createEndboss:function(){
-    endboss = this.game.add.sprite(300,1950, "endboss");
+    endboss = this.game.add.sprite(map.objects["Boss Layer"][0].x,map.objects["Boss Layer"][0].y, "endboss");
     endboss.scale.setTo(0.3,0.3);
     endboss.enableBody = true;
     endboss.enableBodyDebug = true;
@@ -442,24 +441,6 @@ checkOverlap: function(spriteA, spriteB) {
     var boundsB = spriteB.getBounds();
 
     return Phaser.Rectangle.intersects(boundsA, boundsB);
-},
-
-collectBonus:function(catcher, chest)
-{
-	timeCheck = this.game.time.now;
-	if(chest.frame == 0)
-	{
-		if (catchButton.isDown)
-		{
-			spongeFace.visible = true;
-			spongeFace.play("talk");
-			dialog.text = bonusDialog;
-			score += 10;
-			scoreText.text = 'Score: ' + score;
-			chest.frame = 1;
-			treasure.visible = true;
-		}
-	}
 },
 
 
