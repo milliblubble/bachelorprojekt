@@ -30,7 +30,7 @@ var treasure;
 var player;
 var catcher;  
 var playerDead = false;
- 
+var shockCheck = false;
 
 var life = 100; 
 var score= 0; 
@@ -105,7 +105,9 @@ update:function()
 		//dialog.text = '';
 		spongeFace.visible = false;
 	}
-
+    if(this.game.time.now - timeCheck > 400) {
+        shockCheck = false;
+    }  
    
 
     //if (this.checkOverlap(player, attack01))
@@ -395,12 +397,7 @@ shockPlayer: function(player, lightning){
         console.log("%c life : " +life , "color: white; background: red"); 
         shock.play('', 0, 0.3, false);
         lifeText.text = 'Health: '+ life +' %';
-        if(player.direction == "right") {
-            player.frame = 11;
-        }
-        if(player.direction == "left") {
-            player.frame = 12;
-        }
+        shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
     }
@@ -419,12 +416,7 @@ rollOverPlayer:function(pLayer, lightningBall){
         console.log("%c life : " +life , "color: white; background: red"); 
         shock.play('', 0, 0.3, false);
         lifeText.text = 'Health: '+ life +' %';
-        if(player.direction == "right") {
-            player.frame = 11;
-        }
-        if(player.direction == "left") {
-            player.frame = 12;
-        }
+        shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
     }
@@ -651,6 +643,15 @@ updatePlayerControl:function()
             }
             if(soundOn == true) {
                 woosh3.play('', 0, 0.5, false);
+            }
+        }
+
+        if(shockCheck == true) {
+             if(player.direction == "right") {
+            player.frame = 11;
+            }
+            if(player.direction == "left") {
+            player.frame = 12;
             }
         }
     }
