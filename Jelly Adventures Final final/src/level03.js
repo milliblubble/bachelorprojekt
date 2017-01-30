@@ -94,13 +94,15 @@ update:function()
     if(firstCollision == true  && firstCollisionDying == true) {
         this.game.physics.arcade.overlap(player,quallen, this.killPlayer, null, this); // VERLETZT SPIELER 
         this.game.physics.arcade.overlap(player,quallenG, this.killPlayerTwo, null, this);
+        this.game.physics.arcade.overlap(player,lightning, this.shockPlayer, null, this);
+        this.game.physics.arcade.overlap(player,lightningBall, this.rollOverPlayer, null, this);
     }
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
     }
 	if(this.game.time.now - timeCheck > 1000) // new
 	{
-		dialog.text = '';
+		//dialog.text = '';
 		spongeFace.visible = false;
 	}
 
@@ -126,14 +128,13 @@ update:function()
             hButtonRemove = false; 
         }
     }
-   
+
 
 
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
-    this.game.physics.arcade.overlap(player,lightning, this.killPlayer, null, this);
-    this.game.physics.arcade.overlap(player,lightningBall, this.killPlayer, null, this);
+    
     //this.game.physics.arcade.overlap(catcher, endboss, this.killEndboss, null, this); //ENDBOSS ANGREIFEN 
 
     catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
@@ -153,11 +154,12 @@ update:function()
     // ZEIGT HITBOXEN
     //debug();
 
-//this.updateEndbossMovement(); 
 
+//HIER WERDEN DIE SCHÄGE GEZÄHLT
     if(hitCounter ==3){
     hitCounter=0;
     this.tween1();
+
 }
 },
 
@@ -194,7 +196,7 @@ updateParallax:function ()
 //Funtkion zum Erstellen des Spielers
 createPlayer:function()
 {
-    player = this.game.add.sprite(1200,700, "player"); //PLAYER WIRD AUF VORDEFINIERTEN BEREICH GESETZT
+    player = this.game.add.sprite(map.objects["Player Layer"][0].x,map.objects["Player Layer"][0].y, "player"); //PLAYER WIRD AUF VORDEFINIERTEN BEREICH GESETZT
     //"Player Layer"][0].x,map.objects["Player Layer"][0].y
     player.inputEnabled = true;
     player.input.enableDrag(); 
@@ -324,7 +326,7 @@ tween1: function(){
  }, 
  tween4:function(){
     var tween4 = this.game.add.tween(endboss).to({x:1500, y: 600}, 2000, "Linear", true);
-     this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
+     this.time.events.repeat(Phaser.Timer.SECOND *2, 5, this.attack02, this); 
   //tween4.onComplete.addOnce(this.tween1,this); 
 
  }, 
@@ -359,14 +361,15 @@ killEndboss: function(){
     hitCounter +=1; 
     if (lifeEndboss >0){
 
-    lifeEndboss -=10; 
+    lifeEndboss -=5; 
     console.log("%cEndeboss Lebensenergie: "+ lifeEndboss); 
 }
 
 
 
-if(lifeEndboss==0){
-    endboss.kill(); 
+    else if(lifeEndboss==0){
+        
+    endboss.kill();    
     this.winState(); 
 }
     
@@ -374,19 +377,65 @@ if(lifeEndboss==0){
 
  },
 
-
- /*updateEndbossMovement: function(){
-
-   // this.tween1(); 
-
-},*/ 
- /*
+// Überführung zur abschließenden state
 
  winState: function()
 {
+ 
+
     bMusic.stop();
-    this.game.state.start("FinalWin");
-},*/
+   
+    
+},
+
+
+shockPlayer: function(player, lightning){
+     if(life > 0)
+    {
+        life -= 10;  
+        console.log("%c life : " +life , "color: white; background: red"); 
+        shock.play('', 0, 0.3, false);
+        lifeText.text = 'Health: '+ life +' %';
+        if(player.direction == "right") {
+            player.frame = 11;
+        }
+        if(player.direction == "left") {
+            player.frame = 12;
+        }
+        firstCollision = false;
+        timeCheck = this.game.time.now;
+    }
+    if (life <= 0)
+    {
+        firstCollisionDying = false;
+        this.gameOver();
+    }
+
+},
+
+rollOverPlayer:function(pLayer, lightningBall){
+    if(life > 0)
+    {
+        life -= 10;  
+        console.log("%c life : " +life , "color: white; background: red"); 
+        shock.play('', 0, 0.3, false);
+        lifeText.text = 'Health: '+ life +' %';
+        if(player.direction == "right") {
+            player.frame = 11;
+        }
+        if(player.direction == "left") {
+            player.frame = 12;
+        }
+        firstCollision = false;
+        timeCheck = this.game.time.now;
+    }
+    if (life <= 0)
+    {
+        firstCollisionDying = false;
+        this.gameOver();
+    } 
+
+}, 
 
 
 createQuallen:function()
@@ -704,7 +753,7 @@ collectJellyfishG: function()
 }, 
 
 
-killPlayer:function(player,quallen)
+killPlayer:function(player, quallen)
 {  
     if(life > 0)
     {
@@ -751,6 +800,30 @@ killPlayerTwo:function(player,QuallenG)
     }
 },
 
+killPlayer:function(player,quallen)
+{  
+    if(life > 0)
+    {
+        life -= 10;  
+        console.log("%c life : " +life , "color: white; background: red"); 
+        shock.play('', 0, 0.3, false);
+        lifeText.text = 'Health: '+ life +' %';
+        if(player.direction == "right") {
+            player.frame = 11;
+        }
+        if(player.direction == "left") {
+            player.frame = 12;
+        }
+        firstCollision = false;
+        timeCheck = this.game.time.now;
+    }
+    if (life <= 0)
+    {
+        firstCollisionDying = false;
+        this.gameOver();
+    }
+},
+
 
 
 gameOver:function()
@@ -770,7 +843,7 @@ gameOver:function()
     gameOvertext.fixedToCamera= true;
 
     var restartKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R); 
-    restartKey.onDown.addOnce(this.level2);
+    restartKey.onDown.addOnce(this.level3);
        // playerDead = false;
         //this.level2(); 
         playerDead = false; 
@@ -779,7 +852,7 @@ gameOver:function()
      
 },
 // level2 funktion
-level2: function()
+level3: function()
 {
 	bMusic.stop();
 	this.game.state.restart();
