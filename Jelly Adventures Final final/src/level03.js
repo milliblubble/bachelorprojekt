@@ -96,6 +96,7 @@ update:function()
         this.game.physics.arcade.overlap(player,quallenG, this.killPlayerTwo, null, this);
         this.game.physics.arcade.overlap(player,lightning, this.shockPlayer, null, this);
         this.game.physics.arcade.overlap(player,lightningBall, this.rollOverPlayer, null, this);
+       
     }
     if(this.game.time.now - timeCheck > 1000) {
         firstCollision = true;
