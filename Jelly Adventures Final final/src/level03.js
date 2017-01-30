@@ -823,39 +823,28 @@ killPlayer:function(player,quallen)
     }
 },
 
-
-
 gameOver:function()
 {
-    bMusic.stop();
+	bMusic.stop();
     catcher.kill();
     playerDead = true;
     player.animations.play("die");
     if(soundOn == true) {
         deathSound.play('', 0, 0.5, false);
     }
-   // firstCollisionDying = false;
-
-    var gameOvertext = this.game.add.text(400,150, 'Game over! Press R to restart', 
-                                    {font: '50px Arial', fill: '#ffffff'}); 
-    gameOvertext.anchor.set(0.5); 
-    gameOvertext.fixedToCamera= true;
-
-    var restartKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R); 
-    restartKey.onDown.addOnce(this.level3);
-       // playerDead = false;
-        //this.level2(); 
-        playerDead = false; 
-        score = 0;
-        life = 100;
-     
+	this.game.time.events.add(4000, this.gameOverState, this);
+	
 },
-// level2 funktion
-level3: function()
+
+gameOverState:function()
 {
-	bMusic.stop();
-	this.game.state.restart();
-}, 
+	life = 100;
+	score = 0;
+	playerDead = false;
+	firstCollision = true;
+	firstCollisionDying = true;
+	this.game.state.start("GameOver", true, false, 3);
+},
 
 checkOverlap:function(spriteA, spriteB) {
 

@@ -27,5 +27,9 @@ gameOver.prototype = {
 		{
 			this.game.state.start("Level02");
 		}
+		else if (aktLevel == 3)
+		{
+			this.game.state.start("Level03");
+		}
 	}
 }; 
