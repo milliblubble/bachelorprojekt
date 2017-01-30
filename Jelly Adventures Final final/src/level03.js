@@ -32,20 +32,20 @@ var catcher;
 var playerDead = false;
 var shockCheck = false;
 
+var frameNr = 0;
 var life = 100; 
 var score= 0; 
 var test;
 
 //VARIABLEN FÜR DEN ENDBOSS 
 var endboss; 
+var endbossFrameNr =0; 
 var lightning; 
 var lightningBall;
 var lifeEndboss = 100; 
 var hitCounter = 0; 
 var hButtonRemove = false; 
 
-// GRUPPENVARIABLE
-var quallen, bubbles;
 
 var firstCollision = true;
 var firstCollisionDying = true;
@@ -67,12 +67,9 @@ level03.prototype = {
     this.createCatcher(); //ERSTELLT DEN KESCHER
     
     this.createControl();  // ERSTELLUNG DER STEUERUNG
-    this.createQuallen();  // ERSTELLT QUALLEN AUF DER MAP 
-
+    
     this.createEndboss(); //ERSTELLT DEN ENDBOSS
-
-    this.createQuallenG();
-
+    
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
     
 
@@ -93,7 +90,6 @@ update:function()
     
     if(firstCollision == true  && firstCollisionDying == true) {
         this.game.physics.arcade.overlap(player, endboss, this.killPlayer, null, this); // VERLETZT SPIELER 
-        //this.game.physics.arcade.overlap(player,quallenG, this.killPlayerTwo, null, this);
         this.game.physics.arcade.overlap(player,lightning, this.shockPlayer, null, this);
         this.game.physics.arcade.overlap(player,lightningBall, this.rollOverPlayer, null, this);
        
@@ -117,12 +113,7 @@ update:function()
        catchButton.onDown.add(this.collectJellyfish2, this);
     }*/
   //  this.game.physics.arcade.overlap(catcher,quallen2, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
-    if(this.checkOverlap(catcher, quallenG)) {
-    	catchButton.onDown.add(this.collectJellyfishG);
-    	if(cButtonRemove == true) {
-    		catchButton.onDown.remove(this.collectJellyfishG);
-    	}
-    }
+  
 
    if(this.checkOverlap(catcher, endboss)) {
         catchButton.onDown.add(this.killEndboss);
@@ -132,10 +123,7 @@ update:function()
         }
     }
 
-
-
-    this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
-    this.game.physics.arcade.collide(quallen,pLayer);  //KOLLISION QUALLEN MIT DEN PLATTFORMEN WIRD AKTIVERT
+   
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     
     //this.game.physics.arcade.overlap(catcher, endboss, this.killEndboss, null, this); //ENDBOSS ANGREIFEN 
@@ -148,9 +136,7 @@ update:function()
     
     this.updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
     this.updateCatcherControl(); 
-    
-    this.game.physics.arcade.collide(bubbles,pLayer, this.destroyBubble, null,this);  //KOLLISION BUBBLE MIT DEN PLATTFORMEN WIRD AKTIVERT
-    this.game.physics.arcade.collide(player,bubbles);  //KOLLISION BUBBLE MIT DEM PLAYER WIRD AKTIVERT
+       
 
     this.updateParallax();
     // ZEIGT HITBOXEN
@@ -361,19 +347,28 @@ tween1: function(){
 killEndboss: function(){
 
     hitCounter +=1; 
+    score += 1;     
+
     if (lifeEndboss >0){
 
     lifeEndboss -=5; 
     console.log("%cEndeboss Lebensenergie: "+ lifeEndboss); 
+
+    if(lifeEndboss > 0 && lifeEndboss % 2 ==0){
+    qualleScore.frame = endbossFrameNr + 1;
+        endbossFrameNr += 1;}
+
+    else if (lifeEndboss ==0)
+    {
+         endboss.kill(); 
+         scoreText.kill(); 
+         qualleScore.kill();    
+         this.winState(); 
+   
+}    
 }
 
 
-
-    else if(lifeEndboss==0){
-        
-    endboss.kill();    
-    this.winState(); 
-}
     
 
 
@@ -397,7 +392,8 @@ shockPlayer: function(player, lightning){
         life -= 10;  
         console.log("%c life : " +life , "color: white; background: red"); 
         shock.play('', 0, 0.3, false);
-        lifeText.text = 'Health: '+ life +' %';
+        lifeText.frame = frameNr + 1;
+        frameNr += 1;
         shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
@@ -414,9 +410,10 @@ rollOverPlayer:function(pLayer, lightningBall){
     if(life > 0)
     {
         life -= 10;  
+        lifeText.frame = frameNr + 1;
+        frameNr += 1;
         console.log("%c life : " +life , "color: white; background: red"); 
-        shock.play('', 0, 0.3, false);
-        lifeText.text = 'Health: '+ life +' %';
+        shock.play('', 0, 0.3, false);       
         shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
@@ -429,34 +426,6 @@ rollOverPlayer:function(pLayer, lightningBall){
 
 }, 
 
-
-createQuallen:function()
-{
-    //  Die Gruppe für Quallen wird erstellt
-    quallen = this.game.add.group();
-    // Quallen erhalten einen Körper
-    quallen.enableBody = true;
-    quallen.enableBodyDebug = true;
-    
-    quallen.physicsBodyType = Phaser.Physics.ARCADE; 
-    this.game.physics.enable(quallen, Phaser.Physics.ARCADE); 
-    quallen.inputEnabled = true; 
-    
-    map.createFromObjects('Object Layer', "Qualle", 'qualle', 0, true, false, quallen);
-     
-    // ANNIMATION DER QUALEN
-    quallen.callAll('animations.add', 'animations', 'wackeln', [0, 1, 2, 3], 3, true);
-    quallen.callAll('animations.play', 'animations', 'wackeln');
-},
-
-createQuallenG: function() {
-	quallenG = this.game.add.sprite(500, 1950, "qualle2");
-	quallenG.animations.add("move", [0, 1, 2 , 3], 3, true);
-	quallenG.animations.play("move");
-	this.game.physics.enable(quallenG, Phaser.Physics.ARCADE); 
-	quallenG.body.moves = false;
-	quallenG.body.immovable = false;	
-},
 
 
 // Funktion zum Einstellen der Steuerung
@@ -530,13 +499,20 @@ checkOverlap: function(spriteA, spriteB) {
 //ERSTELLT DEN SCORE & HEALTH TEXT OBEN LINKS
 createScoreBar:function(){
 
-    scoreText = this.game.add.text(60 ,16, 'Score:' + score + '', { fontSize: '32px', fill: '#000'}); 
+    scoreText = this.game.add.text(700 ,16, 'Endboss', { fontSize: '32px', fill: '#000'}); 
     scoreText.anchor.set(0.5); 
     scoreText.fixedToCamera= true;
+    qualleScore = this.game.add.sprite(700, 40, "healthbar"); 
+    qualleScore.anchor.setTo(0.5);
+    qualleScore.fixedToCamera = true;
 
-    lifeText = this.game.add.text(92, 40, 'Health:' + life + '%', {fontSize: '32px', fill: '#000'} ); 
+    lifeLabel = this.game.add.text(90 ,16, 'Spongeboy', { fontSize: '32px', fill: '#000'}); 
+    lifeLabel.anchor.set(0.5); 
+    lifeLabel.fixedToCamera= true;
+    lifeText = this.game.add.sprite(90, 40, "healthbar" );
     lifeText.anchor.set(0.5); 
     lifeText.fixedToCamera =true; 
+
 },
 
 updatePlayerControl:function()
@@ -756,14 +732,14 @@ collectJellyfishG: function()
 
 killPlayer:function(player, endboss)
 {  
-    if(life > 0)
-    {
+    
           if(life > 0)
     {
         life -= 10;  
+        lifeText.frame = frameNr + 1;
+        frameNr += 1;
         console.log("%c life : " +life , "color: white; background: red"); 
         shock.play('', 0, 0.3, false);
-        lifeText.text = 'Health: '+ life +' %';
         shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
@@ -773,7 +749,7 @@ killPlayer:function(player, endboss)
         firstCollisionDying = false;
         this.gameOver();
     } 
-}
+
 }, 
 
 /*killPlayerTwo:function(player,QuallenG)
