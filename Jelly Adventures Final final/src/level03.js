@@ -866,15 +866,6 @@ checkOverlap:function(spriteA, spriteB) {
     return Phaser.Rectangle.intersects(boundsA, boundsB);
 },
 
-// wenn spongebob zu weit unten ist stirbt er
-checkOverlapAbyss:function()
-{
-    if(player.y == 2335 && firstCollisionDying == true)
-    {
-        this.gameOver();
-    }
-},
-
 debug:function()
 { 
     // ANZEIGE DER HITBOXEN
