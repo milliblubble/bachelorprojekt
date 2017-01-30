@@ -832,6 +832,8 @@ gameOver:function()
     if(soundOn == true) {
         deathSound.play('', 0, 0.5, false);
     }
+    lifeText.frame = 9;
+    frameNr = 9;
 	this.game.time.events.add(4000, this.gameOverState, this);
 	
 },
