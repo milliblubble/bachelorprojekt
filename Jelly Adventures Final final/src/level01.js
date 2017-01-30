@@ -627,6 +627,7 @@ killPlayer:function(player,quallen)
     if(life > 0)
     {
         life -= 10;  
+        console.log("%clife: " + life); 
         if(soundOn == true) {  
             shock.play('', 0, 0.3, false);
         }

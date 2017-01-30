@@ -363,27 +363,18 @@ killEndboss: function(){
          endboss.kill(); 
          scoreText.kill(); 
          qualleScore.kill();    
-         this.winState(); 
+         this.endgame(); 
    
 }    
 }
 
-
-    
-
-
  },
 
-// Überführung zur abschließenden state
 
- winState: function()
-{
- 
+endgame: function (){
 
-    bMusic.stop();
-   
-    
-},
+     console.log("%cThis game is over"); 
+}, 
 
 
 shockPlayer: function(player, lightning){

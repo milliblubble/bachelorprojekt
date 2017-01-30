@@ -1,24 +1,22 @@
-
-var finalWin = function(game){
-	 console.log("%cLoad finalWin", "color: white; background: red"); 
-};
+var finalWin = function(game){}; 
 
 
 
+finalWin.prototype = {	
+	
+  	create: function(){
+  		var gameOvertext = this.game.add.text(400,300, 'Yay you won! Press R to play again', 
+                                    {font: '50px Arial', fill: '#ffffff'}); 
+		gameOvertext.anchor.set(0.5); 
+		gameOvertext.fixedToCamera= true;
 
-finalWin.prototype = {
-	create:function () 
-{
-    var winLabel = this.game.add.text(80,80,'YAY YOU WON', { font: '50px Aial', fill: '#00FF00' }); 
-
-    var startLabel = this.game.add.text(80,game.world.height -80,'press R to play again', { font: '25px Aial', fill: '#00FF00' }); 
-
-    var rKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R); 
-    rKey.onDown.addOnce(this.playAgain, this);
-
-        playAgain: function(){
-        game.state.start("gameMenu");   
-	}
-
-}
-};
+		var restartKey = this.game.input.keyboard.addKey(Phaser.Keyboard.R); 
+		restartKey.onDown.add(this.playTheGame, this);
+	
+	},
+	playTheGame: function(){
+		
+			this.game.state.start("GameMenu");
+		}		
+		
+}; 
