@@ -92,8 +92,8 @@ update:function()
     this.game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     
     if(firstCollision == true  && firstCollisionDying == true) {
-        this.game.physics.arcade.overlap(player,quallen, this.killPlayer, null, this); // VERLETZT SPIELER 
-        this.game.physics.arcade.overlap(player,quallenG, this.killPlayerTwo, null, this);
+        this.game.physics.arcade.overlap(player, endboss, this.killPlayer, null, this); // VERLETZT SPIELER 
+        //this.game.physics.arcade.overlap(player,quallenG, this.killPlayerTwo, null, this);
         this.game.physics.arcade.overlap(player,lightning, this.shockPlayer, null, this);
         this.game.physics.arcade.overlap(player,lightningBall, this.rollOverPlayer, null, this);
        
@@ -754,20 +754,17 @@ collectJellyfishG: function()
 }, 
 
 
-killPlayer:function(player, quallen)
+killPlayer:function(player, endboss)
 {  
     if(life > 0)
+    {
+          if(life > 0)
     {
         life -= 10;  
         console.log("%c life : " +life , "color: white; background: red"); 
         shock.play('', 0, 0.3, false);
         lifeText.text = 'Health: '+ life +' %';
-        if(player.direction == "right") {
-            player.frame = 11;
-        }
-        if(player.direction == "left") {
-            player.frame = 12;
-        }
+        shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
     }
@@ -775,10 +772,11 @@ killPlayer:function(player, quallen)
     {
         firstCollisionDying = false;
         this.gameOver();
-    }
-},
+    } 
+}
+}, 
 
-killPlayerTwo:function(player,QuallenG)
+/*killPlayerTwo:function(player,QuallenG)
 {  
     if(life > 0)
     {
@@ -799,9 +797,9 @@ killPlayerTwo:function(player,QuallenG)
         firstCollisionDying = false;
         this.gameOver();
     }
-},
+},*/
 
-killPlayer:function(player,quallen)
+/*killPlayer:function(player,quallen)
 {  
     if(life > 0)
     {
@@ -823,7 +821,7 @@ killPlayer:function(player,quallen)
         firstCollisionDying = false;
         this.gameOver();
     }
-},
+},*/
 
 gameOver:function()
 {
