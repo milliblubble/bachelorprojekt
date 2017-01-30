@@ -141,7 +141,6 @@ update:function()
     catcher.y = Math.floor(player.y -65);
     
     
-    this.checkOverlapAbyss(); //Überprüfung ob spongebob runtergefallen ist
 	this.game.physics.arcade.overlap(catcher, chest, this.collectBonus, null, this); // truhe öffnen
     
     this.updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
