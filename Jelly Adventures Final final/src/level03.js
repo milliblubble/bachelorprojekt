@@ -77,7 +77,7 @@ level03.prototype = {
     
 
     this.createSoundButton();
-
+   
     
 
     //debug();
@@ -154,7 +154,11 @@ update:function()
     //debug();
 
 //this.updateEndbossMovement(); 
-   
+
+    if(hitCounter ==3){
+    hitCounter=0;
+    this.tween1();
+}
 },
 
 createWorld: function()
@@ -282,12 +286,13 @@ createEndboss:function(){
     endboss.enableBodyDebug = true;
     endboss.physicsBodyType = Phaser.Physics.ARCADE;
     this.game.physics.enable(endboss, Phaser.Physics.ARCADE); 
+     this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
 
     endboss.animations.add("moving", [0,1], 4, true);
     endboss.animations.play("moving"); 
     endboss.body.moves = false;
     endboss.collideWorldBounds = true;
-    this.tween1(); 
+    //is.tween1(); 
     //var tween = this.game.add.tween(endboss).to({y:1800},2000, "Linear", true);
     //tween.onComplete.addOnce(this.tween2, this); 
     //tween.start();
@@ -298,8 +303,8 @@ createEndboss:function(){
 tween1: function(){
     
     
-    var tween1 = this.game.add.tween(endboss).to({x: 1500, y: 400}, 2000, "Linear", true );  //wartet 2 Sekunden bis der nächste tween aufgerufen wird 
-    this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
+    var tween1 = this.game.add.tween(endboss).to({x: 1500, y: 400}, 1000, "Linear", true); //tet 2 Sekunden bis der nächste tween aufgerufen wird 
+    //    this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
      tween1.onComplete.addOnce(this.tween2,this);
     // this.time.events.add(1000, this.tween2, this)
    
@@ -319,7 +324,8 @@ tween1: function(){
  }, 
  tween4:function(){
     var tween4 = this.game.add.tween(endboss).to({x:1500, y: 600}, 2000, "Linear", true);
-    tween4.onComplete.addOnce(this.tween1,this); 
+     this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
+  //tween4.onComplete.addOnce(this.tween1,this); 
 
  }, 
  attack01: function(){
@@ -344,18 +350,22 @@ tween1: function(){
     lightningBall.collideWorldBounds = true;
     lightningBall.animations.add("rolling", [0,1], 6, true);
     lightningBall.animations.play("rolling");
-    var tween = this.game.add.tween(lightningBall).to({x:1200, y:700}, 2000, "Linear", true); 
+    var tween = this.game.add.tween(lightningBall).to({x:1200, y:700}, 1000, "Linear", true); 
    
  },
 
 killEndboss: function(){
+
+    hitCounter +=1; 
     if (lifeEndboss >0){
 
     lifeEndboss -=10; 
     console.log("%cEndeboss Lebensenergie: "+ lifeEndboss); 
 }
 
-else {
+
+
+if(lifeEndboss==0){
     endboss.kill(); 
     this.winState(); 
 }
@@ -363,6 +373,7 @@ else {
 
 
  },
+
 
  /*updateEndbossMovement: function(){
 
