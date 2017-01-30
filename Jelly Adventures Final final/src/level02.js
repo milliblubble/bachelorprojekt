@@ -46,6 +46,7 @@ var firstCollision = true;
 var firstCollisionDying = true;
 var timeCheck;
 
+
 var cButtonRemove = false;
 var catchCounter = 0;
 
@@ -118,7 +119,6 @@ update:function()
 		treasure.visible = false;
 	}
 
-   
 
     //if (this.checkOverlap(player, attack01))
 
@@ -686,7 +686,8 @@ collectJellyfish:function(catcher, quallen)
     if (catchButton.isDown)
     {
         score += 1;
-        scoreText.text = 'Score: ' + score + 'Endboss : ' + lifeEndboss;   
+        scoreText.text = 'x' + score;   
+       // scoreText.text = 'Score: ' + score + 'Endboss : ' + lifeEndboss;   
         quallen.kill();
     }
 },
@@ -722,7 +723,8 @@ collectJellyfishG: function()
 {
 	catchCounter += 1;
 	score += 1;
-	scoreText.text = 'Score: ' + score + lifeEndboss;
+	scoreText.text = 'x' + score;   
+	//scoreText.text = 'Score: ' + score + lifeEndboss;
 	if(catchCounter == 2) {
 		quallenG.kill();
 		cButtonRemove = true;
@@ -826,7 +828,7 @@ addEndObject: function(){
 levelTwoWin: function(player, endObject)
 
 {   
-	if(score >= 1) {
+	if(score >= 10) {
     	this.game.time.events.add(2000, this.level3, this);
     }
 }, 
