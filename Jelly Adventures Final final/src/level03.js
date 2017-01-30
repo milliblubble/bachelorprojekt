@@ -78,6 +78,8 @@ level03.prototype = {
 
     this.createSoundButton();
 
+    
+
     //debug();
     //create score and healtbar
 
@@ -88,6 +90,7 @@ update:function()
     this.game.debug.text(this.game.time.fps, this.game.width-50, 50, "#00ff00");
 
     this.game.physics.arcade.collide(player,pLayer); // KOLLISION SPIELER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
+    
     if(firstCollision == true  && firstCollisionDying == true) {
         this.game.physics.arcade.overlap(player,quallen, this.killPlayer, null, this); // VERLETZT SPIELER 
         this.game.physics.arcade.overlap(player,quallenG, this.killPlayerTwo, null, this);
@@ -116,7 +119,7 @@ update:function()
     	}
     }
 
-    if(this.checkOverlap(catcher, endboss)) {
+   if(this.checkOverlap(catcher, endboss)) {
         catchButton.onDown.add(this.killEndboss);
         if(hButtonRemove == true) {
             catchButton.onDown.remove(this.killEndboss);
@@ -131,7 +134,7 @@ update:function()
     this.game.physics.arcade.collide(catcher,pLayer); // KOLLISION KESCHER MIT DEN PLATTFORMEN WIRD AKTIVIERT 
     this.game.physics.arcade.overlap(player,lightning, this.killPlayer, null, this);
     this.game.physics.arcade.overlap(player,lightningBall, this.killPlayer, null, this);
-   // this.game.physics.arcade.overlap(catcher,endboss, this.killEndboss, null, this);
+    //this.game.physics.arcade.overlap(catcher, endboss, this.killEndboss, null, this); //ENDBOSS ANGREIFEN 
 
     catcher.x = Math.floor(player.x +70); //Kescher folgt Spongeboy
     catcher.y = Math.floor(player.y -65);
@@ -149,6 +152,9 @@ update:function()
     this.updateParallax();
     // ZEIGT HITBOXEN
     //debug();
+
+//this.updateEndbossMovement(); 
+   
 },
 
 createWorld: function()
@@ -184,7 +190,8 @@ updateParallax:function ()
 //Funtkion zum Erstellen des Spielers
 createPlayer:function()
 {
-    player = this.game.add.sprite(map.objects["Player Layer"][0].x,map.objects["Player Layer"][0].y, "player"); //PLAYER WIRD AUF VORDEFINIERTEN BEREICH GESETZT
+    player = this.game.add.sprite(1200,700, "player"); //PLAYER WIRD AUF VORDEFINIERTEN BEREICH GESETZT
+    //"Player Layer"][0].x,map.objects["Player Layer"][0].y
     player.inputEnabled = true;
     player.input.enableDrag(); 
       
@@ -194,7 +201,8 @@ createPlayer:function()
     // Physic für den Player wird gesetzt
     player.body.gravity.y = 300;
     player.body.bounce.y = 0.1;
-    player.body.collideWorldBounds = true;
+    
+
     
     //Hitbox angepasst
     player.body.setSize(40,55,0,10);
@@ -274,60 +282,55 @@ createEndboss:function(){
     endboss.enableBodyDebug = true;
     endboss.physicsBodyType = Phaser.Physics.ARCADE;
     this.game.physics.enable(endboss, Phaser.Physics.ARCADE); 
-    endboss.inputEnabled = true;
-    if (lifeEndboss == 70){
-    var tween = this.game.add.tween(endboss).to({y:1800},2000, "Linear", true);
-    tween.onComplete.addOnce(this.tween2, this); 
-    tween.start();
-    tween.yoyo(true, 500); 
-    }
-  
 
     endboss.animations.add("moving", [0,1], 4, true);
     endboss.animations.play("moving"); 
     endboss.body.moves = false;
-    endboss.collideWorldBounds = true;  
-
+    endboss.collideWorldBounds = true;
+    this.tween1(); 
+    //var tween = this.game.add.tween(endboss).to({y:1800},2000, "Linear", true);
+    //tween.onComplete.addOnce(this.tween2, this); 
+    //tween.start();
+    //tween.yoyo(true, 500);
 
 
 }, 
-
-
- tween1: function(){
-
-    console.log("%cEnter Tween test ", "color: white; background: green");        
+tween1: function(){
     
-    var tween1 = this.game.add.tween(endboss).to({x:300, y:1800},2000, "Linear", true);  //wartet 2 Sekunden bis der nächste tween aufgerufen wird 
+    
+    var tween1 = this.game.add.tween(endboss).to({x: 1500, y: 400}, 2000, "Linear", true );  //wartet 2 Sekunden bis der nächste tween aufgerufen wird 
     this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
-    tween1.onComplete.addOnce(this.tween2,this); 
+     tween1.onComplete.addOnce(this.tween2,this);
+    // this.time.events.add(1000, this.tween2, this)
+   
     
 
  }, 
  tween2: function(){    
-     var tween2 = this.game.add.tween(endboss).to({x:100, y: 1800},2000, "Linear", true); //wartet 2 Sekunden bis der nächste tween aufgerufen wird      
+     var tween2 = this.game.add.tween(endboss).to({x: 1200, y:400},2000, "Linear", true); //wartet 2 Sekunden bis der nächste tween aufgerufen wird      
      tween2.onComplete.addOnce(this.tween3,this);  
  }, 
 
  tween3:function(){
-    var tween3 = this.game.add.tween(endboss).to({x:300, y:1800},2000, "Linear", true,5000);
-     this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack01, this); 
+    var tween3 = this.game.add.tween(endboss).to({x:1500, y:400},2000, "Linear", true,5000);
+    this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack01, this); 
     tween3.onComplete.addOnce(this.tween4,this); 
 
  }, 
  tween4:function(){
-    var tween4 = this.game.add.tween(endboss).to({x: 300, y:1950}, 2000, "Linear", true);
-    tween4.onComplete.addOnce(this.tween,this); 
+    var tween4 = this.game.add.tween(endboss).to({x:1500, y: 600}, 2000, "Linear", true);
+    tween4.onComplete.addOnce(this.tween1,this); 
 
  }, 
  attack01: function(){
-    lightning=this.game.add.sprite(100, 1950, "attack01");
+    lightning=this.game.add.sprite(1200, 500, "attack01");
     lightning.scale.setTo(0.3,0.3); 
     this.game.physics.enable(lightning, Phaser.Physics.ARCADE); 
     //attack02.body.bounce.y = 0.9;
     lightning.collideWorldBounds = true;
     //attack02.animations.add("rolling", [0,1], 6, true);
     //attack02.animations.play("rolling");
-    var tween = this.game.add.tween(lightning).to({x:100, y:2020}, 2000, "Linear", true); 
+    var tween = this.game.add.tween(lightning).to({x:1200, y:800}, 2000, "Linear", true); 
     //this.time.events.add(20000, this.attack01.kill, this);
 
  }, 
@@ -335,16 +338,44 @@ createEndboss:function(){
 
  attack02: function(){
 
-    lightningBall =this.game.add.sprite(300, 2020, "attack02");
+    lightningBall =this.game.add.sprite(1500, 600, "attack02");
     this.game.physics.enable(lightningBall, Phaser.Physics.ARCADE); 
     lightningBall.body.bounce.y = 0.9;
     lightningBall.collideWorldBounds = true;
     lightningBall.animations.add("rolling", [0,1], 6, true);
     lightningBall.animations.play("rolling");
-    var tween = this.game.add.tween(lightningBall).to({x:150, y:2020}, 2000, "Linear", true); 
+    var tween = this.game.add.tween(lightningBall).to({x:1200, y:700}, 2000, "Linear", true); 
    
  },
 
+killEndboss: function(){
+    if (lifeEndboss >0){
+
+    lifeEndboss -=10; 
+    console.log("%cEndeboss Lebensenergie: "+ lifeEndboss); 
+}
+
+else {
+    endboss.kill(); 
+    this.winState(); 
+}
+    
+
+
+ },
+
+ /*updateEndbossMovement: function(){
+
+   // this.tween1(); 
+
+},*/ 
+ /*
+
+ winState: function()
+{
+    bMusic.stop();
+    this.game.state.start("FinalWin");
+},*/
 
 
 createQuallen:function()
@@ -648,37 +679,6 @@ collectJellyfish:function(catcher, quallen)
     }
 },
 
-killEndboss: function(){    
-
-     lifeEndboss = (lifeEndboss - 10); 
-     hButtonRemove = true; 
-     console.log("%cLifespan Endeboss"+ lifeEndboss, "color: white; background: red"); 
-
-    
-    if (lifeEndboss ==70){
-    console.log("%cLifespan Endeboss"+ lifeEndboss, "color: white; background: blue");  
-
-    }
-
-    else  if (lifeEndboss == 40){
-        console.log("%cLifespan Endeboss"+ lifeEndboss, "color: white; background: green");
-        this.tween1(); 
-
-    }
-    else if (lifeEndboss == 10){
-
-         console.log("%cMaaan you really got me ", "color: white; background: green");
-        endboss.kill(); 
-        lightning.kill(); 
-        lightningBall.kill();
-
-    }
-
-
-   
-
-
-},
 
 collectJellyfishG: function()
 {
@@ -691,10 +691,6 @@ collectJellyfishG: function()
 		catchCounter = 0;
 	}
 }, 
-	
-
-
-
 
 
 killPlayer:function(player,quallen)
