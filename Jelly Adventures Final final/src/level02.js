@@ -350,6 +350,8 @@ createRiesenQuallen: function() {
     riesenQuallen.enableBody = true;
     riesenQuallen.enableBodyDebug = true;
     
+	riesenQuallen.life = 2;
+	
     riesenQuallen.physicsBodyType = Phaser.Physics.ARCADE; 
     this.game.physics.enable(riesenQuallen, Phaser.Physics.ARCADE); 
     riesenQuallen.inputEnabled = true; 
@@ -454,14 +456,6 @@ createMonster: function() {
     tween.start();
     tween.yoyo(true, 500);
 },
-
-/*checkOverlap: function(spriteA, spriteB) {
-
-    var boundsA = spriteA.getBounds();
-    var boundsB = spriteB.getBounds();
-
-    return Phaser.Rectangle.intersects(boundsA, boundsB);
-},*/
 
 collectBonus:function(catcher, chest)
 {
@@ -752,9 +746,9 @@ collectJellyfishG: function()
         score += 1;
         scoreText.text = 'x' + score; 
        // scoreText.text = 'Score: ' + score + 'Endboss : ' + lifeEndboss;   
-       if(riesenQuallen.life <= 0)
+       if(riesenQuallen.life <= 1)
         {
-       		riesenQuallen.kill();     
+			riesenQuallen.kill();
         }
         else
         {
