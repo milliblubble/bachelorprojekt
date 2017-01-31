@@ -131,7 +131,7 @@ preload.prototype = {
 },
 
   update: function () {
-    if (!!this.ready) { // !! is "bang bang you're a boolean". Not sure why it's necessary here....me either
+    if (!!this.ready) {
       this.game.state.start('GameMenu');
     }
   },

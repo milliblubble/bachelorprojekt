@@ -17,7 +17,7 @@ var woosh3;
 var deathSound;
 var chestOpen;
 var cash;
-var sleepSound;
+var sleepingSound;
 
 var soundOn = true;
 
@@ -490,7 +490,7 @@ collectBonus:function(catcher, chest)
 
 checkNearShip: function()
 {
-	if(player.y >= 1343 && player.x <=3387 && player.x >=1881 && soundOn == true)
+	if((player.y < 1343) && (player.x >1881) && (player.x <3387) && (soundOn == true))
 	{
 		sleepingSound.play('', 0, 0.2, true);
 	}
