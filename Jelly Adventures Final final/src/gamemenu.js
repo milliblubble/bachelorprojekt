@@ -34,7 +34,7 @@ gameMenu.prototype = {
 		 this.addLevel01(); 
 		 this.addLevel02(); 
  		 this.addLevel03(); 	
-		 this.addArrow(); 	
+		 //this.addArrow(); 	
 
 		//this.buttons = new MenuButtons(this.buttonSettings);
 		//this.arrow = new MenuArrow('qualle', game.camera.width / 2 - 110, game.camera.height / 2 - 40, this.buttonYOffsets, [0, 1], this.buttons); //arrow hier ändern
@@ -70,7 +70,7 @@ gameMenu.prototype = {
 		return level03_button;
 	}, 
 
-	addArrow:function(){
+	/*addArrow:function(){
 
     this.arrow = this.game.add.sprite(this.game.camera.width / 2 - 110, this.game.camera.height / 2 - 40, 'qualle');
     this.arrow.anchor.setTo(0.5, 0.5);
@@ -79,7 +79,7 @@ gameMenu.prototype = {
 	this.arrow.animations.play('move');
 	// Initial settings.
 	this.arrow.currentButton = 1;
-	this.arrow.canMove = true;},
+	this.arrow.canMove = true;},*/
 
 	playMusic: function() {
 		if(window.music && window.music.name == 'fun') {
