@@ -142,6 +142,8 @@ update:function()
     // ZEIGT HITBOXEN
     //debug();
 
+    this.updateState(); 
+
 
 //HIER WERDEN DIE SCHÄGE GEZÄHLT
     if(hitCounter ==3){
@@ -282,11 +284,7 @@ createEndboss:function(){
     endboss.animations.play("moving"); 
     endboss.body.moves = false;
     endboss.collideWorldBounds = true;
-    //is.tween1(); 
-    //var tween = this.game.add.tween(endboss).to({y:1800},2000, "Linear", true);
-    //tween.onComplete.addOnce(this.tween2, this); 
-    //tween.start();
-    //tween.yoyo(true, 500);
+   
 
 
 }, 
@@ -294,8 +292,7 @@ tween1: function(){
     
     
     var tween1 = this.game.add.tween(endboss).to({x: 1500, y: 400}, 1000, "Linear", true); //tet 2 Sekunden bis der nächste tween aufgerufen wird 
-    //    this.time.events.repeat(Phaser.Timer.SECOND *1, 5, this.attack02, this); 
-     tween1.onComplete.addOnce(this.tween2,this);
+    tween1.onComplete.addOnce(this.tween2,this);
     // this.time.events.add(1000, this.tween2, this)
    
     
@@ -354,27 +351,34 @@ killEndboss: function(){
     lifeEndboss -=5; 
     console.log("%cEndeboss Lebensenergie: "+ lifeEndboss); 
 
+
     if(lifeEndboss > 0 && lifeEndboss % 2 ==0){
     qualleScore.frame = endbossFrameNr + 1;
         endbossFrameNr += 1;}
 
     else if (lifeEndboss ==0)
     {
+
          endboss.kill(); 
          scoreText.kill(); 
          qualleScore.kill();    
-         this.endgame(); 
-   
+         
 }    
 }
 
+
+
  },
 
+ updateState: function(){
+    if(lifeEndboss == 0){
+        console.log("%c This game is over, you won! " , "color: white; background: red");
+        this.game.state.start("FinalWin");
+    }
 
-endgame: function (){
+ }, 
+ 
 
-     console.log("%cThis game is over"); 
-}, 
 
 
 shockPlayer: function(player, lightning){
@@ -388,6 +392,7 @@ shockPlayer: function(player, lightning){
         shockCheck = true;
         firstCollision = false;
         timeCheck = this.game.time.now;
+
     }
     if (life <= 0)
     {
