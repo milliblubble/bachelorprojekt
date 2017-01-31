@@ -49,7 +49,7 @@ var quallen, riesenQuallen, bubbles;
 var firstCollision = true;
 var firstCollisionDying = true;
 var timeCheck;
-
+var timeCheckCatcher;
 
 var cButtonRemove = false;
 var catchCounter = 0;
@@ -129,14 +129,12 @@ update:function()
        catchButton.onDown.add(this.collectJellyfish2, this);
     }*/
   //  this.game.physics.arcade.overlap(catcher,quallen2, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
-    // if(this.checkOverlap(catcher, riesenQuallen)) {
-    // 	catchButton.onDown.add(this.collectJellyfishG);
-    // 	if(cButtonRemove == true) {
-    // 		catchButton.onDown.remove(this.collectJellyfishG);
-    // 	}
-    // }
+    if(this.checkOverlap(catcher, riesenQuallen)) {
+     	this.check();
+    }
 
-    this.game.physics.arcade.overlap(catcher,riesenQuallen, this.collectJellyfishG, null, this); //EINSAMMELN DER RIESENQUALLEN 
+
+   // this.game.physics.arcade.overlap(catcher,riesenQuallen, this.catch, null, this); //EINSAMMELN DER RIESENQUALLEN 
 
     this.game.physics.arcade.overlap(player,endObject, this.levelTwoWin, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
@@ -457,13 +455,13 @@ createMonster: function() {
     tween.yoyo(true, 500);
 },
 
-checkOverlap: function(spriteA, spriteB) {
+/*checkOverlap: function(spriteA, spriteB) {
 
     var boundsA = spriteA.getBounds();
     var boundsB = spriteB.getBounds();
 
     return Phaser.Rectangle.intersects(boundsA, boundsB);
-},
+},*/
 
 collectBonus:function(catcher, chest)
 {
@@ -736,23 +734,32 @@ collectJellyfish:function(catcher, quallen)
     }
 },
 
-collectJellyfishG: function(catcher, riesenQuallen)
-{
 
-    if (catchButton.isDown)
-    {
+
+check: function() {
+	catchButton.onDown.add(this.collectJellyfishG);
+     	if(cButtonRemove == true) {
+     		catchButton.onDown.remove(this.collectJellyfishG);
+     		cButtonRemove = false;
+    	}
+},
+
+collectJellyfishG: function()
+{   
+	if(cButtonRemove == false) {
         console.log(map.objects["Object Layer"][18].properties.life);
                 console.log(riesenQuallen.life);
         score += 1;
-        scoreText.text = 'x' + score;   
+        scoreText.text = 'x' + score; 
        // scoreText.text = 'Score: ' + score + 'Endboss : ' + lifeEndboss;   
        if(riesenQuallen.life <= 0)
-       {
-            riesenQuallen.kill();
+        {
+       		riesenQuallen.kill();     
         }
         else
         {
-            riesenQuallen.life--;
+        	riesenQuallen.life--;  
+        	cButtonRemove = true;         
         }
     }
 },
