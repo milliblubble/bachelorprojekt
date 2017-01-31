@@ -121,8 +121,11 @@ preload.prototype = {
     this.game.load.audio('deathSound', 'assets/Audio/deathSound.mp3');
     this.game.load.audio('eatingSound', 'assets/Audio/eating.mp3');
     this.game.load.audio('shock', 'assets/Audio/shock.mp3');
-
-     //MUSIC AN/AUS UND PAUSE BUTTON
+	this.game.load.audio('chestOpen', 'assets/Audio/chestopen.mp3');
+	this.game.load.audio('cash', 'assets/Audio/cash.mp3');
+	this.game.load.audio('sleepingSound', 'assets/Audio/sleepingSound.mp3');
+	
+    //MUSIC AN/AUS UND PAUSE BUTTON
     this.game.load.spritesheet("sound", "assets/Sprites/soundOnOff.png", 64, 64);
     this.game.load.spritesheet("pause", "assets/Sprites/pauseandplay.png", 64, 64);
 },

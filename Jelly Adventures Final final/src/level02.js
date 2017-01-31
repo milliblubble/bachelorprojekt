@@ -15,6 +15,9 @@ var woosh1;
 var woosh2;
 var woosh3;
 var deathSound;
+var chestOpen;
+var cash;
+var sleepSound;
 
 var soundOn = true;
 
@@ -149,7 +152,9 @@ update:function()
     
     this.checkOverlapAbyss(); //Überprüfung ob spongebob runtergefallen ist
 	this.game.physics.arcade.overlap(catcher, chest, this.collectBonus, null, this); // truhe öffnen
-    
+    this.checkNearShip();
+	
+	
     this.updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
     this.updateCatcherControl(); 
     
@@ -398,6 +403,9 @@ createMusic:function()
     deathSound = this.game.add.audio('deathSound');
     eatingSound = this.game.add.audio('eatingSound');
     shock = this.game.add.audio('shock');
+	chestOpen = this.game.add.audio('chestOpen');
+	cash = this.game.add.audio('cash');
+	sleepingSound = this.game.add.audio('sleepingSound');
 },
 
 // Funktion zum Loopen der Musik
@@ -469,8 +477,26 @@ collectBonus:function(catcher, chest)
 			score += 10;
 			scoreText.text = 'Score: ' + score;
 			chest.frame = 1;
+			if(soundOn == true) {
+				chestOpen.play('', 0, 0.2, false);
+			}
 			treasure.visible = true;
+			if(soundOn == true){
+				cash.play('', 0, 0.2, false);
+			}
 		}
+	}
+},
+
+checkNearShip: function()
+{
+	if(player.y >= 1343 && player.x <=3387 && player.x >=1881 && soundOn == true)
+	{
+		sleepingSound.play('', 0, 0.2, true);
+	}
+	else
+	{
+		sleepingSound.stop();
 	}
 },
 
