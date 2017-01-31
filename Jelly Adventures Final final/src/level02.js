@@ -28,6 +28,7 @@ var bonusDialog = "Yeay Eine Truhe!";
 var ghost;
 var chest;
 var treasure;
+var sPlay = false;
 
 // VARIABLEN FÜR DEN SPIELER 
 var player;
@@ -492,11 +493,16 @@ checkNearShip: function()
 {
 	if((player.y < 1343) && (player.x >1881) && (player.x <3387) && (soundOn == true))
 	{
-		sleepingSound.play('', 0, 0.2, true);
+		if(sPlay == false)
+		{
+			sleepingSound.play('',0,0.2, true);
+			sPlay = true;
+		}
 	}
 	else
 	{
 		sleepingSound.stop();
+		sPlay = false;
 	}
 },
 
