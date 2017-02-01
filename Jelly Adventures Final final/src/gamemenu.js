@@ -26,6 +26,10 @@ gameMenu.prototype = {
 		//menuLogo.anchor.setTo(0.5,0.5); 
 		menuLogo.fixedToCamera = true;
 		menuLogo.scale.setTo(1.5,1.5);
+		
+		var title = this.game.add.text(95,155, "JELLY ADVENTURES");
+		title.fontSize = 30;
+		title.font = 'Bahiana';
 
 		//TITEL des Spiels hinzufügen
 		//this.gameTitle = game.add.image(game.camera.width / 2, game.camera.height / 2 - 150, 'game_logo');
