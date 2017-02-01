@@ -282,6 +282,28 @@
                  "width":62.6666666666666,
                  "x":4545.58333333333,
                  "y":1087.5
+                }, 
+                {
+                 "gid":1,
+                 "height":32,
+                 "id":31,
+                 "name":"Qualle",
+                 "properties":
+                    {
+                     "body.allowGravity":false,
+                     "body.bounce.y":1
+                    },
+                 "propertytypes":
+                    {
+                     "body.allowGravity":"bool",
+                     "body.bounce.y":"float"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1335,
+                 "y":780.000000000004
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -290,7 +312,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":31,
+ "nextobjectid":32,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

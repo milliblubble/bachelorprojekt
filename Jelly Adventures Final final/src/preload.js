@@ -77,12 +77,14 @@ preload.prototype = {
     this.load.image("sandBG","assets/BG/sand.png");
     this.load.image("vordergrundBG","assets/BG/vordergrund_01.png");    
 
+
     // LADEN DER OBJEKTE
     this.load.image("spongeboy_house", "assets/Object/Spongeboy_House.png");  // Spongeboys Haus
     this.load.image("rusty_cancer_house", "assets/Object/Rusty_Cancer_House.png");  // Rusty Cancer Gebauede
     this.load.image("rusty_cancer_shield", "assets/Object/Rusty_Cancer_Shield.png");  // Rusty Cancer Schild
-    this.load.image("steeringWheel", "assets/Object/SteeringWheel.png");  // Rusty Cancer Schild
-
+    this.load.image("steeringWheel", "assets/Object/SteeringWheel.png");  // Steuerrad
+    this.load.image("sail", "assets/Sprites/Sail.png");  // Segel 1
+    this.load.image("sail02", "assets/Sprites/Sail02.png");  // Segel 2
 
     //Laden Dialog
     this.load.spritesheet("cancerFace", "assets/Sprites/MrCancerDialogue.png",62,62);
