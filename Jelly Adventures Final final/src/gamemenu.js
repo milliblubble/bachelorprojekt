@@ -41,6 +41,9 @@ gameMenu.prototype = {
 
 		//this.fadeIn();
 	},
+
+
+
 	addLevel01:function(){
 		var level01_button = this.game.add.button(this.game.camera.width / 2, this.game.camera.height / 2 -40, 'level_1_button', this.startLevel01, this);	
 		level01_button.anchor.setTo(0.5, 0.5);

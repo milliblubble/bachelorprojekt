@@ -1,4 +1,3 @@
-
 var level02 = function(game){};
 
 
@@ -129,12 +128,12 @@ update:function()
        catchButton.onDown.add(this.collectJellyfish2, this);
     }*/
   //  this.game.physics.arcade.overlap(catcher,quallen2, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
-    if(this.checkOverlap(catcher, riesenQuallen)) {
-     	this.check();
-    }
+  //  if(this.checkOverlap(catcher, riesenQuallen)) {
+     //	this.check();
+  //  }
 
 
-   // this.game.physics.arcade.overlap(catcher,riesenQuallen, this.catch, null, this); //EINSAMMELN DER RIESENQUALLEN 
+    this.game.physics.arcade.overlap(catcher,riesenQuallen, this.catch, null, this); //EINSAMMELN DER RIESENQUALLEN 
 
     this.game.physics.arcade.overlap(player,endObject, this.levelTwoWin, null, this); //EINSAMMELN DER QUALLEN 
     this.game.physics.arcade.overlap(catcher,quallen, this.collectJellyfish, null, this); //EINSAMMELN DER QUALLEN 
@@ -164,6 +163,7 @@ update:function()
     // ZEIGT HITBOXEN
     //debug();
 },
+
 
 createWorld: function()
 {
@@ -730,33 +730,32 @@ collectJellyfish:function(catcher, quallen)
 
 
 
-check: function() {
-	catchButton.onDown.add(this.collectJellyfishG);
+catch: function(catcher, riesenQuallen) {
+	catchButton.onDown.addOnce(this.collectJellyfishG, riesenQuallen);
      	if(cButtonRemove == true) {
-     		catchButton.onDown.remove(this.collectJellyfishG);
+     		catchButton.onDown.dispose();
+     		///catchButton.onDown.remove(this.collectJellyfishG);
      		cButtonRemove = false;
     	}
 },
 
-collectJellyfishG: function()
+collectJellyfishG: function(riesenQuallen)
 {   
 	if(cButtonRemove == false) {
-        console.log(map.objects["Object Layer"][18].properties.life);
+       // console.log(map.objects["Object Layer"][18].properties.life);
                 console.log(riesenQuallen.life);
         score += 1;
         scoreText.text = 'x' + score; 
-       // scoreText.text = 'Score: ' + score + 'Endboss : ' + lifeEndboss;   
-       if(riesenQuallen.life <= 1)
+        this.life--;  
+        cButtonRemove = true;         
+       if(this.life <= 0)
         {
-			riesenQuallen.kill();
-        }
-        else
-        {
-        	riesenQuallen.life--;  
-        	cButtonRemove = true;         
-        }
-    }
+        	this.kill();
+        }   
+    }    
 },
+
+
 
 /*
 collectJellyfishG: function()
@@ -944,4 +943,3 @@ debug:function()
     pLayer.debug = true; // Plattform Hitbox
 }
 } 
-
