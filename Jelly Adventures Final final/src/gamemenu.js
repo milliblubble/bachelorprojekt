@@ -27,7 +27,7 @@ gameMenu.prototype = {
 		menuLogo.fixedToCamera = true;
 		menuLogo.scale.setTo(1.5,1.5);
 		
-		var title = this.game.add.text(95,155, "JELLY ADVENTURES");
+		var title = this.game.add.text(95,155, "JELLYFISH ADVENTURES");
 		title.fontSize = 30;
 		title.font = 'Bahiana';
 
