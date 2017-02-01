@@ -27,8 +27,8 @@ gameMenu.prototype = {
 		menuLogo.fixedToCamera = true;
 		menuLogo.scale.setTo(1.5,1.5);
 		
-		var title = this.game.add.text(95,155, "JELLYFISH ADVENTURES");
-		title.fontSize = 30;
+		var title = this.game.add.text(92,158, "JELLYFISH ADVENTURES");
+		title.fontSize = 28;
 		title.font = 'Bahiana';
 
 		//TITEL des Spiels hinzufügen
