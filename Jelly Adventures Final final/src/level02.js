@@ -90,7 +90,6 @@ level02.prototype = {
     this.addEndObject();
     //debug();
     //create score and healtbar
-        console.log(map.objects["Object Layer"][18].properties.life);
 }, 
 update:function() 
 {
@@ -150,7 +149,7 @@ update:function()
     
     this.checkOverlapAbyss(); //Überprüfung ob spongebob runtergefallen ist
 	this.game.physics.arcade.overlap(catcher, chest, this.collectBonus, null, this); // truhe öffnen
-    this.checkNearShip();
+    //this.checkNearShip();
 	
 	
     this.updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
@@ -170,14 +169,16 @@ createWorld: function()
 	this.game.stage.backgroundColor ="#15DAFF";
 	//background.fixedToCamera = true;
 	map = this.game.add.tilemap("level_02");
-	background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
+	//background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
     map.addTilesetImage("SteeringWheel","steeringWheel");
+    map.addTilesetImage("Sail","sail");
+    map.addTilesetImage("Sail02","sail02");
     map.addTilesetImage("Sign_Jellyfish", "schild_qualle");
 	this.game.time.events.loop(Phaser.Timer.SECOND * 10, this.createBubble, this);
 
 	map.addTilesetImage("tile-sheet","tiles");
     bgLayer2 = map.createLayer("Background Layer 2");
-    bgLayer1 = map.createLayer("Background Layer 1");
+    //bgLayer1 = map.createLayer("Background Layer 1");
     pLayer = map.createLayer("Platform Layer");
 
    // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
@@ -189,13 +190,13 @@ createWorld: function()
     pLayer.resizeWorld();
 },
 createForeground: function(){
-	foreground = this.game.add.tileSprite(0,map.height, 8000, 147, "vordergrundBG");
+	//foreground = this.game.add.tileSprite(0,map.height, 8000, 147, "vordergrundBG");
 
 }, 
 updateParallax:function ()
 {
-    foreground.tilePosition.x = -(this.game.camera.x * 0.7);
-    background.tilePosition.x = -(this.game.camera.x * 0.1); 
+  //  foreground.tilePosition.x = -(this.game.camera.x * 0.7);
+   // background.tilePosition.x = -(this.game.camera.x * 0.1); 
 },
 //Funtkion zum Erstellen des Spielers
 createPlayer:function()
