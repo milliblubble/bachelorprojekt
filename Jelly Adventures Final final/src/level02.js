@@ -149,7 +149,7 @@ update:function()
     
     this.checkOverlapAbyss(); //Überprüfung ob spongebob runtergefallen ist
 	this.game.physics.arcade.overlap(catcher, chest, this.collectBonus, null, this); // truhe öffnen
-    //this.checkNearShip();
+    this.checkNearShip();
 	
 	
     this.updatePlayerControl();  // SPIELERSTEUERUNG WIRD AKTUALLISIERT
