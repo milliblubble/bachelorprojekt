@@ -185,7 +185,7 @@ createForeground: function()
 updateParallax:function ()
 {
     foreground.tilePosition.x = -(this.game.camera.x * 0.7);
-    background1.tilePosition.x += -0.15;
+    background1.tilePosition.x += -0.10;
     background2.tilePosition.x = -(this.game.camera.x * 0.1); 
 },
 

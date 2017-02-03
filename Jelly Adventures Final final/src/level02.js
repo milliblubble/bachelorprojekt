@@ -77,17 +77,18 @@ level02.prototype = {
 	this.createChest();
 	this.createDialog();
 	this.createTreasure();
-	
+    this.createBubbleGroup();
+    this.createBubble()
+    this.createMonster();
+    this.addEndObject();
+
+
     this.createForeground(); // ERSTELLT DEN VORDERGRUND
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
     
-    this.createBubbleGroup();
-    this.createBubble()
-
     this.createSoundButton();
     this.createPauseButton();
-    this.createMonster();
-    this.addEndObject();
+
     //debug();
     //create score and healtbar
 }, 
@@ -178,7 +179,7 @@ createWorld: function()
 
 	map.addTilesetImage("tile-sheet","tiles");
     bgLayer2 = map.createLayer("Background Layer 2");
-    //bgLayer1 = map.createLayer("Background Layer 1");
+    bgLayer1 = map.createLayer("Background Layer 1");
     pLayer = map.createLayer("Platform Layer");
 
    // AKtiviert die Kollision für die Platform Layer in den Bereichen 1-20
@@ -190,13 +191,13 @@ createWorld: function()
     pLayer.resizeWorld();
 },
 createForeground: function(){
-	//foreground = this.game.add.tileSprite(0,map.height, 8000, 147, "vordergrundBG");
+	foreground = this.game.add.tileSprite(0,(map.height*map.tileHeight)-300, map.width * map.tileWidth, 300, "grassFG")
 
 }, 
 updateParallax:function ()
 {
-    //foreground.tilePosition.x = -(this.game.camera.x * 0.7);
-    background1.tilePosition.x += -0.15;
+    foreground.tilePosition.x = -(this.game.camera.x * 0.7);
+    background1.tilePosition.x += -0.10;
     //background2.tilePosition.x = -(this.game.camera.x * 0.1); 
 },
 //Funtkion zum Erstellen des Spielers

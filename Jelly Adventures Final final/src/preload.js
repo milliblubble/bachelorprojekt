@@ -75,6 +75,7 @@ preload.prototype = {
     /// LADEN DER HINTERGRUENDE
     this.load.image("bikiniBottomBG","assets/BG/background.png");
     this.load.image("sandBG","assets/BG/sand.png");
+    this.load.image("grassFG","assets/BG/backgroundGrass.png");
     this.load.image("vordergrundBG","assets/BG/vordergrund_01.png");    
 
 
