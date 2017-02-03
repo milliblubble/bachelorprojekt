@@ -2,7 +2,7 @@ var level02 = function(game){};
 
 
 // KARTENVARIABLE
-var background;
+var background1;
 var foreground; 
 var map;
 var bgLayer,wLayer,pLayer;
@@ -169,7 +169,7 @@ createWorld: function()
 	this.game.stage.backgroundColor ="#15DAFF";
 	//background.fixedToCamera = true;
 	map = this.game.add.tilemap("level_02");
-	//background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
+    background1 = this.game.add.tileSprite(0,0, map.width*map.tileWidth, map.height*map.tileHeight, "bikiniBottomBG");
     map.addTilesetImage("SteeringWheel","steeringWheel");
     map.addTilesetImage("Sail","sail");
     map.addTilesetImage("Sail02","sail02");
@@ -195,8 +195,9 @@ createForeground: function(){
 }, 
 updateParallax:function ()
 {
-  //  foreground.tilePosition.x = -(this.game.camera.x * 0.7);
-   // background.tilePosition.x = -(this.game.camera.x * 0.1); 
+    //foreground.tilePosition.x = -(this.game.camera.x * 0.7);
+    background1.tilePosition.x += -0.15;
+    //background2.tilePosition.x = -(this.game.camera.x * 0.1); 
 },
 //Funtkion zum Erstellen des Spielers
 createPlayer:function()

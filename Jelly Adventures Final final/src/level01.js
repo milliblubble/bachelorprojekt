@@ -8,7 +8,7 @@
 var level01 = function(game){};
 
 // KARTENVARIABLE
-var background;
+var background1, background2;
 var foreground; 
 var map;
 var bgLayer,wLayer,pLayer;
@@ -149,13 +149,15 @@ create:function ()
 
 createWorld: function()
 {
-    this.game.stage.backgroundColor ="#15DAFF";
+    //this.game.stage.backgroundColor ="#15DAFF";
     //background.fixedToCamera = true;
     map = this.game.add.tilemap("level_01");
        map.addTilesetImage("Spongeboy_House","spongeboy_house");
         map.addTilesetImage("Rusty_Cancer_Shield", "rusty_cancer_shield");
         map.addTilesetImage("Rusty_Cancer_House","rusty_cancer_house");
-        background = this.game.add.tileSprite(0,map.height + 850, 10000, 320, "sandBG");
+
+        background1 = this.game.add.tileSprite(0,0, map.width*map.tileWidth, map.height*map.tileHeight, "bikiniBottomBG");
+        background2 = this.game.add.tileSprite(0,map.height + 850, 10000, 320, "sandBG");
     
         map.addTilesetImage("Schild_Laufen", "schild_laufen");
         map.addTilesetImage("Schild_Springen", "schild_springen");
@@ -183,7 +185,8 @@ createForeground: function()
 updateParallax:function ()
 {
     foreground.tilePosition.x = -(this.game.camera.x * 0.7);
-    background.tilePosition.x = -(this.game.camera.x * 0.1); 
+    background1.tilePosition.x += -0.15;
+    background2.tilePosition.x = -(this.game.camera.x * 0.1); 
 },
 
 //Funtkion zum Erstellen des Spielers
