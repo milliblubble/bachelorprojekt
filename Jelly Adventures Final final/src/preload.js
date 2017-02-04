@@ -77,6 +77,11 @@ preload.prototype = {
     this.load.image("sandBG","assets/BG/sand.png");
     this.load.image("grassFG","assets/BG/backgroundGrass.png");
     this.load.image("vordergrundBG","assets/BG/vordergrund_01.png");    
+    this.load.image("caveBG","assets/BG/caveBG.png"); 
+    this.load.image("caveBG2","assets/BG/caveBG2.png"); 
+    this.load.image("caveTopFG","assets/BG/caveTopFG.png");   
+    this.load.image("caveBotFG","assets/BG/caveBotFG.png");     
+
 
 
     // LADEN DER OBJEKTE

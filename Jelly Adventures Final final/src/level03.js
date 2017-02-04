@@ -3,8 +3,8 @@ var level03 = function(game){};
 
 
 // KARTENVARIABLE
-var background;
-var foreground; 
+var background1, background2;
+var foregroundTop,foregroundBot; 
 var map;
 var bgLayer,wLayer,pLayer;
 
@@ -61,6 +61,7 @@ level03.prototype = {
     this.game.time.advancedTiming = true;
 
     this.createWorld();  // ERSTELLT DIE WELT
+
     this.createMusic();  // EINSTELLUNGEN DER MUSIK
 
     this.createPlayer(); // ERSTELLT DEN SPIELER
@@ -69,13 +70,14 @@ level03.prototype = {
     this.createControl();  // ERSTELLUNG DER STEUERUNG
     
     this.createEndboss(); //ERSTELLT DEN ENDBOSS
+    this.createForeground(); // ERSTELLT DEN VORDERGRUND
     
     this.createScoreBar(); //ERSTELLT DIE SCORE & HEALTHBAR
     
 
     this.createSoundButton();
    
-    
+
 
     //debug();
     //create score and healtbar
@@ -158,7 +160,9 @@ createWorld: function()
 	this.game.stage.backgroundColor ="#15DAFF";
 	//background.fixedToCamera = true;
 	map = this.game.add.tilemap("level_03");
-	// background = this.game.add.tileSprite(0,map.height, 10000, 320, "sandBG");
+    background1 = this.game.add.tileSprite(0,0, map.width*map.tileWidth, map.height*map.tileHeight, "caveBG");
+   background2 = this.game.add.tileSprite(0,0, map.width*map.tileWidth, map.height*map.tileHeight, "caveBG2");
+   background2.tileScale.x = 0.9;
     map.addTilesetImage("SteeringWheel","steeringWheel");
 
 	map.addTilesetImage("tile-sheet","tiles");
@@ -176,12 +180,22 @@ createWorld: function()
 },
 createForeground: function(){
 
+    foregroundTop = this.game.add.tileSprite(0,0, map.width*map.tileWidth, (827*0.58), "caveTopFG");
+    foregroundTop.tileScale.y =0.58;
+    foregroundTop.tileScale.x =0.5;
+
+    foregroundBot = this.game.add.tileSprite(0, (map.height*map.tileHeight)-(577*0.26), map.width*map.tileWidth,(577*0.26), "caveBotFG");
+    foregroundBot.tileScale.y =0.26;
+    foregroundBot.tileScale.x =0.5;
+
 
 }, 
 updateParallax:function ()
 {
-   // foreground.tilePosition.x = -(this.game.camera.x * 0.7);
-   // background.tilePosition.x = -(this.game.camera.x * 0.1); 
+    foregroundTop.tilePosition.x = -(this.game.camera.x * 0.7);
+    foregroundBot.tilePosition.x = -(this.game.camera.x * 0.9);
+    background1.tilePosition.x = -(this.game.camera.x * 0.005); 
+    background2.tilePosition.x = -(this.game.camera.x * 0.05); 
 },
 //Funtkion zum Erstellen des Spielers
 createPlayer:function()
