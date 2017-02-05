@@ -5,6 +5,12 @@ var gameMenu = function(game){
     
 }; 
 
+WebFontConfig = {
+	google: {
+		families: ['Bahiana']
+	}
+};
+
 gameMenu.prototype = {
 
     create: function(){

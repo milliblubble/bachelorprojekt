@@ -4,17 +4,6 @@ var preload = function (game) {
     
 };
 
-WebFontConfig = {
-
-	active: function() { this.game.time.events.add(Phaser.Timer.SECOND, createText, this); },
-
-	//  The Google Fonts we want to load (specify as many as you like in the array)
-	google: {
-	  families: ['Bahiana']
-	}
-
-};
-
 preload.prototype = {
 
   preload: function () {
