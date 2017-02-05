@@ -878,8 +878,6 @@ gameOverState:function()
 {
 	life = 100;
 	score = 0;
-	lifeText.frame = 0;
-    frameNr = 0;
 	playerDead = false;
 	firstCollision = true;
 	firstCollisionDying = true;
