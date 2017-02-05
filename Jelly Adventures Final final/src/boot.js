@@ -11,6 +11,8 @@ boot.prototype = {
     this.load.image('load_progress_bar', 'assets/sprites/preloader/progress_bar_fg.png');
     this.load.image('menuLogo', 'assets/menu/game_logo.png');
     this.load.image('bikinibottom', 'assets/BG/BikiniBottom.png'); 
+	this.game.scale.pageAlignHorizontally = true;
+	this.game.scale.pageAlignVertically = true;	
     }, 
     create: function(){
         //this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
