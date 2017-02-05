@@ -471,7 +471,7 @@ collectBonus:function(catcher, chest)
 			spongeFace.play("talk");
 			dialog.text = bonusDialog;
 			score += 10;
-			scoreText.text = 'Score: ' + score;
+			scoreText.text = 'x' + score;
 			chest.frame = 1;
 			if(soundOn == true) {
 				chestOpen.play('', 0, 0.2, false);
